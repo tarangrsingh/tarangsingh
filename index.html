@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarang — Physics</title>
+<meta name="description" content="Tarang — experimental physicist working on cavity magnonics and superconducting quantum circuits.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1020;
+    --panel:#141B33;
+    --panel-border:rgba(120,140,255,0.28);
+    --accent-blue:#6C7BFF;
+    --accent-blue-bright:#9AA6FF;
+    --accent-amber:#E8A54B;
+    --ink:#E7E9F5;
+    --ink-muted:#8C94BA;
+    --mono:#B9C2E8;
+    --max:760px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk', system-ui, sans-serif;
+    font-weight:600;
+    margin:0 0 0.4em 0;
+    line-height:1.15;
+  }
+  a{color:var(--accent-blue-bright);}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--accent-blue-bright); outline-offset:3px;}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 24px;}
+
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:10;
+    background:rgba(11,16,32,0.85);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--panel-border);
+  }
+  nav{
+    max-width:960px; margin:0 auto; padding:16px 24px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .wordmark{font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:1.1rem; color:var(--ink); text-decoration:none;}
+  .navlinks{display:flex; gap:28px; list-style:none; margin:0; padding:0;}
+  .navlinks a{color:var(--ink-muted); text-decoration:none; font-size:0.95rem; transition:color .15s;}
+  .navlinks a:hover{color:var(--accent-blue-bright);}
+
+  main{padding-top:76px;}
+  section{padding:72px 0;}
+
+  .via{display:flex; align-items:center; justify-content:center; gap:0; margin:0 auto;}
+  .via::before,.via::after{content:'';height:1px; width:80px; background:var(--panel-border);}
+  .via-dot{width:9px; height:9px; border-radius:50%; border:2px solid var(--accent-blue); background:var(--bg); margin:0 10px;}
+
+  /* Hero */
+  #hero{padding-top:64px;}
+  .hero-grid{
+    max-width:960px; margin:0 auto; padding:0 24px;
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:32px; align-items:center;
+  }
+  #hero h1{font-size:3rem;}
+  .hero-sub{font-size:1.25rem; color:var(--ink); font-weight:400; margin-bottom:18px; max-width:34ch;}
+  .hero-body{color:var(--ink-muted); max-width:46ch; margin-bottom:28px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    display:inline-block; padding:11px 20px; border-radius:4px;
+    font-size:0.95rem; text-decoration:none; font-weight:500;
+    border:1px solid transparent; cursor:pointer; transition:background .15s, color .15s, border-color .15s;
+  }
+  .btn-primary{background:var(--accent-blue); color:#0B1020;}
+  .btn-primary:hover{background:var(--accent-blue-bright);}
+  .btn-outline{border-color:var(--accent-blue); color:var(--ink);}
+  .btn-outline:hover{border-color:var(--accent-blue-bright); color:var(--accent-blue-bright);}
+  .spiral-wrap{display:flex; justify-content:center;}
+  #heroSvg{width:100%; max-width:300px; height:auto;}
+
+  /* About */
+  #about p{max-width:64ch; color:var(--ink-muted); font-size:1.05rem;}
+
+  /* Research */
+  .research-lead{color:var(--ink-muted); max-width:56ch; margin-bottom:36px;}
+  .panels{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  .panel{background:var(--panel); border:1px solid var(--panel-border); border-radius:3px; padding:28px;}
+  .panel h3{font-size:1.25rem; margin-bottom:12px;}
+  .panel p{color:var(--ink-muted); font-size:0.98rem;}
+  .result-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.92rem;
+    color:var(--mono);
+    background:rgba(0,0,0,0.2);
+    border-left:2px solid var(--accent-amber);
+    padding:10px 14px;
+    margin:16px 0;
+  }
+  .status{display:inline-block; font-size:0.82rem; color:var(--accent-blue-bright); border:1px solid var(--panel-border); padding:3px 10px; border-radius:3px; margin-bottom:14px;}
+  .tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px;}
+  .tag{font-family:'IBM Plex Mono', monospace; font-size:0.78rem; color:var(--ink-muted); border:1px solid var(--panel-border); padding:4px 9px; border-radius:3px;}
+
+  /* Background stats */
+  .stats{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  .stat h4{font-family:'Space Grotesk',sans-serif; font-size:1rem; color:var(--ink); margin:0 0 6px 0;}
+  .stat p{color:var(--ink-muted); margin:0; font-size:0.95rem;}
+
+  /* Outreach */
+  #outreach p{max-width:56ch; color:var(--ink-muted);}
+
+  /* Contact */
+  #contact p{color:var(--ink-muted); max-width:52ch;}
+  .contact-actions{display:flex; gap:14px; flex-wrap:wrap; margin-top:20px;}
+
+  footer{padding:32px 0 48px; text-align:center;}
+  footer p{color:var(--ink-muted); font-size:0.85rem; margin:0;}
+
+  @media (max-width:720px){
+    .hero-grid{grid-template-columns:1fr; text-align:left;}
+    .spiral-wrap{order:-1; margin-bottom:8px;}
+    #heroSvg{max-width:200px;}
+    #hero h1{font-size:2.3rem;}
+    .panels{grid-template-columns:1fr;}
+    .stats{grid-template-columns:1fr;}
+    .navlinks{gap:16px;}
+    .navlinks a{font-size:0.85rem;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; animation:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a class="wordmark" href="#hero">Tarang</a>
+    <ul class="navlinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#outreach">Outreach</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <section id="hero">
+    <div class="hero-grid">
+      <div>
+        <h1>Tarang</h1>
+        <p class="hero-sub">Experimental physicist — magnon–photon coupling now, superconducting quantum circuits next.</p>
+        <p class="hero-body">MSc Physics, IIT (BHU) Varanasi. I fabricate and measure microwave resonators for cavity magnonics, and I'm extending that RF background into superconducting-qubit readout circuitry ahead of a PhD in the field.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#research">See the research</a>
+          <a class="btn btn-outline" href="#contact">Get in touch</a>
+        </div>
+      </div>
+      <div class="spiral-wrap">
+        <svg id="heroSvg" viewBox="0 0 300 300" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="bridgeGrad" x1="60" y1="210" x2="220" y2="90" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#E8A54B"/>
+              <stop offset="1" stop-color="#6C7BFF"/>
+            </linearGradient>
+          </defs>
+          <path id="bridgePath" d="M60,210 Q130,195 195,115" stroke="url(#bridgeGrad)" stroke-width="2" stroke-linecap="round"></path>
+          <path id="dendritePath" d="M60,210 L40,180 M60,210 L85,175 M40,180 L25,150 M40,180 L50,150 M85,175 L75,150 M85,175 L108,158" stroke="#E8A54B" stroke-width="2" stroke-linecap="round"></path>
+          <path id="gridPath" d="M195,65 L220,65 L245,65 M195,90 L220,90 L245,90 M195,115 L220,115 L245,115 M195,65 L195,90 L195,115 M220,65 L220,90 L220,115 M245,65 L245,90 L245,115" stroke="#6C7BFF" stroke-width="1.6" stroke-linecap="round"></path>
+          <g id="synapseDots" opacity="0">
+            <circle cx="25" cy="150" r="3" fill="#E8A54B"/>
+            <circle cx="50" cy="150" r="3" fill="#E8A54B"/>
+            <circle cx="75" cy="150" r="3" fill="#E8A54B"/>
+            <circle cx="108" cy="158" r="3" fill="#E8A54B"/>
+          </g>
+          <g id="nodeSquares" opacity="0">
+            <rect x="192" y="62" width="6" height="6" rx="1" fill="#9AA6FF"/>
+            <rect x="217" y="62" width="6" height="6" rx="1" fill="#9AA6FF"/>
+            <rect x="242" y="62" width="6" height="6" rx="1" fill="#9AA6FF"/>
+            <rect x="192" y="87" width="6" height="6" rx="1" fill="#9AA6FF"/>
+            <rect x="217" y="87" width="6" height="6" rx="1" fill="#9AA6FF"/>
+            <rect x="242" y="87" width="6" height="6" rx="1" fill="#9AA6FF"/>
+            <rect x="192" y="112" width="6" height="6" rx="1" fill="#9AA6FF"/>
+            <rect x="217" y="112" width="6" height="6" rx="1" fill="#9AA6FF"/>
+            <rect x="242" y="112" width="6" height="6" rx="1" fill="#9AA6FF"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="via" aria-hidden="true"><span class="via-dot"></span></div>
+
+  <section id="about">
+    <div class="wrap">
+      <h2>About</h2>
+      <p>I work at the boundary between magnonics and quantum circuits: coupling spin waves to microwave photons in resonators I design and fabricate myself, then extending that hands-on RF background into superconducting-qubit readout hardware. The direction I want to take into a PhD is circuit elements that borrow spiking, neuron-like dynamics for computation without giving up quantum behavior — hardware that computes more like a brain and still runs on Hilbert space.</p>
+    </div>
+  </section>
+
+  <div class="via" aria-hidden="true"><span class="via-dot"></span></div>
+
+  <section id="research">
+    <div class="wrap">
+      <h2>Research</h2>
+      <p class="research-lead">Two projects, one thread: microwave circuits that couple to something quantum.</p>
+      <div class="panels">
+        <div class="panel">
+          <h3>Cavity Magnonics Thesis</h3>
+          <p>An original elliptical spiral resonator design — the Archimedean Spiral Double Split-Ring Resonator (A-SDSRR), grown out of a 2024 split-ring resonator paper — built to couple magnons to microwave photons. The full loop runs simulation in CST Microwave Studio, fabrication on FR4 by toner transfer and wet etching, and characterization on a Rohde &amp; Schwarz ZNLE18 vector network analyzer.</p>
+          <div class="result-line">g/2π ≈ 65–70 MHz — coupling peaks near 3 spiral turns, not the highest turn count</div>
+          <p>Boards fabricated and measured across five turn counts (N = 1, 3, 5, 7, 9). First-author paper covering the theory, CST modeling, and VNA measurements.</p>
+          <div class="tags">
+            <span class="tag">CST Microwave Studio</span>
+            <span class="tag">PCB fabrication</span>
+            <span class="tag">VNA (S21)</span>
+            <span class="tag">Coupled-oscillator fitting</span>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Superconducting Qubit Readout</h3>
+          <div class="status">In progress — geometry engine phase</div>
+          <p>Reproducing the multiplexed readout circuit from a 2025 PRX Quantum paper on multiconductor-transmission-line qubit readout: a 16-qubit device with transmons, MTL-coupled readout and filter resonators, and TSV-routed shared readout lines. Building it in code on Quantum Metal, starting with the physics and geometry engine and the core MTL-coupler unit before qubits, tiling, or the TSV backside structure.</p>
+          <div class="tags">
+            <span class="tag">Quantum Metal</span>
+            <span class="tag">Python</span>
+            <span class="tag">Superconducting circuit design</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="via" aria-hidden="true"><span class="via-dot"></span></div>
+
+  <section id="background">
+    <div class="wrap">
+      <h2>Background</h2>
+      <div class="stats">
+        <div class="stat">
+          <h4>National exams</h4>
+          <p>Competitive rankings in JEST, JAM, and TIFR-GS.</p>
+        </div>
+        <div class="stat">
+          <h4>Research internships</h4>
+          <p>TIFR Colaba (condensed matter) and TIFR-HBCSE.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="via" aria-hidden="true"><span class="via-dot"></span></div>
+
+  <section id="outreach">
+    <div class="wrap">
+      <h2>Outreach</h2>
+      <p>I also run a physics-education YouTube channel: short animated explainers — like why magnets never touch — with my own voiceover, each one built as a self-contained HTML page with built-in video export.</p>
+      <a class="btn btn-outline" href="#" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
+    </div>
+  </section>
+
+  <div class="via" aria-hidden="true"><span class="via-dot"></span></div>
+
+  <section id="contact">
+    <div class="wrap">
+      <h2>Get in touch</h2>
+      <p>Reach me by email, or download my CV.</p>
+      <div class="contact-actions">
+        <a class="btn btn-primary" href="mailto:your.email@example.com">Email me</a>
+        <a class="btn btn-outline" href="#">Download CV</a>
+        <a class="btn btn-outline" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Tarang, 2026</p>
+</footer>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function reveal(el, delay){
+    const len = el.getTotalLength();
+    el.style.strokeDasharray = len;
+    el.style.strokeDashoffset = len;
+    if(reduceMotion){
+      el.style.strokeDashoffset = 0;
+    } else {
+      setTimeout(() => {
+        el.style.transition = 'stroke-dashoffset 1.1s ease-out';
+        el.style.strokeDashoffset = 0;
+      }, delay);
+    }
+  }
+
+  const bridge = document.getElementById('bridgePath');
+  const dendrite = document.getElementById('dendritePath');
+  const grid = document.getElementById('gridPath');
+  const synapses = document.getElementById('synapseDots');
+  const nodes = document.getElementById('nodeSquares');
+
+  reveal(bridge, 100);
+  reveal(dendrite, 500);
+  reveal(grid, 950);
+
+  const dotDelay = reduceMotion ? 0 : 1500;
+  setTimeout(() => {
+    synapses.style.transition = 'opacity .6s ease-out';
+    nodes.style.transition = 'opacity .6s ease-out';
+    synapses.style.opacity = 1;
+    nodes.style.opacity = 1;
+  }, dotDelay);
+</script>
+
+</body>
+</html>
