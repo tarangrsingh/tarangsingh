@@ -174,7 +174,6 @@
     if (d.listLabel) detailView.appendChild(el('p', 'ip-text', d.listLabel));
     if (d.list && d.list.length) { var ul = el('ul', 'ip-list'); d.list.forEach(function (t) { ul.appendChild(el('li', null, t)); }); detailView.appendChild(ul); }
     if (d.source) { var s = el('a', 'ip-source', d.source.text); s.href = d.source.href; s.target = '_blank'; s.rel = 'noopener'; detailView.appendChild(s); }
-    if (!(d.body && d.body.length) && !d.list && n.type !== 'death') detailView.appendChild(el('p', 'ip-hint', 'Nothing written here yet — this branch is still growing.'));
     var back = el('button', 'ip-back', '← The whole map'); back.type = 'button';
     back.addEventListener('click', function () { select(null); });
     detailView.appendChild(back);

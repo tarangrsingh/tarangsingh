@@ -16,13 +16,13 @@
 //   { id: 'chaos', label: 'Chaos', prompt: 'Is unpredictability a flaw or a feature?', body: ['My thoughts...'] }
 // `id` must be unique and URL-safe; it also makes the node linkable as ideas.html#chaos.
 //
-// The questions under `prompt` were written as starting points; replace or delete them freely.
+// Every `prompt` is a dash placeholder for you to replace with your own words.
 // The writing under `body` / `list` is yours, carried over from the old Ideas page.
 
 window.IDEAS = {
   intro: {
-    title: 'A map of ideas',
-    text: 'Everything begins from one point. From there it branches — into the sciences, and into the questions that fit in none of them — until every branch reaches the same edge.',
+    title: 'Ideas',
+    text: '—',
     hint: 'Touch any point to open it. Esc returns to the whole map.'
   },
 
@@ -30,7 +30,7 @@ window.IDEAS = {
     id: 'god',
     label: 'God',
     title: 'Understanding God (T–3)',
-    prompt: 'The one point every branch begins from.',
+    prompt: '—',
     body: [
       'Over the course of time I have observed that god and every deed that he does to us humans is in the form of the mixture of deism and absurdism…',
       'He hides himself by making us feel that things are absurd enough, but they are not — everything is intertwined, and it takes the utmost amount of conscience and a third-person view to understand his deeds, but the closest theory is deism. Religion is a cage which traps you, and most people stay trapped; more ironically, religion does the exact opposite of what it says it should — it pulls you away from thinking about god with your own mind, and instead makes you believe things which are foretold. God has to be understood and thought about, not believed and worshipped — he made us conscious so that we could think about him. Every day I reach closer to understanding him, and go farther apart from human indecencies; my emotional understanding is growing exponentially, I am learning a lot about how humans think and act, and love is a blessing.'
@@ -41,48 +41,48 @@ window.IDEAS = {
   // Order matters: fields are placed clockwise, so neighbours here are neighbours on the map.
   branches: [
     {
-      id: 'physics', label: 'Physics', prompt: 'How the universe behaves.',
+      id: 'physics', label: 'Physics', prompt: '—',
       children: [
-        { id: 'quantum', label: 'Quantum Mechanics', prompt: 'What does it mean for something to be undecided until it is observed?' },
-        { id: 'spacetime', label: 'Spacetime', prompt: 'Is time something we move through, or a story we tell about change?' },
-        { id: 'entropy', label: 'Entropy', prompt: 'Why does time have a direction?' },
+        { id: 'quantum', label: 'Quantum Mechanics', prompt: '—' },
+        { id: 'spacetime', label: 'Spacetime', prompt: '—' },
+        { id: 'entropy', label: 'Entropy', prompt: '—' },
         {
           id: 'nuclear', label: 'Nuclear models',
           body: ['I think all the models describing nuclear physics are a shot in the dark which are not correct, there are too many errors and corrections at every step which makes it hard to realize that it is what it is, further the framework has multiple modifications at every step which makes it less and less fundamental and more and more iterative, so there is a big gap in this sector.'],
           source: { text: 'from the blog · Sep 16, 2026', href: 'https://quarkbyquark.blogspot.com/2026/09/about-nuclear-physics.html' }
         },
-        { id: 'cosmology', label: 'Cosmology', prompt: 'What came before the beginning, if “before” even applies?' }
+        { id: 'cosmology', label: 'Cosmology', prompt: '—' }
       ]
     },
     {
-      id: 'math', label: 'Mathematics', prompt: 'Structure, pattern and proof.',
+      id: 'math', label: 'Mathematics', prompt: '—',
       children: [
-        { id: 'infinity', label: 'Infinity', prompt: 'Are some endlessnesses larger than others?' },
-        { id: 'symmetry', label: 'Symmetry', prompt: 'Why does nature keep choosing balance?' },
-        { id: 'proof', label: 'Proof', prompt: 'Can everything that is true be proven?' }
+        { id: 'infinity', label: 'Infinity', prompt: '—' },
+        { id: 'symmetry', label: 'Symmetry', prompt: '—' },
+        { id: 'proof', label: 'Proof', prompt: '—' }
       ]
     },
     {
-      id: 'chemistry', label: 'Chemistry', prompt: 'How matter combines and changes.',
+      id: 'chemistry', label: 'Chemistry', prompt: '—',
       children: [
-        { id: 'bonds', label: 'Bonds', prompt: 'How do atoms agree to stay together?' },
-        { id: 'elements', label: 'Elements', prompt: 'Where were the elements forged?' }
+        { id: 'bonds', label: 'Bonds', prompt: '—' },
+        { id: 'elements', label: 'Elements', prompt: '—' }
       ]
     },
     {
-      id: 'biology', label: 'Biology', prompt: 'How matter comes alive.',
+      id: 'biology', label: 'Biology', prompt: '—',
       children: [
-        { id: 'life', label: 'Life', prompt: 'Where does matter cross the line into life?' },
-        { id: 'evolution', label: 'Evolution', prompt: 'How does blind selection build something so intricate?' },
-        { id: 'mind', label: 'Mind', prompt: 'How do neurons, or parameters, become thought?' }
+        { id: 'life', label: 'Life', prompt: '—' },
+        { id: 'evolution', label: 'Evolution', prompt: '—' },
+        { id: 'mind', label: 'Mind', prompt: '—' }
       ]
     },
     {
-      id: 'philosophy', label: 'Philosophy', prompt: 'Questions that have no lab result.',
+      id: 'philosophy', label: 'Philosophy', prompt: '—',
       children: [
-        { id: 'meaning', label: 'Meaning', prompt: 'Does life need a reason, or does it make one?' },
-        { id: 'freewill', label: 'Free will', prompt: 'Are our choices ours?' },
-        { id: 'knowledge', label: 'Knowledge', prompt: 'What can we know, and how would we know that we know?' },
+        { id: 'meaning', label: 'Meaning', prompt: '—' },
+        { id: 'freewill', label: 'Free will', prompt: '—' },
+        { id: 'knowledge', label: 'Knowledge', prompt: '—' },
         {
           id: 'quotes', label: 'Quotes',
           listLabel: 'Quotes I’ve come across which have left a deep impact on me — list updates actively.',
@@ -98,11 +98,11 @@ window.IDEAS = {
       ]
     },
     {
-      id: 'metaphysics', label: 'Metaphysics', prompt: 'What there is, and why.',
+      id: 'metaphysics', label: 'Metaphysics', prompt: '—',
       children: [
-        { id: 'being', label: 'Being', prompt: 'What does it mean to exist?' },
-        { id: 'consciousness', label: 'Consciousness', prompt: 'Why is there an inner experience at all?' },
-        { id: 'causality', label: 'Causality', prompt: 'Where does the chain of causes begin?' }
+        { id: 'being', label: 'Being', prompt: '—' },
+        { id: 'consciousness', label: 'Consciousness', prompt: '—' },
+        { id: 'causality', label: 'Causality', prompt: '—' }
       ]
     }
   ],
@@ -110,6 +110,6 @@ window.IDEAS = {
   rim: {
     id: 'death',
     label: 'Death',
-    prompt: 'Every branch ends here. What remains?'
+    prompt: 'the only that I know of, will happen whatsoever is the case.'
   }
 };
