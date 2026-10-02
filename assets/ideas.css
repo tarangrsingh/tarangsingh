@@ -8,7 +8,8 @@
   position: absolute; left: 24px; top: 18px; z-index: 3; margin: 0;
   font: 400 clamp(1.5rem, 2.4vw, 2rem)/1.2 var(--font); letter-spacing: -0.01em; color: var(--copper-light);
 }
-.space-stage { position: relative; height: clamp(560px, calc(100vh - 76px), 880px); height: clamp(560px, calc(100svh - 76px), 880px); --u: 1; }
+.space { --stage-h: clamp(560px, calc(100vh - 76px), 880px); --stage-h: clamp(560px, calc(100svh - 76px), 880px); }
+.space-stage { position: relative; height: var(--stage-h); --u: 1; }
 /* A soft pool of shade behind the tree so labels stay legible over the photograph */
 .space-stage::before {
   content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -79,7 +80,7 @@
 
 /* ---- detail panel --------------------------------------------------------------------------------------- */
 .idea-panel {
-  position: relative; z-index: 4; align-self: center; min-height: 250px; padding: 22px 24px 20px; border-radius: 18px; overflow: hidden; isolation: isolate;
+  position: relative; z-index: 4; align-self: center; min-height: 250px; max-height: var(--stage-h); padding: 22px 24px 20px; border-radius: 18px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; isolation: isolate;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
   border: 1px solid rgba(255, 255, 255, 0.28);
   -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%);
@@ -119,7 +120,7 @@ html.light-mode .idea-panel { background: linear-gradient(160deg, rgba(255, 255,
   .space { grid-template-columns: 1fr; gap: 6px; padding: 4px 14px 0; }
   .space-title { position: static; padding: 18px 8px 0; }
   .space-stage { height: calc(min(100vw - 28px, 660px) * 1.12 + 76px); width: min(100%, 660px); margin: 0 auto; }
-  .idea-panel { width: min(100%, 560px); margin: 0 auto 18px; }
+  .idea-panel { width: min(100%, 560px); margin: 0 auto 18px; max-height: none; overflow: visible; }
 }
 @media (max-width: 720px) {
   .node--disc .lbl { padding: 2px 9px; font-size: calc(13px * var(--u)); }
