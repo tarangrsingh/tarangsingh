@@ -16,19 +16,6 @@ main p a {
 }
 main p a:hover, main p a:focus-visible { text-underline-offset: 0.32em; text-decoration-color: currentColor; }
 
-/* Profile header on the home page: a small rounded photo beside the name and affiliation */
-.profile { display: flex; align-items: center; gap: 18px; margin: 0 0 30px; }
-.profile img {
-  flex: none; width: 92px; height: 92px; border-radius: 26px; object-fit: cover;
-  background: var(--avatar-bg); border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 14px 30px -16px rgba(0, 0, 0, 0.7);
-  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.45s ease;
-}
-.profile img:hover { transform: scale(1.05) rotate(-2deg); box-shadow: 0 0 0 3px var(--copper-glow), 0 16px 34px -16px rgba(0, 0, 0, 0.7); }
-.profile-name { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; }
-.profile-sub { font-size: 15px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
-@media (max-width: 420px) { .profile img { width: 80px; height: 80px; border-radius: 23px; } .profile-name { font-size: 22px; } }
-
 @media (prefers-reduced-motion: no-preference) {
   /* Smooth fade between pages (Chromium cross-document view transitions; other browsers just navigate) */
   @view-transition { navigation: auto; }
@@ -48,7 +35,6 @@ main p a:hover, main p a:focus-visible { text-underline-offset: 0.32em; text-dec
   @keyframes enter-down { from { opacity: 0; transform: translateY(-10px); } }
   header { animation: enter-down 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
   .page-title, #about { animation: enter-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s backwards; }
-  .profile { animation: enter-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s backwards; }
   .tab-card { animation: enter-up 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
   .tab-card:nth-child(1) { animation-delay: 0.28s; }
   .tab-card:nth-child(2) { animation-delay: 0.36s; }

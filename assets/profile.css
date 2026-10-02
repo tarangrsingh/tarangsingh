@@ -1,0 +1,60 @@
+/* Home-page profile header: a photo that tilts toward the cursor and opens enlarged (see profile.js) */
+.profile { display: flex; align-items: center; gap: 18px; margin: 0 0 30px; }
+.profile-name { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; }
+.profile-sub { font-size: 15px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+.profile-photo {
+  position: relative; flex: none; display: block; width: 92px; height: 92px; padding: 0; margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 26px; overflow: hidden; cursor: zoom-in;
+  background: var(--avatar-bg); -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 14px 30px -16px rgba(0, 0, 0, 0.7);
+  transform: perspective(520px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(var(--sc, 1));
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.4s ease, border-color 0.3s ease;
+}
+.profile-photo.is-tracking { transition: transform 0.08s linear, box-shadow 0.4s ease, border-color 0.3s ease; }
+.profile-photo img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+/* Light that follows the cursor across the photo */
+.profile-photo::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.3s ease;
+  background: radial-gradient(70px circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, 0.4), transparent 70%);
+}
+.profile-photo:is(.is-tracking, :focus-visible)::after { opacity: 1; }
+.profile-photo:is(.is-tracking, :focus-visible) { border-color: var(--copper); box-shadow: 0 0 0 3px var(--copper-glow), 0 18px 34px -16px rgba(0, 0, 0, 0.7); }
+.profile-photo:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
+.profile-photo:active { --sc: 0.96; }
+.profile-photo.is-hidden { opacity: 0; }
+@media (max-width: 420px) { .profile-photo { width: 80px; height: 80px; border-radius: 23px; } .profile-name { font-size: 22px; } }
+
+/* Enlarged view */
+html.lb-open { overflow: hidden; }
+.lb { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 20px; }
+.lb[hidden] { display: none; }
+.lb-backdrop {
+  position: absolute; inset: 0; cursor: zoom-out;
+  background: rgba(var(--bg-rgb), 0.74);
+  -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
+}
+.lb-fig {
+  position: relative; margin: 0; cursor: zoom-out;
+  width: min(86vw, calc(84vh * 0.8), 440px); transform-origin: 0 0;
+  border-radius: 22px; overflow: hidden; background: var(--avatar-bg);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 30px 80px -24px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+.lb-fig img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.lb-close {
+  position: absolute; top: 12px; right: 12px; width: 38px; height: 38px; padding: 0; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center; color: #fff; border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(10, 16, 30, 0.45); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.lb-close:hover { background: rgba(10, 16, 30, 0.7); transform: scale(1.08); }
+.lb-close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.lb-close svg { width: 16px; height: 16px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .profile { animation: enter-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s backwards; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .profile-photo, .profile-photo::after, .lb-close { transition: none; }
+}
