@@ -1,6 +1,6 @@
 /* Home-page profile header: a photo that tilts toward the cursor and opens enlarged (see profile.js) */
 .profile { display: flex; align-items: center; gap: 18px; margin: 0 0 30px; }
-.profile-name { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; }
+.profile-name { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; }
 .profile-sub { font-size: 15px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
 
 .profile-photo {
@@ -62,3 +62,25 @@ html.lb-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .profile-photo, .profile-photo::after, .lb-close, .lb-backdrop { transition: none; }
 }
+
+/* Header wave (home page): "tarang" means wave. It draws in once, then flows gently; hover deepens it. */
+.wave-mark {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2;
+  width: 104px; height: 26px; line-height: 0; cursor: default;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 24%, #000 76%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 24%, #000 76%, transparent);
+}
+.wave-mark svg { display: block; width: 100%; height: 100%; overflow: hidden; }
+.wave-path {
+  fill: none; stroke: var(--copper-light); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  filter: drop-shadow(0 0 3px var(--copper-glow));
+  transform-box: fill-box; transform-origin: center;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.wave-mark:hover .wave-path { transform: scaleY(1.7); }
+@media (prefers-reduced-motion: no-preference) {
+  .wave-mark svg { animation: wave-reveal 1.3s cubic-bezier(0.3, 0.7, 0.2, 1) 0.2s backwards; }
+  .wave-flow { animation: wave-flow 3.4s linear infinite; }
+}
+@keyframes wave-reveal { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes wave-flow { to { transform: translateX(-40px); } }   /* one period of the wave: seamless loop */
