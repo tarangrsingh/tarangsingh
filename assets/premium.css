@@ -1,0 +1,48 @@
+/* Premium polish: quiet, fast, and switched off for anyone who prefers reduced motion. */
+
+::selection { background: var(--copper-glow); color: var(--text); }
+
+/* Header: gains depth once the page scrolls beneath it (class set in premium.js) */
+header {
+  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+header.is-scrolled { box-shadow: 0 14px 34px -20px rgba(0, 0, 0, 0.6); border-bottom-color: var(--copper-glow); }
+
+/* Links in running text: a hairline underline that relaxes and brightens on hover */
+main p a {
+  text-decoration-thickness: 1px; text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  transition: text-decoration-color 0.25s ease, text-underline-offset 0.25s ease, color 0.2s ease;
+}
+main p a:hover, main p a:focus-visible { text-underline-offset: 0.32em; text-decoration-color: currentColor; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Smooth fade between pages (Chromium cross-document view transitions; other browsers just navigate) */
+  @view-transition { navigation: auto; }
+  @keyframes vt-out { to { opacity: 0; transform: translateY(-6px); } }
+  @keyframes vt-in { from { opacity: 0; transform: translateY(10px); } }
+  ::view-transition-old(root) { animation: 0.2s cubic-bezier(0.4, 0, 1, 1) both vt-out; }
+  ::view-transition-new(root) { animation: 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both vt-in; }
+
+  /* Light/dark switch: the new theme grows out of the toggle button as a circle (clip-path set in premium.js) */
+  html.theme-vt::view-transition-old(root), html.theme-vt::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+  html.theme-vt::view-transition-old(root) { z-index: 1; }
+  html.theme-vt::view-transition-new(root) { z-index: 2; }
+
+  /* Entrance: header drifts in, headline rises, tab cards cascade. "backwards" fill only styles the delay period,
+     so hover transforms keep working afterwards. */
+  @keyframes enter-up { from { opacity: 0; transform: translateY(14px); } }
+  @keyframes enter-down { from { opacity: 0; transform: translateY(-10px); } }
+  header { animation: enter-down 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
+  .page-title, #about { animation: enter-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s backwards; }
+  .tab-card { animation: enter-up 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
+  .tab-card:nth-child(1) { animation-delay: 0.28s; }
+  .tab-card:nth-child(2) { animation-delay: 0.36s; }
+  .tab-card:nth-child(3) { animation-delay: 0.44s; }
+  .tab-card:nth-child(4) { animation-delay: 0.52s; }
+  .tab-card:nth-child(5) { animation-delay: 0.6s; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

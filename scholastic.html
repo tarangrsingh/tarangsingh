@@ -269,38 +269,6 @@
   }
   .atom:nth-child(2) { width: 10px; height: 10px; margin: -5px 0 0 -5px; }
   .atom:nth-child(3) { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; }
-  .scrollgraph {
-    position: fixed;
-    top: 50%;
-    right: 4px;
-    z-index: 25;
-    width: 52px;
-    height: min(48vh, 420px);
-    transform: translateY(-50%);
-  }
-  .scrollgraph-curve { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
-  .sg-axis { stroke: var(--rule); stroke-width: 2; }
-  .scrollgraph-range {
-    -webkit-appearance: none;
-    appearance: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    background: transparent;
-    width: min(48vh, 420px);
-    height: 46px;
-    margin: 0;
-    cursor: ns-resize;
-    transform: translate(-50%, -50%) rotate(-90deg);
-  }
-  .scrollgraph-range:focus-visible { outline: none; }
-  .scrollgraph-range::-webkit-slider-runnable-track { width: 100%; height: 46px; background: transparent; }
-  .scrollgraph-range::-moz-range-track { width: 100%; height: 46px; background: transparent; border: none; }
-  .scrollgraph-range::-webkit-slider-thumb { -webkit-appearance: none; width: 1px; height: 1px; opacity: 0; }
-  .scrollgraph-range::-moz-range-thumb { width: 1px; height: 1px; opacity: 0; border: none; }
-  @media (max-width: 640px) {
-    .scrollgraph { display: none; }
-  }
 
   /* Header name: a soft light follows the cursor and a hairline grows underneath; nothing moves (see script) */
   .header-inner { position: relative; }
@@ -328,11 +296,6 @@
   .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   @media (max-width: 360px) { .site-name { padding-left: 6px; padding-right: 6px; } }
 
-  /* Scroll graph: thin lines instead of blocks */
-  .sg-line { stroke: var(--copper-light); stroke-width: 1.6; stroke-linecap: round; vector-effect: non-scaling-stroke; transition: stroke 0.18s ease-out; }
-  .scrollgraph.is-active .sg-line { stroke: var(--copper); }
-  .scrollgraph:hover .sg-line, .scrollgraph:focus-within .sg-line { stroke: var(--text); }
-  @media (pointer: coarse) { .scrollgraph-range { pointer-events: none; } }
 
   /* Scholastic Achievements / Research Experience pages */
   .sx-lead { margin: -2px 0 30px; max-width: 60ch; color: var(--muted); font-size: 15px; line-height: 1.55; }
@@ -436,6 +399,8 @@
                 linear-gradient(rgba(var(--bg-rgb), 0.2) 0%, rgba(var(--bg-rgb), 0.02) 16%, rgba(var(--bg-rgb), 0.02) 68%, rgba(var(--bg-rgb), 0.48) 100%);
   }
 </style>
+<link rel="stylesheet" href="assets/scrollgraph.css">
+<link rel="stylesheet" href="assets/premium.css">
 <script>
   (function () {
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
@@ -444,12 +409,13 @@
 </head>
 <body>
 <div class="photo-bg" aria-hidden="true"></div>
-<div class="scrollgraph">
+<div class="scrollgraph" id="scrollgraph" role="slider" tabindex="0" aria-orientation="vertical" aria-label="Scroll position on this page" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0% down the page">
   <svg class="scrollgraph-curve" viewBox="0 0 60 1000" preserveAspectRatio="none" aria-hidden="true">
     <line class="sg-axis" x1="52" y1="0" x2="52" y2="1000" />
     <g id="sg-lines"></g>
   </svg>
-  <input type="range" id="scrollgraph-range" class="scrollgraph-range" min="0" max="1000" value="0" step="1" aria-label="Scroll position on this page" />
+  <span class="sg-dot" aria-hidden="true"></span>
+  <span class="sg-readout" aria-hidden="true">0%</span>
 </div>
 <div class="cursor-atoms" id="cursor-atoms" aria-hidden="true">
   <span class="atom"></span>
@@ -670,58 +636,6 @@
     })();
   }
 
-  // Side graph: thin horizontal lines along the y-axis; their lengths trace a smooth bell curve that peaks at the scroll
-  // position and swells with scroll speed. Springs keep every change smooth.
-  (function () {
-    var scrollRange = document.getElementById('scrollgraph-range');
-    var linesG = document.getElementById('sg-lines');
-    if (!scrollRange || !linesG) return;
-    var scrollWrap = document.querySelector('.scrollgraph');
-    var LINES = 64, base = 8, sigma = 100, step = 1000 / LINES, ls = [];
-    for (var li = 0; li < LINES; li++) {
-      var ln = document.createElementNS('http://www.w3.org/2000/svg', 'line'), yy = (step * (li + 0.5)).toFixed(1);
-      ln.setAttribute('class', 'sg-line'); ln.setAttribute('x1', 60 - base); ln.setAttribute('x2', 60 - base - 3);
-      ln.setAttribute('y1', yy); ln.setAttribute('y2', yy); linesG.appendChild(ln); ls.push(ln);
-    }
-    function maxScroll() { return Math.max(document.documentElement.scrollHeight - window.innerHeight, 1); }
-    var peak = 0, peakV = 0, amp = 24, ampV = 0, peakT = 0, ampT = 24, raf = 0, last = 0;
-    function draw() {
-      for (var i = 0; i < LINES; i++) {
-        var dy = step * (i + 0.5) - peak, g = Math.exp(-(dy * dy) / (2 * sigma * sigma));
-        ls[i].setAttribute('x2', (60 - base - 3 - amp * g).toFixed(2));
-        ls[i].style.opacity = (0.3 + 0.7 * g).toFixed(2);
-      }
-    }
-    function spring(x, v, target, w, dt) {
-      var e = Math.exp(-w * dt), d = x - target, j = v + w * d;
-      return [target + (d + j * dt) * e, (v - j * w * dt) * e];
-    }
-    function frame(t) {
-      var dt = Math.min(Math.max((t - last) / 1000, 0), 0.05), a, b;
-      last = t; a = spring(peak, peakV, peakT, 22, dt); b = spring(amp, ampV, ampT, 14, dt);
-      peak = a[0]; peakV = a[1]; amp = b[0]; ampV = b[1]; draw();
-      raf = (Math.abs(peak - peakT) > 0.3 || Math.abs(peakV) > 0.5 || Math.abs(amp - ampT) > 0.05 || Math.abs(ampV) > 0.05) ? requestAnimationFrame(frame) : 0;
-    }
-    function start() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
-    var lastY = window.scrollY, lastT = performance.now(), idleTimer = null;
-    function syncFromScroll() {
-      var y = window.scrollY, frac = Math.min(Math.max(y / maxScroll(), 0), 1);
-      peakT = frac * 1000; scrollRange.value = Math.round(frac * 1000);
-      if (reduceMotion) { peak = peakT; amp = 24; draw(); return; }
-      var now = performance.now(), v = Math.abs(y - lastY) / Math.max(now - lastT, 1);
-      lastY = y; lastT = now; ampT = Math.min(24 + v * 46, 46);
-      scrollWrap.classList.add('is-active'); clearTimeout(idleTimer);
-      idleTimer = setTimeout(function () { scrollWrap.classList.remove('is-active'); ampT = 24; start(); }, 260);
-      start();
-    }
-    var tickRaf = null;
-    window.addEventListener('resize', syncFromScroll);
-    window.addEventListener('scroll', function () {
-      if (!tickRaf) tickRaf = requestAnimationFrame(function () { syncFromScroll(); tickRaf = null; });
-    }, { passive: true });
-    scrollRange.addEventListener('input', function () { window.scrollTo(0, (scrollRange.value / 1000) * maxScroll()); });
-    peak = peakT = Math.min(Math.max(window.scrollY / maxScroll(), 0), 1) * 1000; draw(); syncFromScroll();
-  })();
 </script>
 <script>
 // Header name: one soft light glides through the letters on load; after that it only appears where your cursor
@@ -816,5 +730,7 @@
   });
 })();
 </script>
+<script src="assets/scrollgraph.js" defer></script>
+<script src="assets/premium.js" defer></script>
 </body>
 </html>
