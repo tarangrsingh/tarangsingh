@@ -43,7 +43,7 @@ window.IDEAS = {
     {
       id: 'physics', label: 'Physics', prompt: 'How the universe behaves.',
       children: [
-        { id: 'quantum', label: 'Quantum', prompt: 'What does it mean for something to be undecided until it is observed?' },
+        { id: 'quantum', label: 'Quantum Mechanics', prompt: 'What does it mean for something to be undecided until it is observed?' },
         { id: 'spacetime', label: 'Spacetime', prompt: 'Is time something we move through, or a story we tell about change?' },
         { id: 'entropy', label: 'Entropy', prompt: 'Why does time have a direction?' },
         {
