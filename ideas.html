@@ -4,14 +4,14 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Ideas — Tarang Singh</title>
-<meta name="description" content="Ideas, notes, and things Tarang Singh is thinking about. Under construction." />
+<meta name="description" content="An interactive map of ideas: from God, through physics, mathematics, chemistry, biology, philosophy and metaphysics, to death. By Tarang Singh." />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Ideas &mdash; Tarang Singh" />
-<meta property="og:description" content="Ideas, notes, and things Tarang Singh is thinking about. Under construction." />
+<meta property="og:description" content="An interactive map of ideas: from God, through physics, mathematics, chemistry, biology, philosophy and metaphysics, to death. By Tarang Singh." />
 <meta property="og:site_name" content="Tarang Singh" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Ideas &mdash; Tarang Singh" />
-<meta name="twitter:description" content="Ideas, notes, and things Tarang Singh is thinking about. Under construction." />
+<meta name="twitter:description" content="An interactive map of ideas: from God, through physics, mathematics, chemistry, biology, philosophy and metaphysics, to death. By Tarang Singh." />
 <meta name="theme-color" content="#08111f" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#d9e7ff" media="(prefers-color-scheme: light)">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -348,56 +348,10 @@
                 linear-gradient(rgba(var(--bg-rgb), 0.2) 0%, rgba(var(--bg-rgb), 0.02) 16%, rgba(var(--bg-rgb), 0.02) 68%, rgba(var(--bg-rgb), 0.48) 100%);
   }
 
-  /* Ideas feed: filter pills, short notes, expandable essays */
-  .idea-filter { display: flex; gap: 8px; margin: 22px 0 26px; flex-wrap: wrap; }
-  .idea-pill {
-    padding: 7px 15px; border-radius: 999px; font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer;
-    color: var(--muted); background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    -webkit-backdrop-filter: blur(14px) saturate(180%); backdrop-filter: blur(14px) saturate(180%);
-    transition: color 0.2s ease, border-color 0.2s ease;
-  }
-  html.light-mode .idea-pill { background: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.18)); border-color: rgba(255, 255, 255, 0.6); }
-  .idea-pill.is-active { color: var(--copper-light); border-color: var(--copper); }
-  .idea-feed { display: flex; flex-direction: column; gap: 14px; max-width: 640px; }
-  .idea-card {
-    position: relative; overflow: hidden; isolation: isolate; padding: 18px 20px; border-radius: 14px; text-align: left;
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 18px -10px rgba(0, 0, 0, 0.35);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-  }
-  html.light-mode .idea-card { background: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.18)); border-color: rgba(255, 255, 255, 0.6); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 6px 16px -10px rgba(20, 20, 30, 0.25); }
-  .idea-card::after {
-    content: ""; position: absolute; left: -15%; right: -15%; top: -55%; height: 65%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 75%); transform: rotate(-8deg); pointer-events: none;
-  }
-  .idea-card.is-hidden { display: none; }
-  .idea-tag {
-    display: inline-block; margin-bottom: 8px; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700;
-    letter-spacing: 0.04em; text-transform: uppercase; color: var(--link); border: 1px solid var(--rule);
-  }
-  .idea-note p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--text); }
-  .idea-essay { width: 100%; font-family: var(--font); cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .idea-essay h3 { margin: 0 0 6px; font-size: 17px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
-  .idea-teaser { margin: 0; font-size: 15px; line-height: 1.6; color: var(--muted); }
-  .idea-chevron { width: 7px; height: 7px; border-right: 1.6px solid var(--muted); border-bottom: 1.6px solid var(--muted); transform: rotate(45deg); transition: transform 0.25s ease; }
-  .idea-essay[aria-expanded="true"] .idea-chevron { transform: rotate(-135deg); }
-  .idea-details-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s ease; }
-  .idea-essay[aria-expanded="true"] .idea-details-wrap { grid-template-rows: 1fr; }
-  .idea-details-inner { overflow: hidden; }
-  .idea-details-inner p { margin: 12px 0 0; font-size: 15px; line-height: 1.65; color: var(--text); }
-  @media (prefers-reduced-motion: reduce) { .idea-details-wrap { transition: none; } }
-
-  .idea-source { display: inline-block; margin-top: 10px; font-size: 12px; font-weight: 600; color: var(--muted); text-decoration: none; }
-  .idea-source:hover, .idea-source:focus-visible { color: var(--link); text-decoration: underline; }
-  .idea-quotes-label { margin: 0 0 8px; font-size: 15px; line-height: 1.6; color: var(--text); }
-  .idea-quotes { margin: 0; padding-left: 19px; font-size: 14.5px; line-height: 1.65; color: var(--text); }
-  .idea-quotes li { margin: 0 0 5px; font-style: italic; }
 </style>
 <link rel="stylesheet" href="assets/scrollgraph.css">
 <link rel="stylesheet" href="assets/premium.css">
+<link rel="stylesheet" href="assets/ideas.css">
 <script>
   (function () {
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
@@ -468,68 +422,24 @@
   </div>
 </header>
 
-<div class="wrap">
-  <main>
-    <h1 class="page-title">Ideas</h1>
-    <p class="reveal">Notes, questions, and things I&rsquo;m turning over &mdash; physics and philosophy, mostly, and the loose threads between them.</p>
-
-    <div class="idea-filter reveal" role="group" aria-label="Filter by topic">
-      <button type="button" class="idea-pill is-active" data-filter="all">All</button>
-      <button type="button" class="idea-pill" data-filter="physics">Physics</button>
-      <button type="button" class="idea-pill" data-filter="philosophy">Philosophy</button>
+<main class="space" id="space" aria-label="Map of ideas">
+  <h1 class="space-title">Ideas</h1>
+  <div class="space-stage" id="space-stage">
+    <canvas class="space-canvas" id="space-canvas" aria-hidden="true"></canvas>
+    <div class="space-nodes" id="space-nodes"></div>
+  </div>
+  <aside class="idea-panel" id="idea-panel" aria-live="polite" aria-label="Idea details">
+    <div class="ip-intro">
+      <p class="ip-kicker">Ideas</p>
+      <h2 class="ip-title" id="ip-intro-title">A map of ideas</h2>
+      <p class="ip-text" id="ip-intro-text">Everything begins from one point. From there it branches &mdash; into the sciences, and into the questions that fit in none of them &mdash; until every branch reaches the same edge.</p>
+      <p class="ip-hint" id="ip-intro-hint">Touch any point to open it. Esc returns to the whole map.</p>
+      <noscript><p class="ip-noscript">This map is drawn with JavaScript. My writing also lives on the blog: <a href="https://quarkbyquark.blogspot.com" rel="noopener">Quark by Quark</a>.</p></noscript>
     </div>
-
-    <div class="idea-feed reveal">
-
-      <div class="idea-card idea-note" data-tag="physics">
-        <span class="idea-tag">Physics</span>
-        <p>I think all the models describing nuclear physics are a shot in the dark which are not correct, there are too many errors and corrections at every step which makes it hard to realize that it is what it is, further the framework has multiple modifications at every step which makes it less and less fundamental and more and more iterative, so there is a big gap in this sector.</p>
-        <a class="idea-source" href="https://quarkbyquark.blogspot.com/2026/09/about-nuclear-physics.html" target="_blank" rel="noopener">from the blog &middot; Sep 16, 2026</a>
-      </div>
-
-      <button type="button" class="idea-card idea-essay idea-expand" data-tag="philosophy" aria-expanded="false">
-        <span class="idea-tag">Philosophy</span>
-        <h3>Understanding God (T&ndash;3) <span class="idea-chevron" aria-hidden="true"></span></h3>
-        <p class="idea-teaser">Over the course of time I have observed that god and every deed that he does to us humans is in the form of the mixture of deism and absurdism&hellip;</p>
-        <div class="idea-details-wrap"><div class="idea-details-inner">
-          <p>He hides himself by making us feel that things are absurd enough, but they are not &mdash; everything is intertwined, and it takes the utmost amount of conscience and a third-person view to understand his deeds, but the closest theory is deism. Religion is a cage which traps you, and most people stay trapped; more ironically, religion does the exact opposite of what it says it should &mdash; it pulls you away from thinking about god with your own mind, and instead makes you believe things which are foretold. God has to be understood and thought about, not believed and worshipped &mdash; he made us conscious so that we could think about him. Every day I reach closer to understanding him, and go farther apart from human indecencies; my emotional understanding is growing exponentially, I am learning a lot about how humans think and act, and love is a blessing.</p>
-          <a class="idea-source" href="https://quarkbyquark.blogspot.com/2025/05/the-mixture-of-absurdism-and-deism-1.html" target="_blank" rel="noopener">from the blog &middot; May 30, 2025</a>
-        </div></div>
-      </button>
-
-      <div class="idea-card idea-note" data-tag="philosophy">
-        <span class="idea-tag">Philosophy</span>
-        <p class="idea-quotes-label">Quotes I&rsquo;ve come across which have left a deep impact on me &mdash; list updates actively.</p>
-        <ul class="idea-quotes">
-          <li>The more fruit a tree bears, the more grounded it tends to become.</li>
-          <li>A rotten fruit falls by itself.</li>
-          <li>Empathy beyond boundaries is self-destruction.</li>
-          <li>A fish with a closed mouth never gets caught by a fisherman&rsquo;s hook.</li>
-          <li>A fish and a bird may fall in love, but they cannot build a home together.</li>
-        </ul>
-        <a class="idea-source" href="https://quarkbyquark.blogspot.com/2026/04/quotes-i-came-across-which-have-left.html" target="_blank" rel="noopener">from the blog &middot; updated actively</a>
-      </div>
-
-      <!-- NOTE CARD template: short, no expand. Copy this block for a new note. -->
-      <!--
-      <div class="idea-card idea-note" data-tag="physics">
-        <span class="idea-tag">Physics</span>
-        <p>Your note text.</p>
-      </div>
-      -->
-
-      <!-- ESSAY CARD template: longer, click/tap to expand. Copy this block for a new essay. -->
-      <!--
-      <button type="button" class="idea-card idea-essay idea-expand" data-tag="physics" aria-expanded="false">
-        <span class="idea-tag">Physics</span>
-        <h3>Title <span class="idea-chevron" aria-hidden="true"></span></h3>
-        <p class="idea-teaser">Opening line.</p>
-        <div class="idea-details-wrap"><div class="idea-details-inner"><p>Rest of the essay.</p></div></div>
-      </button>
-      -->
-
-    </div>
-  </main>
+    <div class="ip-detail" hidden></div>
+  </aside>
+</main>
+<div class="wrap site-footer-wrap">
   <footer class="site-footer">
     <ul class="contact">
       <li><a class="gmail" href="mailto:tarangrajeshsingh.phy25@itbhu.ac.in" aria-label="Email" title="Email"><svg viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg></a></li>
@@ -693,22 +603,8 @@
   measure(); setTimeout(function () { glint = -2; start(); }, 1200);
 })();
 </script>
-<script>
-// Ideas page: topic filter pills, and click-to-expand essay cards.
-(function () {
-  var pills = document.querySelectorAll('.idea-pill'), cards = document.querySelectorAll('.idea-card');
-  pills.forEach(function (pill) {
-    pill.addEventListener('click', function () {
-      pills.forEach(function (p) { p.classList.remove('is-active'); }); pill.classList.add('is-active');
-      var f = pill.dataset.filter;
-      cards.forEach(function (c) { c.classList.toggle('is-hidden', f !== 'all' && c.dataset.tag !== f); });
-    });
-  });
-  document.querySelectorAll('.idea-expand').forEach(function (card) {
-    card.addEventListener('click', function () { card.setAttribute('aria-expanded', card.getAttribute('aria-expanded') !== 'true'); });
-  });
-})();
-</script>
+<script src="assets/ideas-data.js" defer></script>
+<script src="assets/ideas.js" defer></script>
 <script src="assets/scrollgraph.js" defer></script>
 <script src="assets/premium.js" defer></script>
 </body>

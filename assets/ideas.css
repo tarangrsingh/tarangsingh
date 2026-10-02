@@ -1,0 +1,133 @@
+/* Ideas: a living map. God at the centre, fields branching out, every branch ending on one rim (see ideas.js). */
+
+.space {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: center; gap: 24px;
+  max-width: 1320px; margin: 0 auto; padding: 4px 84px 0 24px;
+}
+.space-title {
+  position: absolute; left: 24px; top: 18px; z-index: 3; margin: 0;
+  font: 400 clamp(1.5rem, 2.4vw, 2rem)/1.2 var(--font); letter-spacing: -0.01em; color: var(--copper-light);
+}
+.space-stage { position: relative; height: clamp(560px, calc(100vh - 76px), 880px); height: clamp(560px, calc(100svh - 76px), 880px); --u: 1; }
+/* A soft pool of shade behind the tree so labels stay legible over the photograph */
+.space-stage::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(var(--bg-rgb), 0.5), rgba(var(--bg-rgb), 0.28) 62%, transparent);
+}
+.space-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.space-nodes { position: absolute; inset: 0; }
+
+/* ---- nodes ---------------------------------------------------------------------------------------------- */
+.node {
+  position: absolute; left: 0; top: 0; width: 0; height: 0; padding: 0; margin: 0; border: 0; background: none;
+  font: inherit; color: var(--text); cursor: pointer; -webkit-tap-highlight-color: transparent;
+  opacity: 0; transition: opacity 0.5s ease; will-change: transform;
+}
+.node.is-in { opacity: 1; }
+.space.has-focus .node.is-in:not(.is-on) { opacity: 0.32; }
+.node .hit { position: absolute; left: -20px; top: -20px; width: 40px; height: 40px; border-radius: 50%; }
+.node .dot {
+  position: absolute; left: 0; top: 0; border-radius: 50%; transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.7s cubic-bezier(0.2, 1.5, 0.4, 1), box-shadow 0.3s ease, background 0.3s ease;
+}
+.node.is-in .dot { transform: translate(-50%, -50%) scale(var(--s, 1)); }
+.node:is(:hover, :focus-visible) .dot { --s: 1.35; }
+.node:focus-visible { outline: none; }
+.node:focus-visible .dot { outline: 2px solid var(--link); outline-offset: 4px; }
+
+.node--god .dot {
+  width: 20px; height: 20px; background: radial-gradient(circle at 38% 34%, #fff, var(--copper-light) 58%, var(--copper));
+  box-shadow: 0 0 0 5px var(--copper-glow), 0 0 34px 8px var(--copper-glow);
+}
+.node--disc .dot { width: 12px; height: 12px; background: var(--copper-light); box-shadow: 0 0 0 4px var(--copper-glow), 0 0 16px var(--copper-glow); }
+.node--idea .dot { width: 8px; height: 8px; background: var(--avatar-bg); border: 1.6px solid var(--copper-light); box-shadow: 0 0 10px var(--copper-glow); }
+.node--death .dot { width: 14px; height: 14px; background: #04070d; border: 1.6px solid var(--copper-light); box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.28), 0 0 18px rgba(0, 0, 0, 0.5); }
+.node.is-selected .dot { background: var(--copper-light); --s: 1.45; box-shadow: 0 0 0 5px var(--copper-glow), 0 0 26px 4px var(--copper-glow); }
+.node--death.is-selected .dot { background: #04070d; }
+.node--god.is-selected .dot { --s: 1.2; }
+
+/* ---- labels --------------------------------------------------------------------------------------------- */
+.lbl-rot { position: absolute; left: 0; top: 0; transform-origin: 0 0; pointer-events: none; }
+.lbl {
+  position: absolute; left: 0; top: 0; white-space: nowrap; pointer-events: auto; text-align: left;
+  font-family: var(--font); color: var(--muted); letter-spacing: 0.01em;
+  text-shadow: 0 1px 10px rgba(var(--bg-rgb), 0.95), 0 0 3px rgba(var(--bg-rgb), 0.9);
+  transition: color 0.25s ease, opacity 0.3s ease;
+}
+.node:is(:hover, :focus-visible, .is-selected) .lbl { color: var(--text); }
+.node.is-on .lbl { color: var(--text); }
+
+.node--idea .lbl { font-size: calc(12.5px * var(--u)); transform: translate(14px, calc(-100% - 1px)); }
+.node--idea[data-flip] .lbl { transform: translate(calc(-100% - 14px), calc(-100% - 1px)); text-align: right; }
+
+.node--disc .lbl {
+  font-size: calc(14.5px * var(--u)); font-weight: 600; color: var(--text); transform: translate(16px, -50%);
+  padding: 3px 11px; border-radius: 999px;
+  background: rgba(var(--bg-rgb), 0.5); border: 1px solid var(--rule);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); text-shadow: none;
+}
+.node--disc[data-flip] .lbl { transform: translate(calc(-100% - 16px), -50%); }
+@media (min-width: 721px) {
+  .node--disc[data-above] .lbl, .node--disc[data-above][data-flip] .lbl { transform: translate(-50%, calc(-100% - 14px)); }
+}
+
+.node--god .lbl {
+  font-size: calc(21px * var(--u)); font-weight: 600; color: var(--text); letter-spacing: 0.02em;
+  transform: translate(-50%, 26px); left: 0;
+}
+.node--death .lbl { font-size: calc(14.5px * var(--u)); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); transform: translate(-50%, 20px); }
+
+/* ---- detail panel --------------------------------------------------------------------------------------- */
+.idea-panel {
+  position: relative; z-index: 4; align-self: center; min-height: 250px; padding: 22px 24px 20px; border-radius: 18px; overflow: hidden; isolation: isolate;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 14px 34px -18px rgba(0, 0, 0, 0.6);
+}
+html.light-mode .idea-panel { background: linear-gradient(160deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.22)); border-color: rgba(255, 255, 255, 0.7); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 14px 30px -18px rgba(20, 20, 30, 0.35); }
+.idea-panel::after { content: ""; position: absolute; left: -15%; right: -15%; top: -50%; height: 60%; background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 75%); transform: rotate(-8deg); pointer-events: none; z-index: -1; }
+.idea-panel [hidden] { display: none !important; }
+.ip-view { animation: ip-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@keyframes ip-in { from { opacity: 0; transform: translateY(8px); } }
+
+.ip-kicker { margin: 0 0 6px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--copper-light); }
+.ip-title { margin: 0 0 10px; font: 600 clamp(1.25rem, 2vw, 1.5rem)/1.25 var(--font); letter-spacing: -0.01em; color: var(--text); }
+.ip-text, .ip-prompt, .ip-body p { font-size: 15px; line-height: 1.65; margin: 0 0 12px; }
+.ip-text { color: var(--text); }
+.ip-prompt { font-style: italic; color: var(--muted); }
+.ip-body p { color: var(--text); }
+.ip-list { margin: 0 0 12px; padding-left: 19px; font-size: 14.5px; line-height: 1.65; color: var(--text); }
+.ip-list li { margin: 0 0 5px; font-style: italic; }
+.ip-hint { margin: 14px 0 0; font-size: 12.5px; color: var(--muted); }
+.ip-source { display: inline-block; margin: 2px 0 12px; font-size: 12.5px; font-weight: 600; color: var(--muted); text-decoration: none; }
+.ip-source:hover, .ip-source:focus-visible { color: var(--link); text-decoration: underline; }
+.ip-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; margin: 0 0 10px; font-size: 12.5px; color: var(--muted); }
+.ip-crumbs button { padding: 0; border: 0; background: none; font: inherit; color: var(--muted); cursor: pointer; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 0.2em; transition: color 0.2s, text-decoration-color 0.2s; }
+.ip-crumbs button:hover, .ip-crumbs button:focus-visible { color: var(--link); text-decoration-color: currentColor; }
+.ip-back {
+  margin-top: 4px; padding: 7px 14px; border-radius: 999px; font: 600 12.5px var(--font); cursor: pointer; color: var(--copper-light);
+  background: rgba(var(--bg-rgb), 0.35); border: 1px solid var(--rule); transition: border-color 0.2s, color 0.2s;
+}
+.ip-back:hover, .ip-back:focus-visible { border-color: var(--copper); color: var(--text); }
+.ip-noscript { font-size: 14px; color: var(--muted); }
+
+.site-footer-wrap { margin-top: 8px; }
+
+/* ---- smaller screens: the panel drops below the map; idea labels only appear for the branch in focus -------- */
+@media (max-width: 960px) {
+  .space { grid-template-columns: 1fr; gap: 6px; padding: 4px 14px 0; }
+  .space-title { position: static; padding: 18px 8px 0; }
+  .space-stage { height: calc(min(100vw - 28px, 660px) * 1.12 + 76px); width: min(100%, 660px); margin: 0 auto; }
+  .idea-panel { width: min(100%, 560px); margin: 0 auto 18px; }
+}
+@media (max-width: 720px) {
+  .node--disc .lbl { padding: 2px 9px; font-size: calc(13px * var(--u)); }
+  .node--idea .lbl { opacity: 0; }
+  .node--idea.is-on .lbl { opacity: 1; }
+  .node--god .dot { width: 17px; height: 17px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node, .node .dot, .lbl, .ip-view { transition: none; animation: none; }
+}
