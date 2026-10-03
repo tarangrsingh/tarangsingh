@@ -19,7 +19,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="assets/inter-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/bg-26e2d7b5.jpg" as="image">
+<link rel="preload" href="assets/bg-26e2d7b5.jpg" as="image" fetchpriority="high">
 <style>
   /* Inter (variable, latin) embedded so it always loads */
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(assets/inter-var.woff2) format('woff2'); }
@@ -404,7 +404,7 @@
   /* Background photo: prism light streaks (HD) */
   .photo-bg {
     position: fixed; inset: 0; z-index: -1;
-    background-image: url(assets/bg-26e2d7b5.jpg);
+    background-image: url(assets/bg-26e2d7b5.jpg), url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAWACgDASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAMEBgcF/8QAJhAAAQQBAwQBBQAAAAAAAAAAAQACAwQFERIhEyIxUUEUUnGBsf/EABgBAAIDAAAAAAAAAAAAAAAAAAIDAQQF/8QAHREAAgIDAQEBAAAAAAAAAAAAAAERIQIDEjETYf/aAAwDAQACEQMRAD8Ax2GfIyR8QB2yjaVHbx8scx1adCfS9dk4xl97HQggHTwtTVt0MnC3fCOoPI9q0tNNNgzKVWc2NR7HaPaWqWKIhjiX7Wf1dRv4XH28UXRkNkaODpz+Cua5CpLBK5pHaD5HhLeEeBPGLXhTjmET+Bqihc0+kSWrI6N/nMW12VkYXDu8FRYqk6C8yMP5J4IRFp6kvnP4DtvaXsvcnoWtrSP18qt9bRuV3C1S7vujOhRFGxRqkV3l3ipMvdNPqObHFIB8akIiLOTmy1tSWVH/2Q==);
     background-size: cover; background-position: 82% 32%;
   }
   .photo-bg::after {
@@ -420,9 +420,10 @@
   .vna svg { position: absolute; inset: 3px 0; width: 100%; height: calc(100% - 6px); overflow: visible; }
   .vna-grid line { stroke: var(--rule); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: 0.7; }
   .vna-trace, .vna-ghost { fill: none; stroke-width: 1.6; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-  .vna-trace { stroke: var(--copper-light); filter: drop-shadow(0 0 3px var(--copper-glow)); }
+  .vna-trace { stroke: var(--copper-light); }
   .vna-ghost { stroke: var(--muted); opacity: 0.25; }
-  .vna-head { fill: var(--copper-light); filter: drop-shadow(0 0 4px var(--copper)); }
+  .vna-head { fill: var(--copper-light); opacity: 0; transition: opacity 0.3s ease; }
+  .vna.is-sweeping .vna-head { opacity: 1; }
   .vna-mk { fill: none; stroke: var(--text); stroke-width: 1.5; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity 0.2s ease; }
   .vna-vx, .vna-hx { stroke: var(--copper); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity 0.2s ease; }
   .vna.is-probing .vna-mk, .vna.is-probing .vna-vx, .vna.is-probing .vna-hx { opacity: 0.9; }

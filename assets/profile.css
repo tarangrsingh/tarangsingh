@@ -57,7 +57,9 @@ html.lb-open { overflow: hidden; }
 .lb-close svg { width: 16px; height: 16px; }
 
 @media (prefers-reduced-motion: no-preference) {
-  .profile { animation: enter-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s backwards; }
+  /* slide only, no fade: the photo is visible from the very first frame */
+  @keyframes profile-in { from { transform: translateY(10px); } }
+  .profile { animation: profile-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
 }
 @media (prefers-reduced-motion: reduce) {
   .profile-photo, .profile-photo::after, .lb-close, .lb-backdrop { transition: none; }

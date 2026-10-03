@@ -1,5 +1,5 @@
 // Lab layer, shared by every page:
-//  1. Instant-feeling navigation: internal pages are prefetched the moment you show intent (hover, focus, touch).
+//  1. Light prefetching: hover a link and its page + photo load ahead; other photos warm up when idle on fast networks.
 //  2. Command palette: Ctrl/Cmd + K or "/" jumps anywhere on the site from the keyboard.
 //  3. Pointer light on cards (scholastic / research), rAF-throttled.
 //  4. A hello for anyone who opens DevTools.
@@ -8,23 +8,35 @@
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ---- 1. prefetch ------------------------------------------------------------------------------------------
-  // Chromium: speculation rules prerender on hover (moderate). Elsewhere: a plain <link rel=prefetch> on intent.
-  if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) {
-    var sr = doc.createElement('script'); sr.type = 'speculationrules';
-    sr.textContent = JSON.stringify({ prerender: [{ where: { href_matches: '/*.html' }, eagerness: 'moderate' }],
-      prefetch: [{ where: { href_matches: '/*.html' }, eagerness: 'moderate' }] });
-    doc.head.appendChild(sr);
+  // Kept deliberately light: no prerendering (it ran whole pages in the background and made scrolling heavy on
+  // phones). With a mouse, resting on a link for a moment fetches that page's HTML and background photo. On a fast,
+  // non-metered connection the other pages' photos are fetched once this page is idle, so they appear instantly later.
+  var BG = { 'index.html': 'bg-8a68d32a.jpg', 'scholastic.html': 'bg-416785b6.jpg', 'star.html': 'bg-416785b6.jpg',
+    'research.html': 'bg-26e2d7b5.jpg', 'contact.html': 'bg-26e2d7b5.jpg', 'ideas.html': 'bg-fa5bc326.jpg' };
+  var base = location.href.replace(/[^/]*([?#].*)?$/, ''), done = {};
+  function img(file) {
+    if (!file || done[file]) return; done[file] = 1;
+    var l = doc.createElement('link'); l.rel = 'prefetch'; l.as = 'image'; l.href = base + 'assets/' + file; doc.head.appendChild(l);   // cache only, no decode
   }
-  var fetched = {};
-  function warm(e) {
-    var a = e.target.closest && e.target.closest('a[href]');
-    if (!a || a.target === '_blank' || a.origin !== location.origin || !/\.html?$/.test(a.pathname) || a.pathname === location.pathname) return;
-    if (fetched[a.href]) return; fetched[a.href] = 1;
+  function page(a) {
+    if (done[a.href]) return; done[a.href] = 1;
     var l = doc.createElement('link'); l.rel = 'prefetch'; l.href = a.href; doc.head.appendChild(l);
+    img(BG[a.pathname.split('/').pop()]);
   }
-  doc.addEventListener('pointerover', warm, { passive: true });
-  doc.addEventListener('focusin', warm);
-  doc.addEventListener('touchstart', warm, { passive: true });
+  var dwell = null;
+  doc.addEventListener('mouseover', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    clearTimeout(dwell);
+    if (!a || a.target === '_blank' || a.origin !== location.origin || !/\.html?$/.test(a.pathname) || a.pathname === location.pathname) return;
+    dwell = setTimeout(function () { page(a); }, 90);
+  }, { passive: true });
+  var net = navigator.connection;
+  if (net && !net.saveData && net.effectiveType === '4g') {
+    window.addEventListener('load', function () {
+      var go = function () { Object.keys(BG).forEach(function (k) { img(BG[k]); }); };
+      setTimeout(function () { (window.requestIdleCallback || setTimeout)(go, { timeout: 3000 }); }, 1500);
+    });
+  }
 
   // ---- 2. command palette -----------------------------------------------------------------------------------
   var ITEMS = [

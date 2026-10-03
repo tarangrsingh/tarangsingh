@@ -5,7 +5,7 @@
 @media (prefers-reduced-motion: reduce) { .brand-star .star-icon { animation: none; } }
 
 /* Text rendering: crisper Inter, numbers that don't jitter while they change */
-body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 .sx-num, .sg-readout, .update-date, .sx-when { font-variant-numeric: tabular-nums; }
 
 /* Tap feedback without the grey iOS flash */
@@ -60,21 +60,10 @@ kbd, .kbd {
 .sx-photos img { transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.25s ease, filter 0.35s ease; }
 @media (hover: hover) { .sx-photos img:hover { transform: scale(1.02); border-color: var(--copper); filter: saturate(1.1); } }
 
-/* ---------- Education / experience cards: tidy date pill on phones, clearer "opens" affordance ---------- */
+/* ---------- Education / experience cards: tidy date pill on phones, list items ease in when opened ---------- */
 @media (max-width: 560px) {
   .sx-head .sx-when { margin-left: 66px; }
 }
-.sx-card.sx-expand .sx-chevron {
-  width: 20px; height: 20px; margin-left: 6px; vertical-align: -4px; border: 1px solid var(--rule); border-radius: 50%;
-  transform: none; position: relative; transition: border-color 0.2s ease, background 0.2s ease, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.sx-card.sx-expand .sx-chevron::before {
-  content: ""; position: absolute; left: 50%; top: 45%; width: 6px; height: 6px; margin: -3px 0 0 -3px;
-  border-right: 1.6px solid var(--copper-light); border-bottom: 1.6px solid var(--copper-light); transform: rotate(45deg);
-}
-.sx-card.sx-expand.is-open .sx-chevron { transform: rotate(180deg); }
-.sx-card.sx-expand:is(:hover, :focus-visible) .sx-chevron { border-color: var(--copper); background: var(--copper-glow); }
-.sx-card.sx-expand:focus-visible { outline: 2px solid var(--copper); outline-offset: 3px; }
 .sx-details-inner .sx-list li { opacity: 0; transform: translateX(-6px); transition: opacity 0.35s ease, transform 0.35s ease; }
 .sx-card.is-open .sx-details-inner .sx-list li { opacity: 1; transform: none; }
 .sx-card.is-open .sx-list li:nth-child(2) { transition-delay: 0.05s; }

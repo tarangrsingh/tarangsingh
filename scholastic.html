@@ -19,7 +19,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="assets/inter-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/bg-416785b6.jpg" as="image">
+<link rel="preload" href="assets/bg-416785b6.jpg" as="image" fetchpriority="high">
 <style>
   /* Inter (variable, latin) embedded so it always loads */
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(assets/inter-var.woff2) format('woff2'); }
@@ -390,7 +390,7 @@
   /* Background photo: Starry Night (HD) */
   .photo-bg {
     position: fixed; inset: 0; z-index: -1;
-    background-image: url(assets/bg-416785b6.jpg);
+    background-image: url(assets/bg-416785b6.jpg), url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAgACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAUCAwQBBv/EACMQAAIBBAICAwEBAAAAAAAAAAECAwAEERIhMQUTQVFhInH/xAAYAQEAAwEAAAAAAAAAAAAAAAACAAMEAf/EABsRAQEAAwADAAAAAAAAAAAAAAEAAhESMUFR/9oADAMBAAIRAxEAPwBLLtDbPbEDXOckc1ZHFMkh0ZX2UZbHFar11W0lcKSVH4cVXZPLdwKqxkx6gFh3Wno3U+qo28nsUto6g8qDxUlgaST2LHpDnB/K0/zG2NAV/KiEYKcMdTzimR3N1sbYQgagng5+6KqgguDGoaUJH9GisXLiu8t1o78Ei8k0JsJPS52zyM981HwflltUMUhABHBpZMpMZYA91kzg9U3LbQL0xu7V9mVSxznH3XE8n8LbrleiWpNDKwTrGOqmrSkkt0PkVZ0MeZncNPegPLNoAeFSisK3DcKHz/gorinyQN//2Q==);
     background-size: cover; background-position: 80% 35%;
   }
   .photo-bg::after {
@@ -405,6 +405,13 @@
     background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03)), rgba(var(--bg-rgb), 0.42);
     border: 1px solid rgba(255, 255, 255, 0.24);
     -webkit-backdrop-filter: blur(16px) saturate(170%); backdrop-filter: blur(16px) saturate(170%);
+  }
+  /* The seven stat tiles skip the live blur (it is the costliest thing to scroll on phones); a deeper tint reads the same */
+  .sx-stat {
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02)), rgba(var(--bg-rgb), 0.7);
+  }
+  .sx-stat, .sx-card {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -8px 14px -10px rgba(255, 255, 255, 0.08), 0 6px 18px -10px rgba(0, 0, 0, 0.4);
   }
   html.light-mode .sx-stat, html.light-mode .sx-card {
@@ -425,8 +432,6 @@
   .sx-plot .pl-base { stroke: var(--rule); stroke-width: 1; vector-effect: non-scaling-stroke; }
   .sx-plot .pl-tick { stroke: var(--muted); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: 0.5; }
   .sx-plot .pl-fill { fill: var(--copper); opacity: 0.6; }
-  .sx-expand .sx-title h3 { display: flex; align-items: center; gap: 8px; }
-  .sx-expand .sx-title h3 .sx-chevron { flex: none; margin: 0 !important; vertical-align: 0 !important; }
   .sx-stat .sx-pct {
     position: absolute; bottom: 52px; right: 14px; padding: 1px 7px; border-radius: 999px; z-index: 2;
     font: 600 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--copper-light);
@@ -719,8 +724,8 @@
 })();
 </script>
 <script>
-// Numbers "collapse" into place when they scroll into view: each digit flickers through random values and locks in,
-// left to right, like a measurement settling. Every rank tile also gets a small distribution plot showing where it sits.
+// Numbers "collapse" into place when they scroll into view: each digit flickers briefly and locks in, left to right,
+// like a measurement settling. The real value is shown at all other times (never random digits at rest). Every rank tile also gets a small distribution plot showing where it sits.
 (function () {
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll('[data-to]').forEach(function (el) {
@@ -729,10 +734,9 @@
     function noise(lockUpTo) {
       return final.split('').map(function (ch, i) { return (i < lockUpTo || ch === '.') ? ch : String(Math.floor(Math.random() * 10)); }).join('');
     }
-    el.textContent = noise(0);
     new IntersectionObserver(function (en, ob) {
       if (!en[0].isIntersecting || done) return; done = true; ob.disconnect();
-      var t0 = performance.now(), D = 950, lastSwap = 0;
+      var t0 = performance.now(), D = 700, lastSwap = 0;
       (function step(now) {
         var t = Math.min((now - t0) / D, 1);
         if (now - lastSwap > 45 || t === 1) { lastSwap = now; el.textContent = t < 1 ? noise(Math.floor(Math.pow(t, 1.6) * final.length)) : final; }

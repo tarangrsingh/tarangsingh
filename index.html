@@ -19,7 +19,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="assets/inter-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/bg-8a68d32a.jpg" as="image">
+<link rel="preload" href="assets/bg-8a68d32a.jpg" as="image" fetchpriority="high">
 <style>
   /* Inter (variable, latin) embedded so it always loads */
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(assets/inter-var.woff2) format('woff2'); }
@@ -469,7 +469,7 @@
   /* Background photo: temple at sunset (HD, correct source) */
   .photo-bg {
     position: fixed; inset: 0; z-index: -1;
-    background-image: url(assets/bg-8a68d32a.jpg);
+    background-image: url(assets/bg-8a68d32a.jpg), url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAWACgDASIAAhEBAxEB/8QAGgABAAIDAQAAAAAAAAAAAAAAAAMGAQQFAv/EACgQAAIBAwMDAgcAAAAAAAAAAAECAAMEEQUSIRMxYUGBBhQiI0Jxkf/EABcBAQEBAQAAAAAAAAAAAAAAAAABAgT/xAAXEQEBAQEAAAAAAAAAAAAAAAAAEQEC/9oADAMBAAIRAxEAPwCxhgexmZVamsXCPg7QD6w+tVqeCai4nfcaXDot0Orkbc9s8zka3Sp1VtRUUN95R7SVbxX+Hjcq26r6nMr9XUa1yEJ/BwwmLUa+rWtOnp9JkXaSzA4/cSXUCXslUkHDnjxEnWDgVazlcNyPM8dbOAQCPMRMUdA67dCw+U+kU+3A5mmL2tnG8/wREUSJd12HDr7rERLR/9k=);
     background-size: cover; background-position: 64% 40%;
   }
   .photo-bg::after {
@@ -590,9 +590,6 @@
   }
   html.js-tilt .tab-card:active { transform: perspective(700px) translateY(-1px) scale(0.97); transition: transform 0.12s ease; }
 
-  /* Header wave answers to scroll speed: scroll fast and the swell grows, then settles (see script) */
-  .wave-mark .wave-path { transform: scaleY(calc(1 + var(--swell, 0))); transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
-  .wave-mark:hover svg .wave-path { transform: scaleY(calc(1.7 + var(--swell, 0))); }
 </style>
 <link rel="stylesheet" href="assets/scrollgraph.css">
 <link rel="stylesheet" href="assets/premium.css">
@@ -963,28 +960,6 @@
     })();
   }
 
-</script>
-<script>
-// Header wave ("tarang" = wave): its amplitude follows how fast you scroll, eased so it swells and settles like water.
-(function () {
-  var mark = document.querySelector('.wave-mark');
-  if (!mark || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var lastY = window.scrollY, lastT = performance.now(), swell = 0, target = 0, raf = 0, prev = 0;
-  function frame(t) {
-    var dt = Math.min(Math.max((t - prev) / 1000, 0), 0.05); prev = t;
-    target *= Math.exp(-dt / 0.35);                       // the push fades
-    swell += (target - swell) * (1 - Math.exp(-dt / 0.12));
-    mark.style.setProperty('--swell', swell.toFixed(3));
-    raf = (swell > 0.004 || target > 0.004) ? requestAnimationFrame(frame) : 0;
-    if (!raf) mark.style.setProperty('--swell', '0');
-  }
-  window.addEventListener('scroll', function () {
-    var now = performance.now(), v = Math.abs(window.scrollY - lastY) / Math.max(now - lastT, 1);
-    lastY = window.scrollY; lastT = now;
-    target = Math.min(Math.max(target, v * 0.45), 1.1);
-    if (!raf) { prev = now; raf = requestAnimationFrame(frame); }
-  }, { passive: true });
-})();
 </script>
 <script>
 // Explore toggle: a small 4-square glyph that morphs into an X, showing/hiding the tab grid.

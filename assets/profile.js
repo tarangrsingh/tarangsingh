@@ -34,6 +34,8 @@
   var warmed = false;
   function warm() { if (!warmed) { warmed = true; var i = new Image(); i.src = LARGE; } }
   thumb.addEventListener('pointerenter', warm); thumb.addEventListener('focus', warm); thumb.addEventListener('touchstart', warm, { passive: true });
+  // ...and fetch it anyway once the page has settled, so a tap on a phone opens it with no wait.
+  window.addEventListener('load', function () { setTimeout(warm, 1200); });
 
   // ---- enlarged view ----------------------------------------------------------------------------------------
   var lb, fig, closeBtn, anim = null, state = 'closed', openedAt = 0;   // closed | opening | open | closing
