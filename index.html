@@ -578,9 +578,25 @@
   .tab-grid-wrap > .tab-grid { overflow: hidden; min-height: 0; }
   @media (prefers-reduced-motion: reduce) { .tab-grid-wrap, .tabs-toggle .tt-sq { transition: none; } }
   .idea-wide { grid-column: 1 / -1; }
+
+  /* Smooth tilt (see script): JS eases these variables every frame, so the transform itself must not also transition */
+  html.js-tilt .tab-card, html.js-tilt .tab-card:is(.is-hover, :focus-visible) {
+    transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.2s ease;
+  }
+  html.js-tilt .tab-card:focus-visible:not(.is-hover) { --lift: -3px; --is: 1.12; }
+  html.js-tilt .tab-card .tab-icon-svg, html.js-tilt .tab-card:is(.is-hover, :focus-visible) .tab-icon-svg {
+    transform: translate(var(--ix, 0px), var(--iy, 0px)) scale(var(--is, 1)); transition: none;
+  }
+  html.js-tilt .tab-card:active { transform: perspective(700px) translateY(-1px) scale(0.97); transition: transform 0.12s ease; }
+
+  /* Header wave answers to scroll speed: scroll fast and the swell grows, then settles (see script) */
+  .wave-mark .wave-path { transform: scaleY(calc(1 + var(--swell, 0))); transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .wave-mark:hover svg .wave-path { transform: scaleY(calc(1.7 + var(--swell, 0))); }
 </style>
 <link rel="stylesheet" href="assets/scrollgraph.css">
 <link rel="stylesheet" href="assets/premium.css">
+<link rel="stylesheet" href="assets/lab.css">
 <link rel="stylesheet" href="assets/profile.css">
 <script>
   (function () {
@@ -735,7 +751,7 @@
             <path pathLength="1" d="M5 28h5"/><path pathLength="1" d="M54 28h5"/>
           </g>
           <path class="bulb-glass" d="M32 8c-9 0-16 7-16 15 0 6.5 3.3 10.5 7 13.3L24 42h16l1-5.7c3.7-2.8 7-6.8 7-13.3 0-8-7-15-16-15Z"/>
-          <path class="bulb-filament" d="M27 19 L32 29 L27 34 M37 19 L32 29"/>
+          <path class="bulb-filament" d="M27 38 V29 c0 -4.5 2 -4.5 2 0 c0 -4.5 2 -4.5 2 0 c0 -4.5 2 -4.5 2 0 c0 -4.5 2 -4.5 2 0 c0 -4.5 2 -4.5 2 0 V38"/>
           <rect class="bulb-base" x="25.5" y="42" width="13" height="7" rx="1.6"/>
           <path class="bulb-thread" d="M25.5 45.3h13M25.5 48.6h11"/>
         </svg>
@@ -772,30 +788,56 @@
       toggle.setAttribute('aria-label', light ? 'Switch to dark mode' : 'Switch to light mode');
     }
     sync();
-    var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    document.querySelectorAll('.tab-card').forEach(function (card) {
-      card.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') card.classList.add('is-hover'); });
-      card.addEventListener('pointerleave', function () { card.classList.remove('is-hover'); });
-      card.addEventListener('mousemove', function (e) {
-        if (!card.classList.contains('is-hover')) return;
-        var r = card.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-        var px = x / r.width - 0.5, py = y / r.height - 0.5;
-        card.style.setProperty('--mx', x + 'px');
-        card.style.setProperty('--my', y + 'px');
-        if (calm) return;
-        card.style.setProperty('--rx', (-py * 10).toFixed(1) + 'deg');
-        card.style.setProperty('--ry', (px * 10).toFixed(1) + 'deg');
-        card.style.setProperty('--ix', (px * 10).toFixed(1) + 'px');
-        card.style.setProperty('--iy', (py * 10).toFixed(1) + 'px');
-      });
-      card.addEventListener('mouseleave', function () {
-        ['--rx', '--ry', '--ix', '--iy'].forEach(function (p) { card.style.removeProperty(p); });
-      });
-    });
     toggle.addEventListener('click', function () {
       var light = document.documentElement.classList.toggle('light-mode');
       try { localStorage.setItem('theme', light ? 'light' : 'dark'); } catch (e) {}
       sync();
+    });
+  })();
+
+
+  // Explore cards: the tilt, lift and icon parallax are eased every frame toward the pointer (critically damped), so the
+  // card glides instead of snapping between mousemove events. Mouse/trackpad only; touch keeps the simple press state.
+  (function () {
+    var cards = document.querySelectorAll('.tab-card');
+    var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    cards.forEach(function (card) {
+      card.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') card.classList.add('is-hover'); });
+      card.addEventListener('pointerleave', function () { card.classList.remove('is-hover'); });
+    });
+    if (!fine || calm) {
+      cards.forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', (e.clientX - r.left) + 'px'); card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        });
+      });
+      return;
+    }
+    document.documentElement.classList.add('js-tilt');
+    var KEYS = ['rx', 'ry', 'ix', 'iy', 'lift', 'is'], UNIT = { rx: 'deg', ry: 'deg', ix: 'px', iy: 'px', lift: 'px', is: '' };
+    cards.forEach(function (card) {
+      var cur = { rx: 0, ry: 0, ix: 0, iy: 0, lift: 0, is: 1 }, tgt = { rx: 0, ry: 0, ix: 0, iy: 0, lift: 0, is: 1 }, raf = 0, last = 0;
+      function frame(t) {
+        var dt = Math.min(Math.max((t - last) / 1000, 0), 0.05), k = 1 - Math.exp(-dt / 0.085), busy = false;
+        last = t;
+        KEYS.forEach(function (key) {
+          cur[key] += (tgt[key] - cur[key]) * k;
+          if (Math.abs(tgt[key] - cur[key]) > 0.002) busy = true; else cur[key] = tgt[key];
+          card.style.setProperty('--' + key, cur[key].toFixed(3) + UNIT[key]);
+        });
+        raf = busy ? requestAnimationFrame(frame) : 0;
+      }
+      function kick() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+      card.addEventListener('pointermove', function (e) {
+        if (e.pointerType !== 'mouse') return;
+        var r = card.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+        var px = x / r.width - 0.5, py = y / r.height - 0.5;
+        card.style.setProperty('--mx', x + 'px'); card.style.setProperty('--my', y + 'px');
+        tgt.rx = -py * 10; tgt.ry = px * 10; tgt.ix = px * 10; tgt.iy = py * 10; tgt.lift = -3; tgt.is = 1.12; kick();
+      }, { passive: true });
+      card.addEventListener('pointerleave', function () { tgt.rx = tgt.ry = tgt.ix = tgt.iy = tgt.lift = 0; tgt.is = 1; kick(); });
     });
   })();
 
@@ -873,17 +915,6 @@
     revealEls.forEach(function (el) { el.classList.add('in-view'); });
   }
 
-  // Interactive timeline: click or press Enter/Space to expand a milestone
-  document.querySelectorAll('.timeline-item').forEach(function (item) {
-    function toggle() {
-      var open = item.classList.toggle('is-open');
-      item.setAttribute('aria-expanded', open);
-    }
-    item.addEventListener('click', toggle);
-    item.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-    });
-  });
 
   // Cursor stars: with a mouse/trackpad they trail the pointer; on touch they gather around the finger. One spring loop
   // drives both (no CSS transitions on movement), and the fake mouse events iOS/iPadOS fires after a tap are ignored.
@@ -934,54 +965,25 @@
 
 </script>
 <script>
-// Header name: one soft light glides through the letters on load; after that it only appears where your cursor
-// (or finger) is, with a hairline growing underneath. Letters never move. Plain text for screen readers / reduced motion.
+// Header wave ("tarang" = wave): its amplitude follows how fast you scroll, eased so it swells and settles like water.
 (function () {
-  var host = document.querySelector('.site-name');
-  if (!host || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var src = host.querySelector('.sn-text'), text = src.textContent.trim();
-  var wrap = document.createElement('span'); wrap.className = 'sn-letters'; wrap.setAttribute('aria-hidden', 'true');
-  var L = Array.from(text).map(function (ch) {
-    var s = document.createElement('span'); s.className = 'sn-l'; s.textContent = ch; wrap.appendChild(s); return s;
-  });
-  wrap.insertAdjacentHTML('beforeend', '<span class="sn-rule"></span>');
-  src.classList.add('sr-only'); host.appendChild(wrap);
-
-  var n = L.length, k = L.map(function () { return 0; });
-  var cx = [], left = 0, ptr = null, glint = null, raf = 0, last = 0;
-  function measure() {
-    left = wrap.getBoundingClientRect().left;
-    cx = L.map(function (s) { return s.offsetLeft + s.offsetWidth / 2; });
-  }
-  function toIndex(px) {                       // pointer x (px) -> fractional letter index
-    if (px <= cx[0]) return (px - cx[0]) / (cx[1] - cx[0]);
-    for (var i = 0; i < n - 1; i++) if (px <= cx[i + 1]) return i + (px - cx[i]) / (cx[i + 1] - cx[i]);
-    return n - 1 + (px - cx[n - 1]) / (cx[n - 1] - cx[n - 2]);
-  }
-  function bump(i, c, s) { var d = i - c; return Math.exp(-(d * d) / (2 * s * s)); }
+  var mark = document.querySelector('.wave-mark');
+  if (!mark || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var lastY = window.scrollY, lastT = performance.now(), swell = 0, target = 0, raf = 0, prev = 0;
   function frame(t) {
-    var dt = Math.min(Math.max((t - last) / 1000, 0), 0.05), a = 1 - Math.exp(-dt / 0.14), busy = false;
-    last = t;
-    if (glint !== null) { glint += dt * 5; if (glint > n + 3) glint = null; }
-    var pos = ptr === null ? null : toIndex(ptr);
-    for (var i = 0; i < n; i++) {
-      var tk = 0;
-      if (pos !== null) tk = 0.8 * bump(i, pos, 2.2);
-      if (glint !== null) tk = Math.max(tk, 0.7 * bump(i, glint, 1.6));
-      k[i] += (tk - k[i]) * a;
-      if (Math.abs(tk - k[i]) > 0.003) busy = true;
-      L[i].style.setProperty('--k', k[i].toFixed(3));
-    }
-    raf = (busy || ptr !== null || glint !== null) ? requestAnimationFrame(frame) : 0;
+    var dt = Math.min(Math.max((t - prev) / 1000, 0), 0.05); prev = t;
+    target *= Math.exp(-dt / 0.35);                       // the push fades
+    swell += (target - swell) * (1 - Math.exp(-dt / 0.12));
+    mark.style.setProperty('--swell', swell.toFixed(3));
+    raf = (swell > 0.004 || target > 0.004) ? requestAnimationFrame(frame) : 0;
+    if (!raf) mark.style.setProperty('--swell', '0');
   }
-  function start() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
-  function move(e) { measure(); ptr = e.clientX - left; host.classList.add('is-live'); start(); }
-  host.addEventListener('pointerenter', move);
-  host.addEventListener('pointermove', move);
-  host.addEventListener('pointerleave', function () { ptr = null; host.classList.remove('is-live'); start(); });
-  host.addEventListener('pointerdown', function () { if (glint === null) { glint = -2; start(); } });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
-  measure(); setTimeout(function () { glint = -2; start(); }, 1200);
+  window.addEventListener('scroll', function () {
+    var now = performance.now(), v = Math.abs(window.scrollY - lastY) / Math.max(now - lastT, 1);
+    lastY = window.scrollY; lastT = now;
+    target = Math.min(Math.max(target, v * 0.45), 1.1);
+    if (!raf) { prev = now; raf = requestAnimationFrame(frame); }
+  }, { passive: true });
 })();
 </script>
 <script>
@@ -997,6 +999,7 @@
 </script>
 <script src="assets/scrollgraph.js" defer></script>
 <script src="assets/premium.js" defer></script>
+<script src="assets/lab.js" defer></script>
 <script src="assets/profile.js" defer></script>
 </body>
 </html>
