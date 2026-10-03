@@ -3,6 +3,7 @@
 .space {
   position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: center; gap: 24px;
   max-width: 1320px; margin: 0 auto; padding: 4px 84px 0 24px;
+  overflow-x: hidden; overflow-x: clip;   /* hidden phone labels must not widen the page */
 }
 .space-title {
   position: absolute; left: 24px; top: 18px; z-index: 3; margin: 0;
