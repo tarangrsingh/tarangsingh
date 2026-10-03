@@ -398,9 +398,50 @@
     background: linear-gradient(to right, rgba(var(--bg-rgb), 0.72) 0%, rgba(var(--bg-rgb), 0.68) 55%, rgba(var(--bg-rgb), 0.4) 78%, rgba(var(--bg-rgb), 0.58) 100%),
                 linear-gradient(rgba(var(--bg-rgb), 0.2) 0%, rgba(var(--bg-rgb), 0.02) 16%, rgba(var(--bg-rgb), 0.02) 68%, rgba(var(--bg-rgb), 0.48) 100%);
   }
+
+  /* Liquid glass for the stat tiles and cards (matches the research page and the home tabs) */
+  .sx-stat, .sx-card {
+    overflow: hidden; isolation: isolate;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03)), rgba(var(--bg-rgb), 0.42);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    -webkit-backdrop-filter: blur(16px) saturate(170%); backdrop-filter: blur(16px) saturate(170%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -8px 14px -10px rgba(255, 255, 255, 0.08), 0 6px 18px -10px rgba(0, 0, 0, 0.4);
+  }
+  html.light-mode .sx-stat, html.light-mode .sx-card {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.22));
+    border-color: rgba(255, 255, 255, 0.65);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 6px 16px -10px rgba(20, 20, 30, 0.25);
+  }
+  @media (hover: hover) { .sx-stat { transition: border-color 0.25s ease, transform 0.25s ease; } .sx-stat:hover { border-color: var(--copper); transform: translateY(-2px); } }
+
+  /* Where each rank sits: a score distribution with the tail above the rank shaded (built in script).
+     The % tiles get a 0-100 ruler instead. */
+  .sx-plot { display: block; width: 100%; height: 30px; margin: 14px 0 4px; overflow: visible;
+    clip-path: inset(-4px 100% -4px 0); transition: clip-path 1.3s cubic-bezier(0.3, 0.7, 0.2, 1) 0.2s; }
+  .in-view .sx-plot { clip-path: inset(-4px -4px -4px 0); }
+  .sx-plot .pl-curve { fill: none; stroke: var(--muted); stroke-width: 1.2; opacity: 0.6; vector-effect: non-scaling-stroke; }
+  .sx-plot .pl-tail { fill: var(--copper); opacity: 0.6; }
+  .sx-plot .pl-mark { stroke: var(--copper-light); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+  .sx-plot .pl-base { stroke: var(--rule); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .sx-plot .pl-tick { stroke: var(--muted); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: 0.5; }
+  .sx-plot .pl-fill { fill: var(--copper); opacity: 0.6; }
+  .sx-expand .sx-title h3 { display: flex; align-items: center; gap: 8px; }
+  .sx-expand .sx-title h3 .sx-chevron { flex: none; margin: 0 !important; vertical-align: 0 !important; }
+  .sx-stat .sx-pct {
+    position: absolute; bottom: 52px; right: 14px; padding: 1px 7px; border-radius: 999px; z-index: 2;
+    font: 600 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--copper-light);
+    border: 1px solid var(--rule); background: rgba(var(--bg-rgb), 0.6);
+    opacity: 0; transform: translateY(-4px); transition: opacity 0.25s ease, transform 0.25s ease; pointer-events: none;
+  }
+  .sx-stat:is(:hover, :focus-visible, .show-pct) .sx-pct { opacity: 1; transform: none; }
+  .sx-stat[tabindex] { cursor: default; outline: none; }
+  .sx-stat:focus-visible { border-color: var(--copper); }
+  .sx-stat::after { z-index: 2; }
+  @media (prefers-reduced-motion: reduce) { .sx-plot { clip-path: none; transition: none; } }
 </style>
 <link rel="stylesheet" href="assets/scrollgraph.css">
 <link rel="stylesheet" href="assets/premium.css">
+<link rel="stylesheet" href="assets/lab.css">
 <script>
   (function () {
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
@@ -477,13 +518,13 @@
     <p class="sx-lead">Entrance-exam ranks and the academic path so far.</p>
 
     <div class="sx-stats reveal">
-      <div class="sx-stat"><div class="sx-num"><span data-to="437">437</span></div><div class="sx-lab">IIT JAM 2025</div><div class="sx-sub">Rank, out of 15,000</div></div>
-      <div class="sx-stat"><div class="sx-num"><span data-to="902">902</span></div><div class="sx-lab">IIT JAM 2024</div><div class="sx-sub">Rank, out of 15,000</div></div>
-      <div class="sx-stat"><div class="sx-num"><span data-to="343">343</span></div><div class="sx-lab">JEST</div><div class="sx-sub">Rank, out of 4,000</div></div>
-      <div class="sx-stat"><div class="sx-num"><small>Top</small><span data-to="60">60</span></div><div class="sx-lab">TIFR GS</div><div class="sx-sub">Placed in the top 60, out of 4,000</div></div>
-      <div class="sx-stat sx-span2"><div class="sx-num"><small>Top</small><span data-to="60">60</span></div><div class="sx-lab">NIUS Scholar</div><div class="sx-sub">Top 60 out of around 3,000 students across India</div></div>
-      <div class="sx-stat"><div class="sx-num"><span data-to="88.5" data-dec="1">88.5</span><small>%</small></div><div class="sx-lab">Class XII</div><div class="sx-sub">90+ in both physics and mathematics</div></div>
-      <div class="sx-stat"><div class="sx-num"><span data-to="90.66" data-dec="2">90.66</span><small>%</small></div><div class="sx-lab">Class X</div><div class="sx-sub">ICSE board</div></div>
+      <div class="sx-stat" data-rank="437" data-pool="15000"><div class="sx-num"><span data-to="437">437</span></div><div class="sx-lab">IIT JAM 2025</div><div class="sx-sub">Rank, out of 15,000</div></div>
+      <div class="sx-stat" data-rank="902" data-pool="15000"><div class="sx-num"><span data-to="902">902</span></div><div class="sx-lab">IIT JAM 2024</div><div class="sx-sub">Rank, out of 15,000</div></div>
+      <div class="sx-stat" data-rank="343" data-pool="4000"><div class="sx-num"><span data-to="343">343</span></div><div class="sx-lab">JEST</div><div class="sx-sub">Rank, out of 4,000</div></div>
+      <div class="sx-stat" data-rank="60" data-pool="4000"><div class="sx-num"><small>Top</small><span data-to="60">60</span></div><div class="sx-lab">TIFR GS</div><div class="sx-sub">Placed in the top 60, out of 4,000</div></div>
+      <div class="sx-stat sx-span2" data-rank="60" data-pool="3000"><div class="sx-num"><small>Top</small><span data-to="60">60</span></div><div class="sx-lab">NIUS Scholar</div><div class="sx-sub">Top 60 out of around 3,000 students across India</div></div>
+      <div class="sx-stat" data-pct="88.5"><div class="sx-num"><span data-to="88.5" data-dec="1">88.5</span><small>%</small></div><div class="sx-lab">Class XII</div><div class="sx-sub">90+ in both physics and mathematics</div></div>
+      <div class="sx-stat" data-pct="90.66"><div class="sx-num"><span data-to="90.66" data-dec="2">90.66</span><small>%</small></div><div class="sx-lab">Class X</div><div class="sx-sub">ICSE board</div></div>
     </div>
     <div class="sx-cards reveal" style="margin:0 0 22px">
       <div class="sx-card reveal">
@@ -577,17 +618,6 @@
     revealEls.forEach(function (el) { el.classList.add('in-view'); });
   }
 
-  // Interactive timeline: click or press Enter/Space to expand a milestone
-  document.querySelectorAll('.timeline-item').forEach(function (item) {
-    function toggle() {
-      var open = item.classList.toggle('is-open');
-      item.setAttribute('aria-expanded', open);
-    }
-    item.addEventListener('click', toggle);
-    item.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-    });
-  });
 
   // Cursor stars: with a mouse/trackpad they trail the pointer; on touch they gather around the finger. One spring loop
   // drives both (no CSS transitions on movement), and the fake mouse events iOS/iPadOS fires after a tap are ignored.
@@ -689,23 +719,72 @@
 })();
 </script>
 <script>
-// Count-up numbers when they scroll into view, and a simple photo lightbox.
+// Numbers "collapse" into place when they scroll into view: each digit flickers through random values and locks in,
+// left to right, like a measurement settling. Every rank tile also gets a small distribution plot showing where it sits.
 (function () {
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll('[data-to]').forEach(function (el) {
-    var to = parseFloat(el.dataset.to), dec = parseInt(el.dataset.dec || '0', 10), done = false;
+    var final = parseFloat(el.dataset.to).toFixed(parseInt(el.dataset.dec || '0', 10)), done = false;
     if (calm || !('IntersectionObserver' in window)) return;
-    el.textContent = (0).toFixed(dec);
+    function noise(lockUpTo) {
+      return final.split('').map(function (ch, i) { return (i < lockUpTo || ch === '.') ? ch : String(Math.floor(Math.random() * 10)); }).join('');
+    }
+    el.textContent = noise(0);
     new IntersectionObserver(function (en, ob) {
       if (!en[0].isIntersecting || done) return; done = true; ob.disconnect();
-      var t0 = performance.now();
+      var t0 = performance.now(), D = 950, lastSwap = 0;
       (function step(now) {
-        var t = Math.min((now - t0) / 1100, 1), e = 1 - Math.pow(1 - t, 3);
-        el.textContent = (t < 1 ? to * e : to).toFixed(dec);
+        var t = Math.min((now - t0) / D, 1);
+        if (now - lastSwap > 45 || t === 1) { lastSwap = now; el.textContent = t < 1 ? noise(Math.floor(Math.pow(t, 1.6) * final.length)) : final; }
         if (t < 1) requestAnimationFrame(step);
       })(t0);
     }, { threshold: 0.6 }).observe(el);
   });
+
+  // Inverse standard-normal CDF (Acklam's rational approximation, |error| < 1.2e-9)
+  function probit(p) {
+    var a = [-39.69683028665376, 220.9460984245205, -275.9285104469687, 138.357751867269, -30.66479806614716, 2.506628274631],
+        b = [-54.47609879822406, 161.5858368580409, -155.6989798598866, 66.80131188771972, -13.28068155288572],
+        c = [-0.007784894002430293, -0.3223964580411365, -2.400758277161838, -2.549732539343734, 4.374664141464968, 2.938163982698783],
+        d = [0.007784695709041462, 0.3224671290700398, 2.445134137142996, 3.754408661907416], q, r;
+    if (p < 0.02425) { q = Math.sqrt(-2 * Math.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+    if (p > 1 - 0.02425) { q = Math.sqrt(-2 * Math.log(1 - p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+    q = p - 0.5; r = q * q;
+    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+  }
+  var NS = 'http://www.w3.org/2000/svg', W = 200, H = 30, Z0 = -3.2, Z1 = 3.2;
+  function X(z) { return (z - Z0) / (Z1 - Z0) * W; }
+  function Y(z) { return H - 1 - Math.exp(-z * z / 2) * (H - 4); }
+  function node(tag, attrs) { var n = document.createElementNS(NS, tag); for (var k in attrs) n.setAttribute(k, attrs[k]); return n; }
+  document.querySelectorAll('.sx-stat').forEach(function (tile) {
+    var svg = node('svg', { 'class': 'sx-plot', viewBox: '0 0 ' + W + ' ' + H, preserveAspectRatio: 'none', 'aria-hidden': 'true' });
+    if (tile.dataset.rank) {
+      var p = (+tile.dataset.rank) / (+tile.dataset.pool), zc = -probit(p), pts = [], tail = [];
+      for (var i = 0; i <= 80; i++) { var z = Z0 + (Z1 - Z0) * i / 80; pts.push(X(z).toFixed(1) + ',' + Y(z).toFixed(2)); if (z >= zc) tail.push(X(z).toFixed(1) + ',' + Y(z).toFixed(2)); }
+      tail.unshift(X(zc).toFixed(1) + ',' + Y(zc).toFixed(2)); tail.unshift(X(zc).toFixed(1) + ',' + (H - 1));
+      tail.push(W + ',' + (H - 1));
+      svg.appendChild(node('line', { 'class': 'pl-base', x1: 0, y1: H - 1, x2: W, y2: H - 1 }));
+      svg.appendChild(node('polygon', { 'class': 'pl-tail', points: tail.join(' ') }));
+      svg.appendChild(node('polyline', { 'class': 'pl-curve', points: pts.join(' '), pathLength: 1 }));
+      svg.appendChild(node('line', { 'class': 'pl-mark', x1: X(zc), y1: 1, x2: X(zc), y2: H - 1 }));
+      var pct = p * 100, lbl = document.createElement('span');
+      lbl.className = 'sx-pct'; lbl.setAttribute('aria-hidden', 'true');
+      lbl.textContent = 'top ' + (pct < 10 ? pct.toFixed(1) : Math.round(pct)) + '%';
+      tile.appendChild(lbl);
+    } else if (tile.dataset.pct) {
+      var f = +tile.dataset.pct / 100;
+      svg.appendChild(node('line', { 'class': 'pl-base', x1: 0, y1: H - 1, x2: W, y2: H - 1 }));
+      for (var t = 0; t <= 10; t++) svg.appendChild(node('line', { 'class': 'pl-tick', x1: t * W / 10, y1: t % 5 ? H - 7 : H - 13, x2: t * W / 10, y2: H - 1 }));
+      svg.appendChild(node('rect', { 'class': 'pl-fill', x: 0, y: H - 5, width: (f * W).toFixed(1), height: 4, rx: 1 }));
+      svg.appendChild(node('line', { 'class': 'pl-mark', x1: f * W, y1: H - 18, x2: f * W, y2: H - 1 }));
+    } else return;
+    var sub = tile.querySelector('.sx-sub');
+    (sub || tile.lastElementChild).insertAdjacentElement('afterend', svg);
+    // touch: tap a tile to show / hide its percentile tag
+    tile.addEventListener('click', function () { tile.classList.toggle('show-pct'); });
+  });
+})();
+(function () {
   var box = document.getElementById('sx-box');
   if (box) {
     var big = box.querySelector('img');
@@ -732,5 +811,6 @@
 </script>
 <script src="assets/scrollgraph.js" defer></script>
 <script src="assets/premium.js" defer></script>
+<script src="assets/lab.js" defer></script>
 </body>
 </html>

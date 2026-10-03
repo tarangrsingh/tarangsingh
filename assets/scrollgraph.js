@@ -57,8 +57,10 @@
     if (tip) tip.textContent = pct + '%';
     peakT = frac * 1000;
     if (reduceMotion) { peak = peakT; amp = 24; draw(); return; }
-    var now = performance.now(), v = Math.abs(y - lastY) / Math.max(now - lastT, 1);
-    lastY = y; lastT = now; ampT = Math.min(24 + v * 46, 46);
+    var now = performance.now(), v = Math.abs(y - lastY) / Math.max(now - lastT, 1), moved = Math.abs(y - lastY) > 0.5;
+    lastY = y; lastT = now;
+    if (!moved && !dragging) { start(); return; }       // layout changes (fonts, images, reveals) shouldn't flash the readout
+    ampT = Math.min(24 + v * 46, 46);
     setActive(true); clearTimeout(idleTimer);
     idleTimer = setTimeout(function () { if (!dragging) setActive(false); ampT = 24; start(); }, 700);
     start();
