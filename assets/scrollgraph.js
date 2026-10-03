@@ -10,6 +10,7 @@
   var html = document.documentElement;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  var hiddenMQ = window.matchMedia('(max-width: 640px)');   // the graph is display:none on phones: do no work there
   var LINES = 64, base = 8, sigma = 100, step = 1000 / LINES, ls = [];
   for (var li = 0; li < LINES; li++) {
     var ln = document.createElementNS('http://www.w3.org/2000/svg', 'line'), yy = (step * (li + 0.5)).toFixed(1);
@@ -22,11 +23,13 @@
   function fracNow() { var m = maxScroll(); return m > 0 ? clamp(window.scrollY / m, 0, 1) : 0; }
 
   var peak = 0, peakV = 0, amp = 24, ampV = 0, peakT = 0, ampT = 24, raf = 0, last = 0;
+  var lastX = [], lastO = [];
   function draw() {
     for (var i = 0; i < LINES; i++) {
       var dy = step * (i + 0.5) - peak, g = Math.exp(-(dy * dy) / (2 * sigma * sigma));
-      ls[i].setAttribute('x2', (60 - base - 3 - amp * g).toFixed(2));
-      ls[i].style.opacity = (0.3 + 0.7 * g).toFixed(2);
+      var x = (60 - base - 3 - amp * g).toFixed(1), o = (0.3 + 0.7 * g).toFixed(2);
+      if (x !== lastX[i]) { ls[i].setAttribute('x2', x); lastX[i] = x; }           // only touch lines that changed
+      if (o !== lastO[i]) { ls[i].style.opacity = o; lastO[i] = o; }
     }
     var pct = (peak / 10).toFixed(2) + '%';
     if (dot) dot.style.top = pct;
@@ -42,7 +45,7 @@
     peak = a[0]; peakV = a[1]; amp = b[0]; ampV = b[1]; draw();
     raf = (Math.abs(peak - peakT) > 0.3 || Math.abs(peakV) > 0.5 || Math.abs(amp - ampT) > 0.05 || Math.abs(ampV) > 0.05) ? requestAnimationFrame(frame) : 0;
   }
-  function start() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+  function start() { if (!raf && !hiddenMQ.matches) { last = performance.now(); raf = requestAnimationFrame(frame); } }
 
   var dragging = false, lastY = window.scrollY, lastT = performance.now(), idleTimer = null;
   function setActive(on) { root.classList.toggle('is-active', on); }

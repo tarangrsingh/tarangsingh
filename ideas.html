@@ -19,7 +19,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="assets/inter-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/bg-fa5bc326.jpg" as="image">
+<link rel="preload" href="assets/bg-fa5bc326.jpg" as="image" fetchpriority="high">
 <style>
   /* Inter (variable, latin) embedded so it always loads */
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(assets/inter-var.woff2) format('woff2'); }
@@ -339,7 +339,7 @@
   /* Background photo: Starship liftoff (HD) */
   .photo-bg {
     position: fixed; inset: 0; z-index: -1;
-    background-image: url(assets/bg-fa5bc326.jpg);
+    background-image: url(assets/bg-fa5bc326.jpg), url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAXACgDASIAAhEBAxEB/8QAGQABAQEAAwAAAAAAAAAAAAAAAAQDAQUG/8QAIhAAAQQBBAMBAQAAAAAAAAAAAQACAxEEBRITISJBUTFh/8QAFwEBAQEBAAAAAAAAAAAAAAAAAwABAv/EAB0RAAICAgMBAAAAAAAAAAAAAAABAhEDMQQhIhP/2gAMAwEAAhEDEQA/ANJdPhZLsa7k+n4j4IQWsBvb1ajk1OPluEAO3Cj8XYxyB8c75ON76va0dkpZciS2wYcaLVpHMODizNcKIeOxtP6qhiR40W6Zwqx5e1DjyGVgdHjyMskWOqpZahmmOJsIkND2TaP7SbqxVhjWiuTPgdmNjJ5GVQcPSKHT8cSXkSENjZ3ftEE8s78NirFCva7PLyRGGQi6I6sJby4CKaQkf2kRJLoyPZc/UM5rOF+S4N+Kd0cszjcrrP4iI9HeyjGzcoY0uOKdFXlfxERSWybP/9k=);
     background-size: cover; background-position: 72% 40%;
   }
   .photo-bg::after {

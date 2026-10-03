@@ -19,7 +19,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="assets/inter-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/bg-416785b6.jpg" as="image">
+<link rel="preload" href="assets/bg-416785b6.jpg" as="image" fetchpriority="high">
 <style>
   /* Inter (variable, latin) embedded so it always loads */
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(assets/inter-var.woff2) format('woff2'); }
@@ -346,7 +346,7 @@
   /* Background photo: Starry Night (HD) */
   .photo-bg {
     position: fixed; inset: 0; z-index: -1;
-    background-image: url(assets/bg-416785b6.jpg);
+    background-image: url(assets/bg-416785b6.jpg), url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAgACgDASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAUCAwQBBv/EACMQAAIBBAICAwEBAAAAAAAAAAECAwAEERIhMQUTQVFhInH/xAAYAQEAAwEAAAAAAAAAAAAAAAACAAMEAf/EABsRAQEAAwADAAAAAAAAAAAAAAEAAhESMUFR/9oADAMBAAIRAxEAPwBLLtDbPbEDXOckc1ZHFMkh0ZX2UZbHFar11W0lcKSVH4cVXZPLdwKqxkx6gFh3Wno3U+qo28nsUto6g8qDxUlgaST2LHpDnB/K0/zG2NAV/KiEYKcMdTzimR3N1sbYQgagng5+6KqgguDGoaUJH9GisXLiu8t1o78Ei8k0JsJPS52zyM981HwflltUMUhABHBpZMpMZYA91kzg9U3LbQL0xu7V9mVSxznH3XE8n8LbrleiWpNDKwTrGOqmrSkkt0PkVZ0MeZncNPegPLNoAeFSisK3DcKHz/gorinyQN//2Q==);
     background-size: cover; background-position: 68% 30%;
   }
   .photo-bg::after {
