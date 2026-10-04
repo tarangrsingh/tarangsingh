@@ -87,7 +87,7 @@ html.light-mode .home .tab-grid::after, html.light-mode .home .updates-card .upd
 .home .tab-card,
 html.js-tilt .home .tab-card,
 html.light-mode .home .tab-card {
-  display: grid; grid-template-columns: 40px 1fr; align-items: center; gap: 16px;
+  display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; gap: 16px;   /* empty 3rd column balances the icon, so names sit in the true centre */
   padding: 13px 12px; margin: 0; border-radius: 10px;
   background: none; border: 0; box-shadow: none; text-align: left;
   -webkit-backdrop-filter: none; backdrop-filter: none;
@@ -99,7 +99,7 @@ html.light-mode .home .tab-grid > .tab-card + .tab-card { border-top-color: rgba
 .home .tab-card::before, .home .tab-card::after { display: none; }
 .home .tab-card .tab-icon-svg { width: 36px; height: 36px; justify-self: center; }
 .home .tab-card h3 {
-  margin: 0; font-size: 17px; font-weight: 500; letter-spacing: -0.005em; color: var(--text);
+  margin: 0; text-align: center; font-size: 17px; font-weight: 500; letter-spacing: -0.005em; color: var(--text);
   transition: color 0.2s ease;
 }
 .home .tab-card:is(.is-hover, :focus-visible) { background: color-mix(in srgb, var(--copper) 12%, transparent); }
