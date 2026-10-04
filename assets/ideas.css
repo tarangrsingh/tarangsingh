@@ -5,8 +5,10 @@
   max-width: 1320px; margin: 0 auto; padding: 4px 84px 0 24px;
   overflow-x: hidden; overflow-x: clip;   /* hidden phone labels must not widen the page */
 }
+.space-head { position: absolute; left: 24px; top: 18px; z-index: 3; }
+.space-note { margin: 4px 0 0; font-size: 13.5px; color: var(--muted); }
 .space-title {
-  position: absolute; left: 24px; top: 18px; z-index: 3; margin: 0;
+  margin: 0;
   font: 400 clamp(1.5rem, 2.4vw, 2rem)/1.2 var(--font); letter-spacing: -0.01em; color: var(--copper-light);
 }
 .space { --stage-h: clamp(560px, calc(100vh - 76px), 880px); --stage-h: clamp(560px, calc(100svh - 76px), 880px); }
@@ -119,7 +121,7 @@ html.light-mode .idea-panel { background: linear-gradient(160deg, rgba(255, 255,
 /* ---- smaller screens: the panel drops below the map; idea labels only appear for the branch in focus -------- */
 @media (max-width: 960px) {
   .space { grid-template-columns: 1fr; gap: 6px; padding: 4px 14px 0; }
-  .space-title { position: static; padding: 18px 8px 0; }
+  .space-head { position: static; padding: 18px 8px 0; }
   .space-stage { height: calc(min(100vw - 28px, 660px) * 1.12 + 76px); width: min(100%, 660px); margin: 0 auto; }
   .idea-panel { width: min(100%, 560px); margin: 0 auto 18px; max-height: none; overflow: visible; }
 }

@@ -17,13 +17,38 @@
 
 .links { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0 0 -7px; padding: 0; list-style: none; }
 .links a {
-  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
-  color: var(--muted); text-decoration: none;
-  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  --brand: var(--text); --mx: 0px; --my: 0px;
+  position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px;
+  color: var(--muted); text-decoration: none; -webkit-tap-highlight-color: transparent;
+  transform: translate(var(--mx), var(--my));
+  transition: color 0.2s ease, background 0.25s ease, box-shadow 0.3s ease, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.links a:hover, .links a:focus-visible { color: var(--text); background: color-mix(in srgb, var(--copper) 14%, transparent); transform: translateY(-1px); }
-.links a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-.links svg { width: 18px; height: 18px; fill: currentColor; }
+.links a.is-near { transition: color 0.2s ease, background 0.25s ease, box-shadow 0.3s ease, transform 0.12s linear; }
+/* each button wears its own colour when you reach for it (hover, keyboard focus, or the press itself on touch) */
+.links a[data-k="cv"]       { --brand: var(--copper-light); }
+.links a[data-k="gmail"]    { --brand: #ea4335; }
+.links a[data-k="linkedin"] { --brand: #3b8fe0; }
+html.light-mode .links a[data-k="linkedin"] { --brand: #0a66c2; }
+.links a[data-k="blog"]     { --brand: #ff6a1f; }
+.links a[data-k="x"]        { --brand: var(--text); }
+.links a[data-k="youtube"]  { --brand: #ff1f3d; }
+.links a:is(:hover, :focus-visible, :active) {
+  color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 15%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 38%, transparent), 0 8px 22px -12px var(--brand);
+}
+.links a:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.links svg { width: 18px; height: 18px; fill: currentColor; transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.links a:hover svg { transform: scale(1.12); }
+.links a:active svg { transform: scale(0.82); transition-duration: 0.08s; }
+/* the press: a quick squish-and-pop, and a ring of the brand colour (the pixel field adds a coloured ripple) */
+.links a.is-pop svg { animation: link-pop 0.5s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.links a.is-pop::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  box-shadow: 0 0 0 0 var(--brand); animation: link-ring 0.6s ease-out forwards;
+}
+@keyframes link-pop { 0% { transform: scale(0.8); } 45% { transform: scale(1.22) rotate(-6deg); } 100% { transform: scale(1.12); } }
+@keyframes link-ring { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 70%, transparent); } to { box-shadow: 0 0 0 14px transparent; } }
 
 /* ---- section labels: small caps with a hairline that runs to the edge --------------------------------------- */
 .home .section-label {
@@ -107,5 +132,6 @@ html.light-mode .home .updates-card .update-entry {
   .home .updates-card .update-entry, html.light-mode .home .updates-card .update-entry { grid-template-columns: 1fr; gap: 2px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .home .tab-card, .home .row-arrow, .links a { transition: none; }
+  .home .tab-card, .home .row-arrow, .links a, .links svg { transition: none; }
+  .links a.is-pop svg, .links a.is-pop::after { animation: none; }
 }
