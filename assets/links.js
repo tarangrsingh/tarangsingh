@@ -1,5 +1,5 @@
 // Home links row: magnetic buttons. With a mouse each icon leans toward the cursor as it approaches; a press gives a
-// squish-and-pop and a ring in the button's brand colour (cursor-field.js adds a ripple in the same colour).
+// squish-and-pop and a ring in the button's brand colour.
 (function () {
   var links = document.querySelectorAll('.links a');
   if (!links.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
