@@ -15,15 +15,15 @@
 .home .profile-name { font-size: clamp(28px, 4.4vw, 36px); font-weight: 600; letter-spacing: -0.022em; line-height: 1.1; }
 .home .profile-sub { font-size: 15.5px; margin-top: 6px; letter-spacing: 0.005em; }
 
-.links { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 10px 0 0; padding: 0; list-style: none; }
+.links { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0 0 -7px; padding: 0; list-style: none; }
 .links a {
-  display: inline-flex; align-items: center; gap: 6px; padding: 2px 0;
-  font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none;
-  transition: color 0.2s ease;
+  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+  color: var(--muted); text-decoration: none;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
-.links a:hover, .links a:focus-visible { color: var(--text); }
-.links a:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; border-radius: 4px; }
-.links svg { width: 14px; height: 14px; fill: currentColor; flex: none; opacity: 0.85; }
+.links a:hover, .links a:focus-visible { color: var(--text); background: color-mix(in srgb, var(--copper) 14%, transparent); transform: translateY(-1px); }
+.links a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.links svg { width: 18px; height: 18px; fill: currentColor; }
 
 /* ---- section labels: small caps with a hairline that runs to the edge --------------------------------------- */
 .home .section-label {
@@ -104,7 +104,6 @@ html.light-mode .home .updates-card .update-entry {
   .home .profile { gap: 16px; }
   .home .profile-photo { width: 84px; height: 84px; border-radius: 24px; }
   .home p { font-size: 17px; }
-  .links { gap: 2px 14px; }
   .home .updates-card .update-entry, html.light-mode .home .updates-card .update-entry { grid-template-columns: 1fr; gap: 2px; }
 }
 @media (prefers-reduced-motion: reduce) {
