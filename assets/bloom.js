@@ -7,7 +7,7 @@
   var seed = nav.querySelector('.bloom-seed'), svg = nav.querySelector('.bloom-threads'), list = nav.querySelector('.bloom-list');
   var items = [].slice.call(list.querySelectorAll('a'));
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var SEED_Y = 28, CLOSED_H = 76;
+  var SEED_Y = 34, CLOSED_H = 96;
   // the fan hangs below the dot: first page on the far left, last on the far right
   var ANGLES = [164, 127, 90, 53, 16].map(function (d) { return d * Math.PI / 180; });
   var threads = items.map(function () {
@@ -22,7 +22,7 @@
   function layout() {
     var w = nav.clientWidth, cx = w / 2, lab = 0;
     items.forEach(function (a) { lab = Math.max(lab, a.querySelector('.bloom-l').offsetWidth); });
-    var rx = Math.max(56, Math.min(w / 2 - lab - 26, 230)), ry = w < 560 ? 168 : 150;
+    var rx = Math.max(56, Math.min(w / 2 - lab - 26, 230)), ry = w < 560 ? 172 : 158;
     openH = SEED_Y + ry + 52;
     items.forEach(function (a, i) {
       var t = ANGLES[i], x = cx + rx * Math.cos(t), y = SEED_Y + ry * Math.sin(t);
