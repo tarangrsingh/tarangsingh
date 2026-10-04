@@ -1,0 +1,138 @@
+/* Home page, minimal edition: one calm column, type-led hierarchy, hairline structure instead of glass tiles.
+   Loaded last on index.html only, so it refines the page without touching the other pages. */
+
+/* Quieter backdrop: the photograph becomes texture, the text reads first */
+.page-home .photo-bg::after {
+  background: linear-gradient(to right, rgba(var(--bg-rgb), 0.9) 0%, rgba(var(--bg-rgb), 0.86) 58%, rgba(var(--bg-rgb), 0.7) 100%);
+}
+
+.home { --gap: clamp(44px, 7vw, 64px); }
+.home p { font-size: 17.5px; line-height: 1.72; }
+
+/* ---- hero -------------------------------------------------------------------------------------------------- */
+.home .profile { gap: 22px; margin: 6px 0 30px; align-items: center; }
+.home .profile-photo { width: 104px; height: 104px; border-radius: 28px; }
+.home .profile-name { font-size: clamp(28px, 4.4vw, 36px); font-weight: 600; letter-spacing: -0.022em; line-height: 1.1; }
+.home .profile-sub { font-size: 15.5px; margin-top: 6px; letter-spacing: 0.005em; }
+
+.links { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0 0 -7px; padding: 0; list-style: none; }
+.links a {
+  --brand: var(--text); --mx: 0px; --my: 0px;
+  position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px;
+  color: var(--muted); text-decoration: none; -webkit-tap-highlight-color: transparent;
+  transform: translate(var(--mx), var(--my));
+  transition: color 0.2s ease, background 0.25s ease, box-shadow 0.3s ease, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.links a.is-near { transition: color 0.2s ease, background 0.25s ease, box-shadow 0.3s ease, transform 0.12s linear; }
+/* each button wears its own colour when you reach for it (hover, keyboard focus, or the press itself on touch) */
+.links a[data-k="cv"]       { --brand: var(--copper-light); }
+.links a[data-k="gmail"]    { --brand: #ea4335; }
+.links a[data-k="linkedin"] { --brand: #3b8fe0; }
+html.light-mode .links a[data-k="linkedin"] { --brand: #0a66c2; }
+.links a[data-k="blog"]     { --brand: #ff6a1f; }
+.links a[data-k="x"]        { --brand: var(--text); }
+.links a[data-k="youtube"]  { --brand: #ff1f3d; }
+.links a:is(:hover, :focus-visible, :active) {
+  color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 15%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 38%, transparent), 0 8px 22px -12px var(--brand);
+}
+.links a:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.links svg { width: 18px; height: 18px; fill: currentColor; transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.links a:hover svg { transform: scale(1.12); }
+.links a:active svg { transform: scale(0.82); transition-duration: 0.08s; }
+/* the press: a quick squish-and-pop, and a ring of the brand colour */
+.links a.is-pop svg { animation: link-pop 0.5s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.links a.is-pop::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  box-shadow: 0 0 0 0 var(--brand); animation: link-ring 0.6s ease-out forwards;
+}
+@keyframes link-pop { 0% { transform: scale(0.8); } 45% { transform: scale(1.22) rotate(-6deg); } 100% { transform: scale(1.12); } }
+@keyframes link-ring { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 70%, transparent); } to { box-shadow: 0 0 0 14px transparent; } }
+
+/* ---- section labels: small caps with a hairline that runs to the edge --------------------------------------- */
+.home .section-label {
+  display: flex; align-items: center; gap: 14px; margin: var(--gap) 0 10px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+}
+.home .section-label::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+
+/* ---- liquid glass: one panel for Explore, one card for Updates ----------------------------------------------- */
+.home .tab-grid,
+.home .updates-card .update-entry,
+html.light-mode .home .updates-card .update-entry {
+  position: relative; overflow: hidden; isolation: isolate; border-radius: 16px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -8px 14px -10px rgba(255, 255, 255, 0.1), 0 10px 26px -14px rgba(0, 0, 0, 0.5);
+}
+html.light-mode .home .tab-grid,
+html.light-mode .home .updates-card .update-entry {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.22));
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 10px 24px -14px rgba(20, 20, 30, 0.3);
+}
+/* the soft sheen across the top edge */
+.home .tab-grid::after,
+.home .updates-card .update-entry::after {
+  content: ""; display: block; position: absolute; left: -15%; right: -15%; top: -55%; height: 60%; z-index: -1;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0) 75%);
+  transform: rotate(-6deg); pointer-events: none;
+}
+html.light-mode .home .tab-grid::after, html.light-mode .home .updates-card .update-entry::after { background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 75%); }
+
+/* ---- explore: a list inside the glass panel ----------------------------------------------------------------- */
+.home .tab-grid { display: block; margin: 0; padding: 4px 6px; }
+.home .tab-card,
+html.js-tilt .home .tab-card,
+html.light-mode .home .tab-card {
+  display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 16px;
+  padding: 13px 12px; margin: 0; border-radius: 10px;
+  background: none; border: 0; box-shadow: none; text-align: left;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  transform: none !important; transition: background 0.25s ease;
+}
+/* (html .home .tab-grid > ...) outranks the light-mode / tilt resets above, so the dividers survive both */
+html .home .tab-grid > .tab-card + .tab-card { border-top: 1px solid rgba(255, 255, 255, 0.12); }
+html.light-mode .home .tab-grid > .tab-card + .tab-card { border-top-color: rgba(10, 31, 92, 0.1); }
+.home .tab-card::before, .home .tab-card::after { display: none; }
+.home .tab-card .tab-icon-svg { width: 36px; height: 36px; justify-self: center; }
+.home .tab-card h3 {
+  margin: 0; font-size: 17px; font-weight: 500; letter-spacing: -0.005em; color: var(--text);
+  transition: color 0.2s ease;
+}
+.home .row-meta { display: inline-flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12.5px; letter-spacing: 0.04em; }
+.home .row-arrow { display: inline-block; font-size: 17px; line-height: 1; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s ease; }
+.home .tab-card:is(.is-hover, :focus-visible) { background: color-mix(in srgb, var(--copper) 12%, transparent); }
+.home .tab-card:is(.is-hover, :focus-visible) h3 { color: var(--copper-light); }
+.home .tab-card:is(.is-hover, :focus-visible) .row-arrow { transform: translateX(4px); color: var(--copper-light); }
+.home .tab-card[target="_blank"]:is(.is-hover, :focus-visible) .row-arrow { transform: translate(3px, -3px); }
+.home .tab-card:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.home .tab-card:active { background: color-mix(in srgb, var(--copper) 12%, transparent); }
+
+/* ---- updates: a dated list in the same column ---------------------------------------------------------------- */
+.home .updates-card { margin: 0 !important; width: auto !important; }
+.home .updates-card .update-entry,
+html.light-mode .home .updates-card .update-entry {
+  display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: baseline;
+  margin: 0; padding: 16px 20px;
+}
+html .home .updates-card .update-entry + .update-entry { margin-top: 10px; }   /* outranks the light-mode card reset */
+.home .updates-card .update-date { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 0.02em; text-transform: none; color: var(--muted); font-variant-numeric: tabular-nums; }
+.home .updates-card .update-entry p { font-size: 15.5px; line-height: 1.65; color: var(--text); }
+
+/* ---- footer -------------------------------------------------------------------------------------------------- */
+.page-home .site-footer { margin-top: var(--gap, 56px); padding-top: 18px; border-top: 1px solid var(--rule); }
+.page-home .footer-copy { margin: 0; }
+
+@media (max-width: 560px) {
+  .home .profile { gap: 16px; }
+  .home .profile-photo { width: 84px; height: 84px; border-radius: 24px; }
+  .home p { font-size: 17px; }
+  .home .updates-card .update-entry, html.light-mode .home .updates-card .update-entry { grid-template-columns: 1fr; gap: 2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home .tab-card, .home .row-arrow, .links a, .links svg { transition: none; }
+  .links a.is-pop svg, .links a.is-pop::after { animation: none; }
+}

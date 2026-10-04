@@ -46,3 +46,7 @@ main p a:hover, main p a:focus-visible { text-underline-offset: 0.32em; text-dec
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* Theme switch: no colour transitions while the theme flips, so the page lands on its final colours in one frame
+   (otherwise each element fades on its own schedule and the switch reads as a washed-out blink). See premium.js. */
+html.theme-switching *, html.theme-switching *::before, html.theme-switching *::after { transition: none !important; }
