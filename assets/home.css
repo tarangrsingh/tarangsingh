@@ -15,7 +15,7 @@
 .home .profile-name { font-size: clamp(28px, 4.4vw, 36px); font-weight: 600; letter-spacing: -0.022em; line-height: 1.1; }
 .home .profile-sub { font-size: 15.5px; margin-top: 6px; letter-spacing: 0.005em; }
 
-.links { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 12px 0 0; padding: 0; list-style: none; }
+.links { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 10px 0 0; padding: 0; list-style: none; }
 .links a {
   display: inline-flex; align-items: center; gap: 6px; padding: 2px 0;
   font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none;
@@ -32,19 +32,45 @@
 }
 .home .section-label::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
 
-/* ---- explore: a list, not a grid of tiles ------------------------------------------------------------------- */
-.home .tab-grid { display: block; margin: 0; }
+/* ---- liquid glass: one panel for Explore, one card for Updates ----------------------------------------------- */
+.home .tab-grid,
+.home .updates-card .update-entry,
+html.light-mode .home .updates-card .update-entry {
+  position: relative; overflow: hidden; isolation: isolate; border-radius: 16px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -8px 14px -10px rgba(255, 255, 255, 0.1), 0 10px 26px -14px rgba(0, 0, 0, 0.5);
+}
+html.light-mode .home .tab-grid,
+html.light-mode .home .updates-card .update-entry {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.22));
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 10px 24px -14px rgba(20, 20, 30, 0.3);
+}
+/* the soft sheen across the top edge */
+.home .tab-grid::after,
+.home .updates-card .update-entry::after {
+  content: ""; display: block; position: absolute; left: -15%; right: -15%; top: -55%; height: 60%; z-index: -1;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0) 75%);
+  transform: rotate(-6deg); pointer-events: none;
+}
+html.light-mode .home .tab-grid::after, html.light-mode .home .updates-card .update-entry::after { background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 75%); }
+
+/* ---- explore: a list inside the glass panel ----------------------------------------------------------------- */
+.home .tab-grid { display: block; margin: 0; padding: 4px 6px; }
 .home .tab-card,
 html.js-tilt .home .tab-card,
 html.light-mode .home .tab-card {
   display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 16px;
-  padding: 13px 8px; margin: 0; border-radius: 10px;
+  padding: 13px 12px; margin: 0; border-radius: 10px;
   background: none; border: 0; box-shadow: none; text-align: left;
   -webkit-backdrop-filter: none; backdrop-filter: none;
   transform: none !important; transition: background 0.25s ease;
 }
 /* (html .home .tab-grid > ...) outranks the light-mode / tilt resets above, so the dividers survive both */
-html .home .tab-grid > .tab-card + .tab-card { border-top: 1px solid var(--rule); border-radius: 0; }
+html .home .tab-grid > .tab-card + .tab-card { border-top: 1px solid rgba(255, 255, 255, 0.12); }
+html.light-mode .home .tab-grid > .tab-card + .tab-card { border-top-color: rgba(10, 31, 92, 0.1); }
 .home .tab-card::before, .home .tab-card::after { display: none; }
 .home .tab-card .tab-icon-svg { width: 36px; height: 36px; justify-self: center; }
 .home .tab-card h3 {
@@ -53,7 +79,7 @@ html .home .tab-grid > .tab-card + .tab-card { border-top: 1px solid var(--rule)
 }
 .home .row-meta { display: inline-flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12.5px; letter-spacing: 0.04em; }
 .home .row-arrow { display: inline-block; font-size: 17px; line-height: 1; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s ease; }
-.home .tab-card:is(.is-hover, :focus-visible) { background: color-mix(in srgb, var(--copper) 7%, transparent); }
+.home .tab-card:is(.is-hover, :focus-visible) { background: color-mix(in srgb, var(--copper) 12%, transparent); }
 .home .tab-card:is(.is-hover, :focus-visible) h3 { color: var(--copper-light); }
 .home .tab-card:is(.is-hover, :focus-visible) .row-arrow { transform: translateX(4px); color: var(--copper-light); }
 .home .tab-card[target="_blank"]:is(.is-hover, :focus-visible) .row-arrow { transform: translate(3px, -3px); }
@@ -65,10 +91,8 @@ html .home .tab-grid > .tab-card + .tab-card { border-top: 1px solid var(--rule)
 .home .updates-card .update-entry,
 html.light-mode .home .updates-card .update-entry {
   display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: baseline;
-  margin: 0; padding: 12px 8px; border-radius: 0; background: none; border: 0; box-shadow: none;
-  -webkit-backdrop-filter: none; backdrop-filter: none;
+  margin: 0; padding: 16px 20px;
 }
-.home .updates-card .update-entry::after { display: none; }
 .home .updates-card .update-date { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 0.02em; text-transform: none; color: var(--muted); font-variant-numeric: tabular-nums; }
 .home .updates-card .update-entry p { font-size: 15.5px; line-height: 1.65; color: var(--text); }
 
