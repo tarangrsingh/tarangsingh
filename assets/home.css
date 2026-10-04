@@ -118,6 +118,7 @@ html.light-mode .home .updates-card .update-entry {
   display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: baseline;
   margin: 0; padding: 16px 20px;
 }
+html .home .updates-card .update-entry + .update-entry { margin-top: 10px; }   /* outranks the light-mode card reset */
 .home .updates-card .update-date { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 0.02em; text-transform: none; color: var(--muted); font-variant-numeric: tabular-nums; }
 .home .updates-card .update-entry p { font-size: 15.5px; line-height: 1.65; color: var(--text); }
 
