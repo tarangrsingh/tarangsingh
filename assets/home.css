@@ -87,7 +87,7 @@ html.light-mode .home .tab-grid::after, html.light-mode .home .updates-card .upd
 .home .tab-card,
 html.js-tilt .home .tab-card,
 html.light-mode .home .tab-card {
-  display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 16px;
+  display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; gap: 16px;   /* empty 3rd column balances the icon, so names sit in the true centre */
   padding: 13px 12px; margin: 0; border-radius: 10px;
   background: none; border: 0; box-shadow: none; text-align: left;
   -webkit-backdrop-filter: none; backdrop-filter: none;
@@ -99,15 +99,11 @@ html.light-mode .home .tab-grid > .tab-card + .tab-card { border-top-color: rgba
 .home .tab-card::before, .home .tab-card::after { display: none; }
 .home .tab-card .tab-icon-svg { width: 36px; height: 36px; justify-self: center; }
 .home .tab-card h3 {
-  margin: 0; font-size: 17px; font-weight: 500; letter-spacing: -0.005em; color: var(--text);
+  margin: 0; text-align: center; font-size: 17px; font-weight: 500; letter-spacing: -0.005em; color: var(--text);
   transition: color 0.2s ease;
 }
-.home .row-meta { display: inline-flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12.5px; letter-spacing: 0.04em; }
-.home .row-arrow { display: inline-block; font-size: 17px; line-height: 1; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s ease; }
 .home .tab-card:is(.is-hover, :focus-visible) { background: color-mix(in srgb, var(--copper) 12%, transparent); }
 .home .tab-card:is(.is-hover, :focus-visible) h3 { color: var(--copper-light); }
-.home .tab-card:is(.is-hover, :focus-visible) .row-arrow { transform: translateX(4px); color: var(--copper-light); }
-.home .tab-card[target="_blank"]:is(.is-hover, :focus-visible) .row-arrow { transform: translate(3px, -3px); }
 .home .tab-card:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .home .tab-card:active { background: color-mix(in srgb, var(--copper) 12%, transparent); }
 
@@ -133,6 +129,6 @@ html .home .updates-card .update-entry + .update-entry { margin-top: 10px; }   /
   .home .updates-card .update-entry, html.light-mode .home .updates-card .update-entry { grid-template-columns: 1fr; gap: 2px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .home .tab-card, .home .row-arrow, .links a, .links svg { transition: none; }
+  .home .tab-card, .links a, .links svg { transition: none; }
   .links a.is-pop svg, .links a.is-pop::after { animation: none; }
 }
