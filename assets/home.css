@@ -29,7 +29,6 @@
 .links a[data-k="gmail"]    { --brand: #ea4335; }
 .links a[data-k="linkedin"] { --brand: #3b8fe0; }
 html.light-mode .links a[data-k="linkedin"] { --brand: #0a66c2; }
-.links a[data-k="blog"]     { --brand: #ff6a1f; }
 .links a[data-k="x"]        { --brand: var(--text); }
 .links a[data-k="youtube"]  { --brand: #ff1f3d; }
 .links a:is(:hover, :focus-visible, :active) {

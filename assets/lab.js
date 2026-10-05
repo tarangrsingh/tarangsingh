@@ -43,6 +43,7 @@
     { ic: '⌂', t: 'Home', href: 'index.html', k: 'g h' },
     { ic: '★', t: 'Scholastic Achievements', href: 'scholastic.html', k: 'g s' },
     { ic: 'ψ', t: 'Research Experience', href: 'research.html', k: 'g r' },
+    { ic: '▢', t: 'Plain page', href: 'basic.html', k: 'g p' },
     { ic: '∂', t: 'Ideas', href: 'ideas.html', k: 'g i' },
     { ic: '✳', t: 'Quote of the Week', href: 'star.html', k: 'g q' },
     { ic: '✉', t: 'Contact', href: 'contact.html', k: 'g c' },
