@@ -123,7 +123,7 @@ html.light-mode .idea-panel { background: linear-gradient(160deg, rgba(255, 255,
   .space { grid-template-columns: 1fr; gap: 6px; padding: 4px 14px 0; }
   .space-head { position: static; padding: 18px 8px 0; }
   .space-stage { height: calc(min(100vw - 28px, 660px) * 1.12 + 76px); width: min(100%, 660px); margin: 0 auto; }
-  .idea-panel { width: min(100%, 560px); margin: 0 auto 18px; max-height: none; overflow: visible; }
+  .idea-panel { width: min(100%, 560px); margin: 0 auto 18px; max-height: none; overflow: hidden; isolation: isolate; }   /* keeps the glass sheen inside the card */
 }
 @media (max-width: 720px) {
   .node--disc .lbl { padding: 2px 9px; font-size: calc(13px * var(--u)); }

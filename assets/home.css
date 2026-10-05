@@ -29,7 +29,6 @@
 .links a[data-k="gmail"]    { --brand: #ea4335; }
 .links a[data-k="linkedin"] { --brand: #3b8fe0; }
 html.light-mode .links a[data-k="linkedin"] { --brand: #0a66c2; }
-.links a[data-k="blog"]     { --brand: #ff6a1f; }
 .links a[data-k="x"]        { --brand: var(--text); }
 .links a[data-k="youtube"]  { --brand: #ff1f3d; }
 .links a:is(:hover, :focus-visible, :active) {
@@ -57,8 +56,7 @@ html.light-mode .links a[data-k="linkedin"] { --brand: #0a66c2; }
 }
 .home .section-label::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
 
-/* ---- liquid glass: one panel for Explore, one card for Updates ----------------------------------------------- */
-.home .tab-grid,
+/* ---- liquid glass: the Updates cards ------------------------------------------------------------------------ */
 .home .updates-card .update-entry,
 html.light-mode .home .updates-card .update-entry {
   position: relative; overflow: hidden; isolation: isolate; border-radius: 16px;
@@ -67,45 +65,128 @@ html.light-mode .home .updates-card .update-entry {
   -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -8px 14px -10px rgba(255, 255, 255, 0.1), 0 10px 26px -14px rgba(0, 0, 0, 0.5);
 }
-html.light-mode .home .tab-grid,
 html.light-mode .home .updates-card .update-entry {
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.22));
   border-color: rgba(255, 255, 255, 0.7);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 10px 24px -14px rgba(20, 20, 30, 0.3);
 }
 /* the soft sheen across the top edge */
-.home .tab-grid::after,
 .home .updates-card .update-entry::after {
   content: ""; display: block; position: absolute; left: -15%; right: -15%; top: -55%; height: 60%; z-index: -1;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0) 75%);
   transform: rotate(-6deg); pointer-events: none;
 }
-html.light-mode .home .tab-grid::after, html.light-mode .home .updates-card .update-entry::after { background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 75%); }
+html.light-mode .home .updates-card .update-entry::after { background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 75%); }
 
-/* ---- explore: a list inside the glass panel ----------------------------------------------------------------- */
-.home .tab-grid { display: block; margin: 0; padding: 4px 6px; }
-.home .tab-card,
-html.js-tilt .home .tab-card,
-html.light-mode .home .tab-card {
-  display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; gap: 16px;   /* empty 3rd column balances the icon, so names sit in the true centre */
-  padding: 13px 12px; margin: 0; border-radius: 10px;
-  background: none; border: 0; box-shadow: none; text-align: left;
-  -webkit-backdrop-filter: none; backdrop-filter: none;
-  transform: none !important; transition: background 0.25s ease;
+/* ---- explore: one dot on a hairline that opens into five threads (see bloom.js) ----------------------------- */
+.bloom {
+  --thread: color-mix(in srgb, var(--text) 26%, transparent);
+  --thread-on: color-mix(in srgb, var(--text) 80%, transparent);
+  position: relative; margin: var(--gap) 0 0;
 }
-/* (html .home .tab-grid > ...) outranks the light-mode / tilt resets above, so the dividers survive both */
-html .home .tab-grid > .tab-card + .tab-card { border-top: 1px solid rgba(255, 255, 255, 0.12); }
-html.light-mode .home .tab-grid > .tab-card + .tab-card { border-top-color: rgba(10, 31, 92, 0.1); }
-.home .tab-card::before, .home .tab-card::after { display: none; }
-.home .tab-card .tab-icon-svg { width: 36px; height: 36px; justify-self: center; }
-.home .tab-card h3 {
-  margin: 0; text-align: center; font-size: 17px; font-weight: 500; letter-spacing: -0.005em; color: var(--text);
-  transition: color 0.2s ease;
+/* without JavaScript: a plain list of the five pages */
+.bloom-list { list-style: none; margin: 0; padding: 0; }
+.bloom:not(.is-live)::before { content: "Explore"; display: block; margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.bloom:not(.is-live) .bloom-list a { display: block; padding: 6px 0; }
+.bloom-pt, .bloom-s, .bloom-threads { display: none; }
+.bloom a { color: var(--text); text-decoration: none; -webkit-tap-highlight-color: transparent; }
+.bloom-l { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.3em; text-decoration-color: transparent; transition: text-decoration-color 0.2s ease; }
+.bloom a:is(:hover, :focus-visible, .is-on) .bloom-l { text-decoration-color: currentColor; }
+.bloom a:focus-visible { outline: none; }
+.bloom a:focus-visible .bloom-l { outline: 1px solid var(--text); outline-offset: 3px; border-radius: 2px; }
+
+/* the live figure */
+.bloom.is-live { height: var(--h, 96px); transition: height 0.55s cubic-bezier(0.3, 0.7, 0.2, 1); }
+.bloom.is-live:not(.is-open) { transition-delay: 0.14s; }
+.bloom.is-live::before, .bloom.is-live::after { content: ""; position: absolute; top: 34px; height: 1px; background: var(--rule); }
+.bloom.is-live::before { left: 0; right: calc(50% + 40px); }
+.bloom.is-live::after { right: 0; left: calc(50% + 40px); }
+
+.bloom-seed {
+  position: absolute; left: 50%; top: 34px; width: 60px; height: 60px; margin: -30px 0 0 -30px; padding: 0; border: 0; border-radius: 50%;
+  background: none; cursor: pointer; z-index: 2; -webkit-tap-highlight-color: transparent;
 }
-.home .tab-card:is(.is-hover, :focus-visible) { background: color-mix(in srgb, var(--copper) 12%, transparent); }
-.home .tab-card:is(.is-hover, :focus-visible) h3 { color: var(--copper-light); }
-.home .tab-card:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-.home .tab-card:active { background: color-mix(in srgb, var(--copper) 12%, transparent); }
+/* the orb: liquid glass, a bright specular spot top-left, a caustic along the bottom, a soft halo around it */
+.bloom-dot {
+  position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; overflow: hidden; isolation: isolate;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.95) 0 5%, rgba(255, 255, 255, 0.35) 15%, transparent 38%),
+    radial-gradient(circle at 50% 55%, color-mix(in srgb, var(--copper-light) 55%, transparent), color-mix(in srgb, var(--copper) 30%, transparent) 72%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(10px) saturate(180%); backdrop-filter: blur(10px) saturate(180%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.85), inset 0 -8px 14px -6px rgba(255, 255, 255, 0.35), inset 0 0 12px color-mix(in srgb, var(--copper-light) 45%, transparent),
+    0 0 18px 4px var(--copper-glow), 0 0 54px 14px var(--copper-glow);
+  transition: transform 0.5s cubic-bezier(0.2, 1.3, 0.4, 1), box-shadow 0.4s ease;
+}
+.bloom-dot::after {   /* light gathering at the bottom edge, as in a glass bead */
+  content: ""; position: absolute; left: 18%; right: 18%; bottom: 7%; height: 30%; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.5), transparent); filter: blur(1px);
+}
+html.light-mode .bloom-dot { border-color: rgba(255, 255, 255, 0.85); }
+/* a slow ripple leaves the orb while it waits to be pressed */
+.bloom-seed::before, .bloom-seed::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%;
+  border: 1px solid var(--copper-light); opacity: 0; pointer-events: none; animation: bloom-ripple 3.6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+.bloom-seed::after { animation-delay: 1.8s; }
+@keyframes bloom-ripple { from { transform: scale(1); opacity: 0.5; } to { transform: scale(2.4); opacity: 0; } }
+.bloom-seed:hover .bloom-dot { transform: scale(1.07); box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9), inset 0 -8px 14px -6px rgba(255, 255, 255, 0.4), inset 0 0 14px color-mix(in srgb, var(--copper-light) 55%, transparent),
+    0 0 22px 6px var(--copper-glow), 0 0 70px 20px var(--copper-glow); }
+.bloom-seed:active .bloom-dot { transform: scale(0.92); transition-duration: 0.12s; }
+.bloom-seed:focus-visible { outline: none; }
+.bloom-seed:focus-visible .bloom-dot { outline: 2px solid var(--link); outline-offset: 4px; }
+.bloom-cap {
+  position: absolute; left: 50%; top: 66px; transform: translateX(-50%); white-space: nowrap;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  transition: opacity 0.25s ease 0.1s;
+}
+.bloom.is-open .bloom-cap { opacity: 0; transition-delay: 0s; }
+.bloom.is-open .bloom-dot { transform: scale(0.72); }
+.bloom.is-open .bloom-seed:hover .bloom-dot { transform: scale(0.8); }
+.bloom.is-open .bloom-seed::before, .bloom.is-open .bloom-seed::after { animation: none; }
+
+.bloom.is-live .bloom-threads { display: block; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.bloom-thread {
+  stroke: var(--thread); stroke-width: 1; stroke-dashoffset: var(--len, 0);
+  transition: stroke-dashoffset 0.32s cubic-bezier(0.5, 0, 0.75, 0), stroke 0.25s ease;
+}
+.bloom.is-open .bloom-thread { stroke-dashoffset: 0; transition: stroke-dashoffset 0.6s cubic-bezier(0.3, 0.7, 0.2, 1), stroke 0.25s ease; }
+.bloom-thread.is-on { stroke: var(--thread-on); }
+
+.bloom.is-live .bloom-list li { position: absolute; left: 0; top: 0; }
+.bloom.is-live .bloom-list a {
+  position: absolute; left: 0; top: 0; width: 0; height: 0; padding: 0;
+  transform: translate(var(--x0), var(--y0)); opacity: 0; visibility: hidden;
+  transition: transform 0.2s ease, opacity 0.16s ease, visibility 0s linear 0.2s;
+}
+.bloom.is-open .bloom-list a {
+  transform: translate(var(--x), var(--y)); opacity: 1; visibility: visible;
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) var(--d, 0s), opacity 0.4s ease var(--d, 0s), visibility 0s;
+}
+.bloom.is-open.is-dim .bloom-list a:not(.is-on) { opacity: 0.4; transition-delay: 0s; }
+.bloom.is-live .bloom-pt { display: block; position: absolute; left: -2.5px; top: -2.5px; width: 5px; height: 5px; border-radius: 50%; background: var(--text); }
+.bloom.is-live .bloom-l { position: absolute; top: 0; padding: 6px 2px; white-space: nowrap; font-size: 16px; line-height: 1.2; transform: translateY(-50%); }
+.bloom.is-live a[data-side="right"] .bloom-l { left: 11px; }
+.bloom.is-live a[data-side="left"] .bloom-l { right: 11px; }
+.bloom.is-live a[data-side="below"] .bloom-l { left: 0; top: 4px; transform: translateX(-50%); }
+/* threads and pages leave the dot one after another */
+.bloom.is-open li:nth-child(2) a, .bloom.is-open .bloom-thread:nth-child(2) { --d: 0.05s; }
+.bloom.is-open li:nth-child(3) a, .bloom.is-open .bloom-thread:nth-child(3) { --d: 0.1s; }
+.bloom.is-open li:nth-child(4) a, .bloom.is-open .bloom-thread:nth-child(4) { --d: 0.15s; }
+.bloom.is-open li:nth-child(5) a, .bloom.is-open .bloom-thread:nth-child(5) { --d: 0.2s; }
+.bloom.is-open .bloom-thread { transition-delay: calc(var(--d, 0s) + 0.08s), 0s; }
+.bloom.is-open .bloom-list a { transition-delay: calc(var(--d, 0s) + 0.3s), calc(var(--d, 0s) + 0.3s), 0s; }
+.bloom.is-settled .bloom-list a, .bloom.is-settled .bloom-thread { transition-delay: 0s; }   /* once open, hover responds at once */
+
+@media (max-width: 560px) {
+  .bloom.is-live .bloom-f { display: none; }
+  .bloom.is-live .bloom-s { display: inline; }
+  .bloom.is-live .bloom-l { font-size: 15px; }
+}
+.bloom.is-instant, .bloom.is-instant *, .bloom.is-instant *::before { transition: none !important; }
+@media (prefers-reduced-motion: reduce) { .bloom, .bloom *, .bloom *::before { transition: none !important; } .bloom-seed::before, .bloom-seed::after { animation: none; } }
 
 /* ---- updates: a dated list in the same column ---------------------------------------------------------------- */
 .home .updates-card { margin: 0 !important; width: auto !important; }
@@ -129,6 +210,6 @@ html .home .updates-card .update-entry + .update-entry { margin-top: 10px; }   /
   .home .updates-card .update-entry, html.light-mode .home .updates-card .update-entry { grid-template-columns: 1fr; gap: 2px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .home .tab-card, .links a, .links svg { transition: none; }
+  .links a, .links svg { transition: none; }
   .links a.is-pop svg, .links a.is-pop::after { animation: none; }
 }
