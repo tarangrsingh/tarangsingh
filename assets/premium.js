@@ -9,6 +9,33 @@
     onScroll();
   }
 
+  // Scroll reveal (each page's own script) staggers sections with an inline transition-delay. Once a section is in,
+  // drop that delay, otherwise every later hover transition on the card starts late.
+  document.addEventListener('transitionend', function (e) {
+    var t = e.target;
+    if (t.classList && t.classList.contains('reveal') && t.classList.contains('in-view') && t.style.transitionDelay) t.style.transitionDelay = '';
+  });
+
+  // Footer: the time in Varanasi, and how it relates to the reader's own clock. Researchers write from every time
+  // zone; this answers "is it a sensible hour to expect a reply?" without asking.
+  var copy = document.querySelector('.footer-copy');
+  if (copy && window.Intl && Intl.DateTimeFormat) {
+    var lt = document.createElement('span'); lt.className = 'local-time';
+    copy.appendChild(lt);
+    var fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false });
+    var rel = function () {
+      var d = 330 + new Date().getTimezoneOffset();          // minutes IST is ahead of the reader (IST = UTC+5:30)
+      if (!d) return 'same time as you';
+      var a = Math.abs(d), h = Math.floor(a / 60), m = a % 60;
+      return (h ? h + ' h' : '') + (h && m ? ' ' : '') + (m ? m + ' min' : '') + (d > 0 ? ' ahead of you' : ' behind you');
+    };
+    var tick = function () {
+      lt.innerHTML = 'Varanasi ' + fmt.format(new Date()) + ' IST <span class="lt-rel">(' + rel() + ')</span>';
+      setTimeout(tick, 60000 - Date.now() % 60000 + 50);   // update on the minute
+    };
+    tick();
+  }
+
   // Theme switch. The page's own click handler still does the real work (toggling html.light-mode); we wrap it.
   // While the theme flips, every CSS colour transition is switched off (html.theme-switching), so the page lands on its
   // final colours in one frame instead of fading element by element, which read as a washed-out blink. Where view

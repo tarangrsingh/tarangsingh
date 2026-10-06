@@ -51,3 +51,29 @@ main p a:hover, main p a:focus-visible { text-underline-offset: 0.32em; text-dec
 /* Theme switch: no colour transitions while the theme flips, so the page lands on its final colours in one frame
    (otherwise each element fades on its own schedule and the switch reads as a washed-out blink). See premium.js. */
 html.theme-switching *, html.theme-switching *::before, html.theme-switching *::after { transition: none !important; }
+
+/* Content that fades in on scroll must never depend on that script: show it when scripting is off, and on paper. */
+@media (scripting: none) { .reveal { opacity: 1 !important; transform: none !important; } }
+
+/* Small header icons keep their look but get a thumb-sized hit area (WCAG 2.5.8) */
+.brand-star, .home-doodle { position: relative; }
+.brand-star::after, .home-doodle::after { content: ""; position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+
+/* Footer: local time where Tarang is, and how far that is from the reader's clock (see premium.js) */
+.local-time { display: inline-block; margin-left: 10px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.local-time::before { content: "·"; margin-right: 10px; opacity: 0.6; }
+.local-time .lt-rel { opacity: 0.75; }
+@media (max-width: 560px) { .local-time { display: block; margin: 6px 0 0; } .local-time::before { display: none; } }
+
+/* Print: a clean, ink-on-paper copy of whatever page is open */
+@media print {
+  :root, html.light-mode { --bg: #fff; --text: #111; --muted: #444; --rule: #ccc; --copper: #333; --copper-light: #111; --link: #111; }
+  html, body { background: #fff !important; color: #111 !important; }
+  .photo-bg, .scrollgraph, .cursor-atoms, .theme-toggle, .kp-hint, .local-time, header nav, .home-doodle, .lb, .tab-icon-svg { display: none !important; }
+  header { position: static !important; background: none !important; box-shadow: none !important; border: 0 !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+  *, *::before, *::after { box-shadow: none !important; text-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; animation: none !important; transition: none !important; }
+  .tab-grid, .update-entry, .sx-card, .sx-stat, .sx-feature, .idea-panel { background: none !important; border-color: #ccc !important; break-inside: avoid; }
+  a { color: #111 !important; }
+  main p a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; color: #555; }
+}
