@@ -14,6 +14,8 @@
   body { margin: 8px; font-family: "Times New Roman", Times, serif; }
   a, a:visited { color: #000; }
   .back { float: right; font-size: 18px; line-height: 1; padding: 2px 6px; cursor: pointer; }
+  #field { display: block; width: 100%; max-width: 600px; height: auto; border: 1px solid #000; }
+  #shot input { width: 4em; }
 </style>
 </head>
 <body>
@@ -22,5 +24,98 @@
 <p>I do physics and math.</p>
 <p><a href="Tarang_Singh_CV.pdf">CV</a></p>
 <hr>
+<h3>shoot your shot</h3>
+<p>Hit the flag. Ground is flat, there is no air, g = 9.81 m/s&sup2;.</p>
+<canvas id="field" width="600" height="220" role="img" aria-label="Side view of the field: a cannon on the left, a flag further along, and the paths of your shots."></canvas>
+<form id="shot">
+  <p>
+    <label>angle <input type="number" id="ang" min="1" max="89" step="0.1" value="45" required> &deg;</label>
+    &nbsp;
+    <label>speed <input type="number" id="vel" min="1" max="40" step="0.1" value="20" required> m/s</label>
+    &nbsp;
+    <button type="submit">Fire</button>
+    <button type="button" id="again">New flag</button>
+  </p>
+</form>
+<p id="log" aria-live="polite"></p>
+<details><summary>hint</summary><p>Range on flat ground: R = v&sup2; sin 2&theta; / g</p></details>
+<script>
+// Projectile: a cannon at x = 0, a flag somewhere down a 100 m field. Real kinematics (no drag), drawn in plain ink.
+(function () {
+  var cv = document.getElementById('field'), cx = cv.getContext('2d');
+  var ang = document.getElementById('ang'), vel = document.getElementById('vel'), log = document.getElementById('log');
+  var G = 9.81, FIELD = 100, W = 600, H = 220, GROUND = H - 24, PX = (W - 20) / FIELD, HALF = 1.5;   // flag is 3 m wide
+  var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var flag, shots, trails, busy = false;
+  // crisp on high-density screens; everything below is drawn in 600x220 units
+  var dpr = Math.min(window.devicePixelRatio || 1, 3);
+  cv.width = W * dpr; cv.height = H * dpr; cx.scale(dpr, dpr);
+  function X(m) { return 10 + m * PX; }
+  function Y(m) { return GROUND - m * PX; }
+  function scene() {
+    cx.clearRect(0, 0, W, H);
+    cx.fillStyle = '#000'; cx.strokeStyle = '#000'; cx.lineWidth = 1; cx.setLineDash([]);
+    cx.beginPath(); cx.moveTo(0, GROUND + 0.5); cx.lineTo(W, GROUND + 0.5); cx.stroke();
+    cx.font = '11px "Times New Roman", Times, serif'; cx.textAlign = 'center';
+    for (var m = 0; m <= FIELD; m += 10) {                              // a ruler along the ground
+      cx.beginPath(); cx.moveTo(X(m) + 0.5, GROUND); cx.lineTo(X(m) + 0.5, GROUND + 4); cx.stroke();
+      if (m === FIELD) { cx.textAlign = 'right'; cx.fillText(m + ' m', W - 3, GROUND + 16); cx.textAlign = 'center'; }
+      else cx.fillText(m, X(m), GROUND + 16);
+    }
+    var a = (+ang.value || 45) * Math.PI / 180;                         // the cannon points where you aim
+    cx.lineWidth = 3; cx.beginPath(); cx.moveTo(X(0), GROUND); cx.lineTo(X(0) + 16 * Math.cos(a), GROUND - 16 * Math.sin(a)); cx.stroke();
+    cx.lineWidth = 1; cx.beginPath(); cx.arc(X(0), GROUND, 5, Math.PI, 0); cx.fill();
+    var fx = X(flag);                                                   // the flag, its 3 m target marked on the ground
+    cx.beginPath(); cx.moveTo(fx + 0.5, GROUND); cx.lineTo(fx + 0.5, GROUND - 28); cx.stroke();
+    cx.beginPath(); cx.moveTo(fx + 1, GROUND - 28); cx.lineTo(fx + 15, GROUND - 23); cx.lineTo(fx + 1, GROUND - 18); cx.fill();
+    cx.fillRect(X(flag - HALF), GROUND - 1, HALF * 2 * PX, 3);
+    cx.setLineDash([1, 3]);
+    trails.forEach(function (t) { path(t, t.length); });
+    cx.setLineDash([]);
+  }
+  function path(pts, n) {
+    cx.beginPath();
+    for (var i = 0; i < n; i++) { var p = pts[i]; if (i) cx.lineTo(X(p[0]), Y(p[1])); else cx.moveTo(X(p[0]), Y(p[1])); }
+    cx.stroke();
+  }
+  function newFlag() {
+    flag = Math.round((22 + Math.random() * 70) * 10) / 10; shots = 0; trails = [];
+    log.textContent = 'Flag at ' + flag.toFixed(1) + ' m.';
+    scene();
+  }
+  function fire(e) {
+    e.preventDefault();
+    if (busy) return;
+    var deg = Math.min(Math.max(+ang.value, 1), 89), v = Math.min(Math.max(+vel.value, 1), 40);
+    ang.value = deg; vel.value = v;
+    var a = deg * Math.PI / 180, vx = v * Math.cos(a), vy = v * Math.sin(a), T = 2 * vy / G, R = vx * T, top = vy * vy / (2 * G);
+    var pts = [], N = 120;
+    for (var i = 0; i <= N; i++) { var t = T * i / N; pts.push([vx * t, vy * t - G * t * t / 2]); }
+    shots++; trails.push(pts); busy = true;
+    var miss = R - flag, hit = Math.abs(miss) <= HALF;
+    function done() {
+      busy = false;
+      var msg = 'Shot ' + shots + ': landed at ' + R.toFixed(1) + ' m, ' + top.toFixed(1) + ' m high, ' + T.toFixed(2) + ' s in the air. ';
+      if (hit) msg += 'Hit, in ' + shots + (shots === 1 ? ' shot.' : ' shots.') + ' Press New flag to play again.';
+      else msg += Math.abs(miss).toFixed(1) + ' m ' + (miss < 0 ? 'short.' : 'long.');
+      log.textContent = msg;
+    }
+    if (calm) { scene(); done(); return; }
+    var start = performance.now(), dur = Math.min(Math.max(T * 1000 / 2.5, 500), 1600);   // real flight, played ~2.5x fast
+    (function step(now) {
+      var k = Math.min((now - start) / dur, 1), n = Math.max(2, Math.round(k * N) + 1);
+      trails.pop(); scene(); trails.push(pts);
+      cx.setLineDash([1, 3]); path(pts, n); cx.setLineDash([]);
+      var p = pts[n - 1]; cx.beginPath(); cx.arc(X(p[0]), Y(p[1]), 3, 0, 2 * Math.PI); cx.fill();
+      if (k < 1) requestAnimationFrame(step); else { scene(); done(); }
+    })(start);
+  }
+  document.getElementById('shot').addEventListener('submit', fire);
+  document.getElementById('again').addEventListener('click', function () { if (!busy) newFlag(); });
+  ang.addEventListener('input', function () { if (!busy) scene(); });
+  newFlag();
+})();
+</script>
+<noscript><p>(The game needs JavaScript.)</p></noscript>
 </body>
 </html>
