@@ -45,6 +45,7 @@
     { ic: 'ψ', t: 'Research Experience', href: 'research.html', k: 'g r' },
     { ic: '▢', t: 'Plain page', href: 'basic.html', k: 'g p' },
     { ic: '∂', t: 'Ideas', href: 'ideas.html', k: 'g i' },
+    { ic: 'π', t: 'Theoretical Models', href: 'theoretical-models.html', k: 'g t' },
     { ic: '✳', t: 'Quote of the Week', href: 'star.html', k: 'g q' },
     { ic: '✉', t: 'Contact', href: 'contact.html', k: 'g c' },
     { ic: '⎙', t: 'CV', href: 'Tarang_Singh_CV.pdf', k: 'g v', blank: true },
