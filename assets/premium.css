@@ -63,13 +63,15 @@ html.theme-switching *, html.theme-switching *::before, html.theme-switching *::
 .local-time { display: inline-block; margin-left: 10px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .local-time::before { content: "·"; margin-right: 10px; opacity: 0.6; }
 .local-time .lt-rel { opacity: 0.75; }
-@media (max-width: 560px) { .local-time { display: block; margin: 6px 0 0; } .local-time::before { display: none; } }
+.visit-count { display: inline-block; margin-left: 10px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.visit-count::before { content: "·"; margin-right: 10px; opacity: 0.6; }
+@media (max-width: 560px) { .local-time, .visit-count { display: block; margin: 6px 0 0; } .local-time::before, .visit-count::before { display: none; } }
 
 /* Print: a clean, ink-on-paper copy of whatever page is open */
 @media print {
   :root, html.light-mode { --bg: #fff; --text: #111; --muted: #444; --rule: #ccc; --copper: #333; --copper-light: #111; --link: #111; }
   html, body { background: #fff !important; color: #111 !important; }
-  .photo-bg, .scrollgraph, .cursor-atoms, .theme-toggle, .kp-hint, .local-time, header nav, .home-doodle, .lb, .tab-icon-svg { display: none !important; }
+  .photo-bg, .scrollgraph, .cursor-atoms, .theme-toggle, .kp-hint, .local-time, .visit-count, header nav, .home-doodle, .lb, .tab-icon-svg { display: none !important; }
   header { position: static !important; background: none !important; box-shadow: none !important; border: 0 !important; }
   .reveal { opacity: 1 !important; transform: none !important; }
   *, *::before, *::after { box-shadow: none !important; text-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; animation: none !important; transition: none !important; }
