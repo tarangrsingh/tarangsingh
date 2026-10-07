@@ -48,12 +48,16 @@
     });
   });
   var grid = document.querySelector('.home .tab-grid');
-  if (grid && 'IntersectionObserver' in window) {
+  function playAll(start) {
+    rows.forEach(function (row, i) {
+      setTimeout(function () { row.style.setProperty('--mx', '40px'); row.style.setProperty('--my', '50%'); wake(row, 1100); }, start + i * 140);
+    });
+  }
+  var pop = grid && grid.closest('.xp-pop');
+  if (pop) pop.addEventListener('xp-open', function () { playAll(120); }, { once: true });   // in the Explore dropdown: the first time it opens
+  else if (grid && 'IntersectionObserver' in window) {
     new IntersectionObserver(function (en, ob) {
-      if (!en[0].isIntersecting) return; ob.disconnect();
-      rows.forEach(function (row, i) {
-        setTimeout(function () { row.style.setProperty('--mx', '40px'); row.style.setProperty('--my', '50%'); wake(row, 1100); }, 350 + i * 140);
-      });
+      if (!en[0].isIntersecting) return; ob.disconnect(); playAll(350);
     }, { threshold: 0.5 }).observe(grid);
   }
 })();

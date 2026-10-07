@@ -173,29 +173,60 @@ html .home .updates-card .update-entry + .update-entry { margin-top: 0; }   /* o
 .home .update-link:is(:hover, :focus-visible) .update-more { text-decoration-color: currentColor; }
 .home .update-link:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
 
-/* ---- first screen (960px and wider): who Tarang is on the left, where to go on the right, the latest updates
-   right beneath both, so a first-time visitor sees all three without scrolling. Same markup, laid out by grid. -- */
+/* ---- Explore, beside the name (see explore.js): a glass button opens the five pages in a frosted dropdown, so the
+   first screen holds the intro and the Updates squares. Without JavaScript the list simply shows under the links. -- */
+.home .name-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; }
+.xp-btn {
+  position: relative; display: inline-flex; align-items: center; gap: 9px; height: 36px; padding: 0 15px 0 16px; border-radius: 999px; cursor: pointer;
+  font: 600 14px/1 var(--font); letter-spacing: 0.01em; color: var(--text); -webkit-tap-highlight-color: transparent;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 20px -12px rgba(0, 0, 0, 0.55);
+  transition: border-color 0.25s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+.xp-btn[hidden] { display: none; }
+html.light-mode .xp-btn { background: linear-gradient(160deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35)); border-color: rgba(255, 255, 255, 0.85); box-shadow: inset 0 1px 0 #fff, 0 8px 20px -12px rgba(20, 20, 30, 0.35); }
+.xp-btn:hover, .xp-btn[aria-expanded="true"] { border-color: var(--copper); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 0 3px var(--copper-glow), 0 8px 20px -12px rgba(0, 0, 0, 0.55); }
+.xp-btn:active { transform: scale(0.96); }
+.xp-btn:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+.xp-chev { width: 7px; height: 7px; margin-top: -3px; border-right: 1.6px solid currentColor; border-bottom: 1.6px solid currentColor; transform: rotate(45deg); opacity: 0.8; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.xp-btn[aria-expanded="true"] .xp-chev { transform: translateY(3px) rotate(-135deg); }
+
+.home .profile-text { position: relative; }
+.xp-pop { margin-top: 14px; }                                  /* no JavaScript: a plain list under the links */
+.xp-pop.is-ready {
+  position: absolute; left: 0; top: calc(100% + 12px); z-index: 40; width: min(400px, calc(100vw - 36px)); margin: 0;
+  opacity: 0; visibility: hidden; transform: translateY(-8px) scale(0.98); transform-origin: 24px 0;
+  transition: opacity 0.22s ease, transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.32s;
+}
+.xp-pop.is-ready.is-open { opacity: 1; visibility: visible; transform: none; transition: opacity 0.22s ease, transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s; }
+/* frosted harder than the page glass: it floats over text, which must not show through */
+html .home .xp-pop .tab-grid {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03)), rgba(var(--bg-rgb), 0.9);
+  -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 24px 50px -18px rgba(0, 0, 0, 0.7);
+}
+html.light-mode .home .xp-pop .tab-grid { background: linear-gradient(160deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.4)), rgba(var(--bg-rgb), 0.8); }
+.home .xp-pop .tab-card, html.js-tilt .home .xp-pop .tab-card, html.light-mode .home .xp-pop .tab-card { padding: 6px 12px; grid-template-columns: 38px 1fr 38px; }
+.home .xp-pop .tab-card .tab-icon-svg { width: 36px; height: 36px; padding: 5px; }
+.home .xp-pop .tab-card h3 { font-size: 16px; }
+.home .updates-card .section-label { margin-top: 40px; }
 @media (min-width: 960px) {
-  .page-home { --content-width: min(1120px, calc(100vw - 112px)); }   /* header, page and footer widen together; clear of the scroll slider */
-  .page-home .wrap { padding-top: 34px; }
+  .page-home .wrap { padding-top: 34px; }                 /* a little less air above, so the Updates fit the first screen */
   .home .profile { margin-bottom: 22px; }
-  .home {
-    display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 420px); column-gap: clamp(40px, 5vw, 72px);
-    grid-template-areas: "profile explore-label" "about explore" "more explore" "updates updates";
-    grid-template-rows: auto auto 1fr auto;
-  }
-  .home > .profile { grid-area: profile; }
-  .home > #about { grid-area: about; margin-top: 0; }
-  .home > #about + p { grid-area: more; }
-  .home > .section-label { grid-area: explore-label; align-self: end; margin: 0 0 10px; }
-  .home > .tab-grid-wrap { grid-area: explore; align-self: start; }
-  .home > .updates-card { grid-area: updates; }
-  .home .updates-card .section-label { margin-top: 22px; }
-  /* a more compact Explore list, so all five rows sit in the first screen */
-  .home .tab-card, html.js-tilt .home .tab-card, html.light-mode .home .tab-card { padding: 6px 12px; grid-template-columns: 38px 1fr 38px; }
-  .home .tab-card .tab-icon-svg { width: 36px; height: 36px; padding: 5px; }
-  .home .tab-card h3 { font-size: 16px; }
   .home .updates-card .update-entry, html.light-mode .home .updates-card .update-entry { --sq: 204px; }
+}
+@media (max-width: 560px) {
+  .home .profile { position: relative; }
+  .home .profile-text { position: static; }
+  .xp-pop.is-ready { left: 0; right: 0; width: auto; }
+  .xp-btn { height: 32px; padding: 0 12px 0 13px; font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) { .xp-pop.is-ready, .xp-chev, .xp-btn { transition: none; } }
+@media print {
+  .xp-btn { display: none !important; }
+  .xp-pop.is-ready { position: static !important; opacity: 1 !important; visibility: visible !important; transform: none !important; width: auto !important; margin-top: 14px !important; }
 }
 
 /* ---- footer -------------------------------------------------------------------------------------------------- */
