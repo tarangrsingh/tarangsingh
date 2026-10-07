@@ -79,3 +79,7 @@ html.theme-switching *, html.theme-switching *::before, html.theme-switching *::
   a { color: #111 !important; }
   main p a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; color: #555; }
 }
+
+/* Footer on the inner pages: the same hairline the home page has, now that the icon row is gone */
+body:not(.page-home) .site-footer:not(:has(.contact)) { border-top: 1px solid var(--rule); }   /* Contact keeps its icons, already ruled off */
+body:not(.page-home) .site-footer:not(:has(.contact)) .footer-copy { margin-top: 18px; }
