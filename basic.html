@@ -16,6 +16,7 @@
   .back { float: right; font-size: 18px; line-height: 1; padding: 2px 6px; cursor: pointer; }
   #field { display: block; width: 100%; max-width: 600px; height: auto; border: 1px solid #000; }
   #shot input { width: 4em; }
+  .game > summary { cursor: pointer; }
 </style>
 </head>
 <body>
@@ -24,7 +25,8 @@
 <p>I do physics and math.</p>
 <p><a href="Tarang_Singh_CV.pdf">CV</a></p>
 <hr>
-<h3>shoot your shot</h3>
+<details class="game">
+<summary>Mini game #1: shoot your shot</summary>
 <p>Hit the flag. Ground is flat, there is no air, g = 9.81 m/s&sup2;.</p>
 <canvas id="field" width="600" height="220" role="img" aria-label="Side view of the field: a cannon on the left, a flag further along, and the paths of your shots."></canvas>
 <form id="shot">
@@ -117,5 +119,8 @@
 })();
 </script>
 <noscript><p>(The game needs JavaScript.)</p></noscript>
+</details>
+<hr>
+<footer><p>built by me, for researchers across the globe</p></footer>
 </body>
 </html>
