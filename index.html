@@ -51,7 +51,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="assets/inter-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/bg-8a68d32a.jpg" as="image" fetchpriority="high">
+<link rel="preload" href="assets/bg-qchip.jpg" as="image" fetchpriority="high">
 <style>
   /* Inter (variable, latin) embedded so it always loads */
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(assets/inter-var.woff2) format('woff2'); }
@@ -498,11 +498,11 @@
   @media (max-width: 360px) { .site-name { padding-left: 6px; padding-right: 6px; } }
 
 
-  /* Background photo: temple at sunset (HD, correct source) */
+  /* Background photo: a superconducting quantum processor chip */
   .photo-bg {
     position: fixed; inset: 0; z-index: -1;
-    background-image: url(assets/bg-8a68d32a.jpg), url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAWACgDASIAAhEBAxEB/8QAGgABAAIDAQAAAAAAAAAAAAAAAAMGAQQFAv/EACgQAAIBAwMDAgcAAAAAAAAAAAECAAMEEQUSIRMxYUGBBhQiI0Jxkf/EABcBAQEBAQAAAAAAAAAAAAAAAAABAgT/xAAXEQEBAQEAAAAAAAAAAAAAAAAAEQEC/9oADAMBAAIRAxEAPwCxhgexmZVamsXCPg7QD6w+tVqeCai4nfcaXDot0Orkbc9s8zka3Sp1VtRUUN95R7SVbxX+Hjcq26r6nMr9XUa1yEJ/BwwmLUa+rWtOnp9JkXaSzA4/cSXUCXslUkHDnjxEnWDgVazlcNyPM8dbOAQCPMRMUdA67dCw+U+kU+3A5mmL2tnG8/wREUSJd12HDr7rERLR/9k=);
-    background-size: cover; background-position: 64% 40%;
+    background-color: #0b1d3d; background-image: url(assets/bg-qchip.jpg);
+    background-size: cover; background-position: 50% 50%;
   }
   .photo-bg::after {
     content: ""; position: absolute; inset: 0;
