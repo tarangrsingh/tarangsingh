@@ -99,6 +99,8 @@ html .home .tab-grid > .tab-card + .tab-card::after {
   background: rgba(255, 255, 255, 0.12); transform: none; z-index: 0;
 }
 html.light-mode .home .tab-grid > .tab-card + .tab-card::after { background: rgba(10, 31, 92, 0.1); }
+/* the first row has no divider above it; keep the old tiles' slanted corner sheen from showing there instead */
+html .home .tab-grid > .tab-card:first-child::after { content: none; }
 .home .tab-card { position: relative; overflow: hidden; isolation: isolate; grid-template-columns: 46px 1fr 46px; }
 /* the old tiles' light that follows the cursor, now running along each row */
 .home .tab-card::before {
