@@ -121,6 +121,25 @@
 <noscript><p>(The game needs JavaScript.)</p></noscript>
 </details>
 <hr>
-<footer><p>built by me, for researchers across the globe</p></footer>
+<footer><p>built by me, for researchers across the globe</p><p id="visitor" hidden></p></footer>
+<script>
+// Visitor counter: same count and same once-per-session rule as the main site (see assets/premium.js).
+(function () {
+  var out = document.getElementById('visitor'), KEY = 'visitor-number', n = null;
+  function show(v) { out.textContent = 'you are visitor #' + v.toLocaleString('en-US'); out.hidden = false; }
+  try { n = parseInt(sessionStorage.getItem(KEY), 10); } catch (e) {}
+  if (n > 0) { show(n); return; }
+  if (!window.fetch) return;
+  fetch('https://abacus.jasoncameron.dev/hit/tarangrsingh-github-io/visits')
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (d) {
+      var v = parseInt(d && d.value, 10);
+      if (!(v > 0)) return;
+      try { sessionStorage.setItem(KEY, String(v)); } catch (e) {}
+      show(v);
+    })
+    .catch(function () {});
+})();
+</script>
 </body>
 </html>

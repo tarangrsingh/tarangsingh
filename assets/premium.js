@@ -1,3 +1,23 @@
+// Visitor number for this browser session (see the footer counter below). Shared with basic.html via window.siteVisitor.
+window.siteVisitor = function (show) {
+  var KEY = 'visitor-number', n = null;
+  try { n = parseInt(sessionStorage.getItem(KEY), 10); } catch (e) {}
+  if (n > 0) { show(n); return; }
+  if (!window.fetch) return;
+  var ctl = window.AbortController ? new AbortController() : null;
+  var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 5000);
+  fetch('https://abacus.jasoncameron.dev/hit/tarangrsingh-github-io/visits', ctl ? { signal: ctl.signal } : {})
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (d) {
+      clearTimeout(timer);
+      var v = parseInt(d && d.value, 10);
+      if (!(v > 0)) return;
+      try { sessionStorage.setItem(KEY, String(v)); } catch (e) {}
+      show(v);
+    })
+    .catch(function () { clearTimeout(timer); });
+};
+
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -34,6 +54,19 @@
       setTimeout(tick, 60000 - Date.now() % 60000 + 50);   // update on the minute
     };
     tick();
+  }
+
+  // Visitor counter. GitHub Pages has no server, so the count lives with a free counter service (Abacus). A visitor is
+  // counted once per browser session: the first page they open records a hit and remembers their number, every later
+  // page in that session just shows it. If the service is slow or down, nothing is shown.
+  var footerCopy = document.querySelector('.footer-copy');
+  if (footerCopy) {
+    window.siteVisitor(function (n) {
+      var vc = document.createElement('span'); vc.className = 'visit-count';
+      vc.textContent = 'Visitor #' + n.toLocaleString('en-US');
+      var after = footerCopy.querySelector('.local-time');   // sits right after the local time, before the Ctrl K hint
+      footerCopy.insertBefore(vc, after ? after.nextSibling : footerCopy.querySelector('.kp-hint'));
+    });
   }
 
   // Theme switch. The page's own click handler still does the real work (toggling html.light-mode); we wrap it.
