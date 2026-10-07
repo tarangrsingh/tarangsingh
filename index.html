@@ -584,31 +584,6 @@
   @keyframes bulb-ray { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
   @media (prefers-reduced-motion: reduce) { .idea-card .bulb-rays path { animation: none !important; } }
 
-  /* Explore toggle + collapsible tab grid */
-  .explore-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 16px; }
-  .tabs-toggle {
-    position: relative; flex: none; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; -webkit-tap-highlight-color: transparent;
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04));
-    border: 1px solid rgba(255, 255, 255, 0.32);
-    -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
-    transition: transform 0.2s ease;
-  }
-  html.light-mode .tabs-toggle { background: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.18)); border-color: rgba(255, 255, 255, 0.6); }
-  .tabs-toggle:active { transform: scale(0.93); }
-  .tabs-toggle .tt-sq { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 1.5px; background: var(--copper-light); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
-  .tabs-toggle.is-open .tt-sq:nth-child(1) { transform: translate(-5px, -5px); }
-  .tabs-toggle.is-open .tt-sq:nth-child(2) { transform: translate(4px, -5px); }
-  .tabs-toggle.is-open .tt-sq:nth-child(3) { transform: translate(-5px, 4px); }
-  .tabs-toggle.is-open .tt-sq:nth-child(4) { transform: translate(4px, 4px); }
-  .tabs-toggle:not(.is-open) .tt-sq:nth-child(1) { transform: translate(0, 0) rotate(45deg); }
-  .tabs-toggle:not(.is-open) .tt-sq:nth-child(2) { transform: translate(0, 0) rotate(-45deg); }
-  .tabs-toggle:not(.is-open) .tt-sq:nth-child(3) { transform: translate(0, 0) rotate(-45deg); }
-  .tabs-toggle:not(.is-open) .tt-sq:nth-child(4) { transform: translate(0, 0) rotate(45deg); }
-  .tab-grid-wrap { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.4s ease; }
-  .tab-grid-wrap:not(.is-open) { grid-template-rows: 0fr; }
-  .tab-grid-wrap > .tab-grid { overflow: hidden; min-height: 0; }
-  @media (prefers-reduced-motion: reduce) { .tab-grid-wrap, .tabs-toggle .tt-sq { transition: none; } }
   .idea-wide { grid-column: 1 / -1; }
 
   /* Smooth tilt (see script): JS eases these variables every frame, so the transform itself must not also transition */
@@ -628,11 +603,11 @@
   .plain-toggle svg { display: block; width: 17px; height: 17px; }
   .plain-toggle:hover svg, .plain-toggle:focus-visible svg { animation: none !important; }
 </style>
-<link rel="stylesheet" href="assets/scrollgraph.css?v=2026100702">
-<link rel="stylesheet" href="assets/premium.css?v=2026100702">
-<link rel="stylesheet" href="assets/lab.css?v=2026100702">
-<link rel="stylesheet" href="assets/profile.css?v=2026100702">
-<link rel="stylesheet" href="assets/home.css?v=2026100702">
+<link rel="stylesheet" href="assets/scrollgraph.css?v=2026100705">
+<link rel="stylesheet" href="assets/premium.css?v=2026100705">
+<link rel="stylesheet" href="assets/lab.css?v=2026100705">
+<link rel="stylesheet" href="assets/profile.css?v=2026100705">
+<link rel="stylesheet" href="assets/home.css?v=2026100705">
 <script>
   (function () {
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
@@ -710,19 +685,15 @@
   <main id="top" class="home">
     <div class="profile">
       <button type="button" class="profile-photo" aria-label="View a larger photo of Tarang Singh" title="View larger photo"><img src="assets/portrait.jpg" width="480" height="480" alt="" decoding="async" fetchpriority="high"></button>
-      <div class="profile-text"><h1 class="profile-name">Tarang Singh</h1><ul class="links" aria-label="Links">
+      <div class="profile-text"><div class="name-row"><h1 class="profile-name">Tarang Singh</h1><button type="button" class="xp-btn" id="xp-btn" aria-expanded="false" aria-controls="xp-pop" hidden>Explore <span class="xp-chev" aria-hidden="true"></span></button></div><ul class="links" aria-label="Links">
         <li><a href="Tarang_Singh_CV.pdf" target="_blank" rel="noopener" aria-label="CV" data-k="cv" title="CV"><svg viewBox="0 0 24 24" aria-hidden="true"><text x="12" y="18.3" text-anchor="middle" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="17" font-weight="800" letter-spacing="-0.6" fill="currentColor">CV</text></svg><span class="sr-only">CV</span></a></li>
         <li><a href="mailto:tarangrajeshsingh.phy25@itbhu.ac.in" aria-label="Email" data-k="gmail" title="Email · tarangrajeshsingh.phy25@itbhu.ac.in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg><span class="sr-only">Email</span></a></li>
         <li><a href="https://www.linkedin.com/in/tarang-singh-8b6167377/" target="_blank" rel="noopener" aria-label="LinkedIn" data-k="linkedin" title="LinkedIn"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M416 32L31.9 32C14.3 32 0 46.5 0 64.3L0 447.7C0 465.5 14.3 480 31.9 480L416 480c17.6 0 32-14.5 32-32.3l0-383.4C448 46.5 433.6 32 416 32zM135.4 416l-66.4 0 0-213.8 66.5 0 0 213.8-.1 0zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77zM384.3 416l-66.4 0 0-104c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9l0 105.8-66.4 0 0-213.8 63.7 0 0 29.2 .9 0c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9l0 117.2z"/></svg><span class="sr-only">LinkedIn</span></a></li>
         <li><a href="https://twitter.com/tarangwrites" target="_blank" rel="noopener" aria-label="X" data-k="x" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg><span class="sr-only">X</span></a></li>
         <li><a href="https://youtube.com/@tarangsingh5417?si=5X4i03z6z_C9QINU" target="_blank" rel="noopener" aria-label="YouTube" data-k="youtube" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg><span class="sr-only">YouTube</span></a></li>
-      </ul></div>
-    </div>
-    <p id="about">I am currently pursuing my masters from <a href="https://www.iitbhu.ac.in" target="_blank" rel="noopener">IIT-BHU, Varanasi</a>, and learning methods of Quantum Compute, to build my own circuits and to contribute to the field in the coming years.</p>
-    <p class="reveal">I love understanding Math and Physics, I also have several other interests such as philosophy/metaphysics, writing, understanding human brain/LLM&rsquo;s and a few other things.</p>
-
-    <h2 class="section-label">Explore</h2>
-    <div class="tab-grid-wrap is-open" id="tab-grid-wrap"><div class="tab-grid">
+      </ul>
+      <nav class="xp-pop" id="xp-pop" aria-label="Explore">
+      <div class="tab-grid">
       <a class="tab-card" href="research.html" aria-label="Research Experience">
         <svg class="tab-icon-svg qubit" viewBox="0 0 64 64" aria-hidden="true">
           <circle cx="32" cy="32" r="21" fill="var(--avatar-bg)" stroke="var(--copper)" stroke-width="1.8"/>
@@ -798,17 +769,28 @@
         </svg>
         <h3>Contact</h3>
       </a>
-    </div></div>
+    </div>
+      </nav></div>
+    </div>
+    <p id="about">I am currently pursuing my masters from <a href="https://www.iitbhu.ac.in" target="_blank" rel="noopener">IIT-BHU, Varanasi</a>, and learning methods of Quantum Compute, to build my own circuits and to contribute to the field in the coming years.</p>
+    <p class="reveal">I love understanding Math and Physics, I also have several other interests such as philosophy/metaphysics, writing, understanding human brain/LLM&rsquo;s and a few other things.</p>
 
     <div class="updates-card reveal" id="updates">
       <h2 class="section-label">Updates</h2>
-      <div class="update-entry">
-        <div class="update-date">04/10/2026</div>
-        <p>(Re)creating a superconducting circuit to understand its notions, I may upload a few interesting finds here, stay tuned!</p>
-      </div>
-      <div class="update-entry">
-        <div class="update-date">22/09/2026</div>
-        <p>v1.1 is out &mdash; hope you have a great time here. I&rsquo;m currently editing my first paper, and the arXiv preprint will be up soon!</p>
+      <div class="updates-list">
+        <a class="update-entry update-link" href="theoretical-models.html">
+          <div class="update-date">07/10/2026</div>
+          <p>Trying to analyze the new set of papers published by OpenAI.</p>
+          <span class="update-more">Theoretical Models</span>
+        </a>
+        <div class="update-entry">
+          <div class="update-date">04/10/2026</div>
+          <p>(Re)creating a superconducting circuit to understand its notions, I may upload a few interesting finds here, stay tuned!</p>
+        </div>
+        <div class="update-entry">
+          <div class="update-date">22/09/2026</div>
+          <p>v1.1 is out &mdash; hope you have a great time here. I&rsquo;m currently editing my first paper, and the arXiv preprint will be up soon!</p>
+        </div>
       </div>
     </div>
   </main>
@@ -1002,22 +984,12 @@
   }
 
 </script>
-<script>
-// Explore toggle: a small 4-square glyph that morphs into an X, showing/hiding the tab grid.
-(function () {
-  var btn = document.getElementById('tabs-toggle'), wrap = document.getElementById('tab-grid-wrap');
-  if (!btn || !wrap) return;
-  btn.addEventListener('click', function () {
-    var open = btn.classList.toggle('is-open'); wrap.classList.toggle('is-open', open);
-    btn.setAttribute('aria-expanded', open);
-  });
-})();
-</script>
-<script src="assets/scrollgraph.js?v=2026100702" defer></script>
-<script src="assets/premium.js?v=2026100702" defer></script>
-<script src="assets/lab.js?v=2026100702" defer></script>
-<script src="assets/profile.js?v=2026100702" defer></script>
-<script src="assets/links.js?v=2026100702" defer></script>
-<script src="assets/wave.js?v=2026100702" defer></script>
+<script src="assets/scrollgraph.js?v=2026100705" defer></script>
+<script src="assets/premium.js?v=2026100705" defer></script>
+<script src="assets/lab.js?v=2026100705" defer></script>
+<script src="assets/profile.js?v=2026100705" defer></script>
+<script src="assets/links.js?v=2026100705" defer></script>
+<script src="assets/explore.js?v=2026100705" defer></script>
+<script src="assets/wave.js?v=2026100705" defer></script>
 </body>
 </html>

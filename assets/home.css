@@ -148,16 +148,86 @@ html.light-mode .home .tab-card .tab-icon-svg { background: radial-gradient(circ
 .home .tab-card:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .home .tab-card:active { background: color-mix(in srgb, var(--copper) 12%, transparent); }
 
-/* ---- updates: a dated list in the same column ---------------------------------------------------------------- */
+/* ---- updates: square glass cards. Wide screens: a column in the right margin, beside the profile. Narrower: a row
+   under Explore that scrolls sideways. ------------------------------------------------------------------------- */
 .home .updates-card { margin: 0 !important; width: auto !important; }
+.home .updates-list {
+  display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+  margin: 0; padding: 4px 0 10px; scrollbar-width: thin;   /* room for the hover lift inside the scroller */
+}
 .home .updates-card .update-entry,
 html.light-mode .home .updates-card .update-entry {
-  display: grid; grid-template-columns: 104px 1fr; gap: 16px; align-items: baseline;
-  margin: 0; padding: 16px 20px;
+  flex: 0 0 var(--sq, 220px); width: var(--sq, 220px); aspect-ratio: 1 / 1; scroll-snap-align: start;
+  display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 18px 18px 16px;
 }
-html .home .updates-card .update-entry + .update-entry { margin-top: 10px; }   /* outranks the light-mode card reset */
-.home .updates-card .update-date { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 0.02em; text-transform: none; color: var(--muted); font-variant-numeric: tabular-nums; }
-.home .updates-card .update-entry p { font-size: 15.5px; line-height: 1.65; color: var(--text); }
+html .home .updates-card .update-entry + .update-entry { margin-top: 0; }   /* outranks the light-mode card reset */
+.home .updates-card .update-date { margin: 0; font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: none; color: var(--muted); font-variant-numeric: tabular-nums; }
+.home .updates-card .update-entry p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--text); }
+/* the card that opens a page */
+.home .update-link { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; transition: border-color 0.25s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.home .update-more {
+  margin-top: auto; font-size: 13px; font-weight: 600; color: var(--copper-light);
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.25em; text-decoration-color: transparent; transition: text-decoration-color 0.2s ease;
+}
+.home .update-link:is(:hover, :focus-visible) { border-color: var(--copper) !important; transform: translateY(-2px); }
+.home .update-link:is(:hover, :focus-visible) .update-more { text-decoration-color: currentColor; }
+.home .update-link:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+
+/* ---- Explore, beside the name (see explore.js): a glass button opens the five pages in a frosted dropdown, so the
+   first screen holds the intro and the Updates squares. Without JavaScript the list simply shows under the links. -- */
+.home .name-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; }
+.xp-btn {
+  position: relative; display: inline-flex; align-items: center; gap: 9px; height: 36px; padding: 0 15px 0 16px; border-radius: 999px; cursor: pointer;
+  font: 600 14px/1 var(--font); letter-spacing: 0.01em; color: var(--text); -webkit-tap-highlight-color: transparent;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 20px -12px rgba(0, 0, 0, 0.55);
+  transition: border-color 0.25s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+.xp-btn[hidden] { display: none; }
+html.light-mode .xp-btn { background: linear-gradient(160deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35)); border-color: rgba(255, 255, 255, 0.85); box-shadow: inset 0 1px 0 #fff, 0 8px 20px -12px rgba(20, 20, 30, 0.35); }
+.xp-btn:hover, .xp-btn[aria-expanded="true"] { border-color: var(--copper); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 0 3px var(--copper-glow), 0 8px 20px -12px rgba(0, 0, 0, 0.55); }
+.xp-btn:active { transform: scale(0.96); }
+.xp-btn:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+.xp-chev { width: 7px; height: 7px; margin-top: -3px; border-right: 1.6px solid currentColor; border-bottom: 1.6px solid currentColor; transform: rotate(45deg); opacity: 0.8; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.xp-btn[aria-expanded="true"] .xp-chev { transform: translateY(3px) rotate(-135deg); }
+
+.home .profile-text { position: relative; }
+.xp-pop { margin-top: 14px; }                                  /* no JavaScript: a plain list under the links */
+.xp-pop.is-ready {
+  position: absolute; left: 0; top: calc(100% + 12px); z-index: 40; width: min(400px, calc(100vw - 36px)); margin: 0;
+  opacity: 0; visibility: hidden; transform: translateY(-8px) scale(0.98); transform-origin: 24px 0;
+  transition: opacity 0.22s ease, transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.32s;
+}
+.xp-pop.is-ready.is-open { opacity: 1; visibility: visible; transform: none; transition: opacity 0.22s ease, transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s; }
+/* frosted harder than the page glass: it floats over text, which must not show through */
+html .home .xp-pop .tab-grid {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03)), rgba(var(--bg-rgb), 0.9);
+  -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 24px 50px -18px rgba(0, 0, 0, 0.7);
+}
+html.light-mode .home .xp-pop .tab-grid { background: linear-gradient(160deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.4)), rgba(var(--bg-rgb), 0.8); }
+.home .xp-pop .tab-card, html.js-tilt .home .xp-pop .tab-card, html.light-mode .home .xp-pop .tab-card { padding: 6px 12px; grid-template-columns: 38px 1fr 38px; }
+.home .xp-pop .tab-card .tab-icon-svg { width: 36px; height: 36px; padding: 5px; }
+.home .xp-pop .tab-card h3 { font-size: 16px; }
+.home .updates-card .section-label { margin-top: 40px; }
+@media (min-width: 960px) {
+  .page-home .wrap { padding-top: 34px; }                 /* a little less air above, so the Updates fit the first screen */
+  .home .profile { margin-bottom: 22px; }
+  .home .updates-card .update-entry, html.light-mode .home .updates-card .update-entry { --sq: 204px; }
+}
+@media (max-width: 560px) {
+  .home .profile { position: relative; }
+  .home .profile-text { position: static; }
+  .xp-pop.is-ready { left: 0; right: 0; width: auto; }
+  .xp-btn { height: 32px; padding: 0 12px 0 13px; font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) { .xp-pop.is-ready, .xp-chev, .xp-btn { transition: none; } }
+@media print {
+  .xp-btn { display: none !important; }
+  .xp-pop.is-ready { position: static !important; opacity: 1 !important; visibility: visible !important; transform: none !important; width: auto !important; margin-top: 14px !important; }
+}
 
 /* ---- footer -------------------------------------------------------------------------------------------------- */
 .page-home .site-footer { margin-top: var(--gap, 56px); padding-top: 18px; border-top: 1px solid var(--rule); }
@@ -170,7 +240,6 @@ html .home .updates-card .update-entry + .update-entry { margin-top: 10px; }   /
   .home .profile { gap: 16px; }
   .home .profile-photo { width: 84px; height: 84px; border-radius: 24px; }
   .home p { font-size: 17px; }
-  .home .updates-card .update-entry, html.light-mode .home .updates-card .update-entry { grid-template-columns: 1fr; gap: 2px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .home .tab-card, .links a, .links svg, .home .tab-card h3::after, .home .tab-card .tab-icon-svg, .home .tab-card::before { transition: none; }

@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Research Experience — Tarang Singh</title>
-<meta name="description" content="Research experience of Tarang Singh: labs, projects and current work." />
+<title>Theoretical Models — Tarang Singh</title>
+<meta name="description" content="Theoretical models by Tarang Singh: writeups and simulations working through the papers published by OpenAI. Under construction." />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Research Experience &mdash; Tarang Singh" />
-<meta property="og:description" content="Research experience of Tarang Singh: labs, projects and current work." />
+<meta property="og:title" content="Theoretical Models &mdash; Tarang Singh" />
+<meta property="og:description" content="Theoretical models by Tarang Singh: writeups and simulations working through the papers published by OpenAI. Under construction." />
 <meta property="og:site_name" content="Tarang Singh" />
-<link rel="canonical" href="https://tarangrsingh.github.io/tarangsingh/research.html" />
-<meta property="og:url" content="https://tarangrsingh.github.io/tarangsingh/research.html" />
+<link rel="canonical" href="https://tarangrsingh.github.io/tarangsingh/theoretical-models.html" />
+<meta property="og:url" content="https://tarangrsingh.github.io/tarangsingh/theoretical-models.html" />
 <meta property="og:image" content="https://tarangrsingh.github.io/tarangsingh/assets/portrait-large.jpg" />
 <meta property="og:image:alt" content="Portrait of Tarang Singh" />
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="Research Experience &mdash; Tarang Singh" />
-<meta name="twitter:description" content="Research experience of Tarang Singh: labs, projects and current work." />
+<meta name="twitter:title" content="Theoretical Models &mdash; Tarang Singh" />
+<meta name="twitter:description" content="Theoretical models by Tarang Singh: writeups and simulations working through the papers published by OpenAI. Under construction." />
 <meta name="theme-color" content="#08111f" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#d9e7ff" media="(prefers-color-scheme: light)">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -23,7 +23,6 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="assets/inter-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/bg-26e2d7b5.jpg" as="image" fetchpriority="high">
 <style>
   /* Inter (variable, latin) embedded so it always loads */
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url(assets/inter-var.woff2) format('woff2'); }
@@ -104,9 +103,13 @@
   .home-doodle:focus-visible .home-doodle-icon { transform: translateY(-2px) scale(1.08); }
 
   .brand-star { display: inline-flex; line-height: 0; }
+  .star-icon { width: 22px; height: auto; filter: drop-shadow(0 0 3px var(--copper-glow)); animation: star-shine 3.2s ease-in-out infinite; }
   @keyframes star-shine {
     0%, 100% { filter: brightness(1) drop-shadow(0 0 2px var(--copper-glow)); opacity: 0.85; }
     50% { filter: brightness(1.8) drop-shadow(0 0 6px var(--copper-glow)) drop-shadow(0 0 16px var(--copper-glow)); opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .star-icon { animation: none; }
   }
   nav { display: flex; align-items: center; flex-wrap: wrap; margin-left: auto; }
 
@@ -274,6 +277,14 @@
   .atom:nth-child(2) { width: 10px; height: 10px; margin: -5px 0 0 -5px; }
   .atom:nth-child(3) { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; }
 
+  .tm { text-align: center; padding: 12vh 0 6vh; }
+  .tm h1.page-title { margin-bottom: 18px; }
+  .tm-status {
+    display: inline-block; margin: 0 0 26px; padding: 5px 12px; border: 1px solid var(--rule); border-radius: 999px;
+    font-family: var(--font); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--copper-light);
+  }
+  .tm-note { max-width: 32em; margin: 0 auto; font-size: 18px; line-height: 1.7; color: var(--text); }
+
   /* Header name: a soft light follows the cursor and a hairline grows underneath; nothing moves (see script) */
   .header-inner { position: relative; }
   .site-name {
@@ -300,80 +311,6 @@
   .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   @media (max-width: 360px) { .site-name { padding-left: 6px; padding-right: 6px; } }
 
-
-  /* Scholastic Achievements / Research Experience pages */
-  .sx-lead { margin: -2px 0 30px; max-width: 60ch; color: var(--muted); font-size: 15px; line-height: 1.55; }
-  .sx-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 0 0 22px; }
-  @media (min-width: 1024px) { .sx-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-  .sx-stat { position: relative; overflow: hidden; padding: 20px 18px 18px; border: 1px solid var(--rule); border-radius: 14px; background: var(--avatar-bg); }
-  .sx-stat::after { content: ""; position: absolute; left: 18px; right: 18px; bottom: 0; height: 2px; background: var(--copper); transform: scaleX(0); transform-origin: left; transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s; }
-  .in-view .sx-stat::after { transform: scaleX(1); }
-  .sx-num { display: flex; align-items: baseline; gap: 6px; font-size: clamp(2.3rem, 6.5vw, 3.1rem); line-height: 1; font-weight: 600; letter-spacing: -0.03em; color: var(--copper-light); font-variant-numeric: tabular-nums; }
-  .sx-num small { font-size: 0.34em; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-  .sx-lab { margin-top: 12px; font-size: 13.5px; font-weight: 600; color: var(--text); }
-  .sx-sub { margin-top: 3px; font-size: 12.5px; line-height: 1.45; color: var(--muted); }
-  .sx-note { margin: 0 0 44px; max-width: 62ch; color: var(--muted); font-size: 15px; line-height: 1.65; }
-  .sx-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
-  .sx-card {
-    position: relative; overflow: hidden; isolation: isolate; padding: 18px; border-radius: 14px;
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -8px 14px -10px rgba(255, 255, 255, 0.1), 0 6px 18px -10px rgba(0, 0, 0, 0.35);
-    transition: border-color 0.25s ease, transform 0.25s ease, background 0.2s ease;
-  }
-  html.light-mode .sx-card {
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.18));
-    border-color: rgba(255, 255, 255, 0.6);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 6px 16px -10px rgba(20, 20, 30, 0.25);
-  }
-  .sx-card::after {
-    content: ""; position: absolute; left: -15%; right: -15%; top: -55%; height: 65%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 75%);
-    transform: rotate(-8deg); pointer-events: none;
-  }
-  @media (hover: hover) { .sx-card:hover { border-color: var(--copper); transform: translateY(-2px); } }
-  .sx-wide { grid-column: 1 / -1; }
-  .sx-card { container-type: inline-size; }
-  @container (max-width: 400px) { .sx-when { margin-left: 66px; } }   /* wrapped under the title: align with it */
-  .sx-head { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 14px; margin-bottom: 12px; }
-  .sx-logo { flex: none; display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; padding: 5px; overflow: hidden; border-radius: 50%; border: 1px solid var(--rule); background: #f7f5f0; }
-  .sx-logo img { width: 100%; height: 100%; object-fit: contain; }
-  .sx-title { flex: 1 1 170px; min-width: 0; }
-  .sx-title h3 { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.3; color: var(--text); }
-  .sx-title p { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
-  .sx-when { flex: none; margin-left: auto; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; color: var(--copper-light); }
-  .sx-card > p { margin: 0 0 10px; font-size: 14.5px; line-height: 1.6; }
-  .sx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-  .sx-tag { padding: 3px 9px; border: 1px solid var(--rule); border-radius: 999px; font-size: 11.5px; color: var(--muted); }
-  .sx-link { display: inline-block; margin-top: 2px; font-size: 13.5px; font-weight: 600; text-decoration: none; }
-  .sx-link:hover { text-decoration: underline; }
-  .sx-feature {
-    position: relative; overflow: hidden; isolation: isolate; margin: 0 0 30px; padding: 22px 22px 20px;
-    border-left: 3px solid var(--copper); border-radius: 14px;
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
-    border-top: 1px solid rgba(255, 255, 255, 0.28); border-right: 1px solid rgba(255, 255, 255, 0.28); border-bottom: 1px solid rgba(255, 255, 255, 0.28);
-    -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 18px -10px rgba(0, 0, 0, 0.35);
-  }
-  html.light-mode .sx-feature {
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.18));
-    border-top-color: rgba(255, 255, 255, 0.6); border-right-color: rgba(255, 255, 255, 0.6); border-bottom-color: rgba(255, 255, 255, 0.6);
-  }
-  .sx-feature::after {
-    content: ""; position: absolute; left: -15%; right: -15%; top: -55%; height: 65%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 75%);
-    transform: rotate(-8deg); pointer-events: none;
-  }
-  .sx-eyebrow { margin-bottom: 8px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--link); }
-  .sx-feature h2 { margin: 0 0 8px; font-size: 20px; font-weight: 600; }
-  .sx-feature p { margin: 0 0 12px; font-size: 15px; line-height: 1.65; }
-  .sx-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 10px; margin: 6px 0 8px; }
-  .sx-photos img { display: block; width: 100%; height: 190px; object-fit: cover; border: 1px solid var(--rule); border-radius: 10px; cursor: zoom-in; }
-  .sx-cap { margin: 0 !important; font-size: 13px !important; color: var(--muted); }
-  .sx-box { position: fixed; inset: 0; z-index: 60; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(4, 8, 16, 0.86); cursor: zoom-out; }
-  .sx-box.open { display: flex; }
-  .sx-box img { max-width: 100%; max-height: 100%; border-radius: 10px; }
 
   /* Liquid-glass buttons: translucent, blurred, with a soft top sheen */
   .theme-toggle, .contact a, .send-btn {
@@ -407,35 +344,14 @@
   }
   .theme-toggle:active, .contact a:active, .send-btn:active:not([disabled]) { transform: translateY(0) scale(0.97); }
 
-  /* Background photo: prism light streaks (HD) */
-  .photo-bg {
-    position: fixed; inset: 0; z-index: -1;
-    background-image: url(assets/bg-26e2d7b5.jpg), url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAWACgDASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAMEBgcF/8QAJhAAAQQBAwQBBQAAAAAAAAAAAQACAwQFERIhEyIxUUEUUnGBsf/EABgBAAIDAAAAAAAAAAAAAAAAAAIDAQQF/8QAHREAAgIDAQEBAAAAAAAAAAAAAAERIQIDEjETYf/aAAwDAQACEQMRAD8Ax2GfIyR8QB2yjaVHbx8scx1adCfS9dk4xl97HQggHTwtTVt0MnC3fCOoPI9q0tNNNgzKVWc2NR7HaPaWqWKIhjiX7Wf1dRv4XH28UXRkNkaODpz+Cua5CpLBK5pHaD5HhLeEeBPGLXhTjmET+Bqihc0+kSWrI6N/nMW12VkYXDu8FRYqk6C8yMP5J4IRFp6kvnP4DtvaXsvcnoWtrSP18qt9bRuV3C1S7vujOhRFGxRqkV3l3ipMvdNPqObHFIB8akIiLOTmy1tSWVH/2Q==);
-    background-size: cover; background-position: 82% 32%;
+  /* Background: one large pi, faded into the page */
+  .pi-bg { position: fixed; inset: 0; z-index: -1; display: grid; place-items: center; overflow: hidden; pointer-events: none; user-select: none; }
+  .pi-bg span {
+    font: italic 400 min(88vh, 96vw)/1 "Times New Roman", Times, Georgia, serif; color: var(--text); opacity: 0.055;
+    transform: translateY(-3%);
   }
-  .photo-bg::after {
-    content: ""; position: absolute; inset: 0;
-    background: linear-gradient(to right, rgba(var(--bg-rgb), 0.72) 0%, rgba(var(--bg-rgb), 0.68) 55%, rgba(var(--bg-rgb), 0.4) 78%, rgba(var(--bg-rgb), 0.58) 100%),
-                linear-gradient(rgba(var(--bg-rgb), 0.2) 0%, rgba(var(--bg-rgb), 0.02) 16%, rgba(var(--bg-rgb), 0.02) 68%, rgba(var(--bg-rgb), 0.48) 100%);
-  }
+  html.light-mode .pi-bg span { opacity: 0.07; }
 
-  /* VNA screen in the "Currently" card (drawn by assets/vna.js; illustrative trace, not measured data) */
-  .vna { position: relative; margin: 16px 0 2px; height: 116px; border-radius: 10px; overflow: hidden; touch-action: pan-y; cursor: crosshair;
-    border: 1px solid var(--rule); background: rgba(var(--bg-rgb), 0.55); box-shadow: inset 0 0 30px -10px rgba(0, 0, 0, 0.5); }
-  html.light-mode .vna { background: rgba(255, 255, 255, 0.45); }
-  .vna svg { position: absolute; inset: 3px 0; width: 100%; height: calc(100% - 6px); overflow: visible; }
-  .vna-grid line { stroke: var(--rule); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: 0.7; }
-  .vna-trace, .vna-ghost { fill: none; stroke-width: 1.6; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-  .vna-trace { stroke: var(--copper-light); }
-  .vna-ghost { stroke: var(--muted); opacity: 0.25; }
-  .vna-head { fill: var(--copper-light); opacity: 0; transition: opacity 0.3s ease; }
-  .vna.is-sweeping .vna-head { opacity: 1; }
-  .vna-mk { fill: none; stroke: var(--text); stroke-width: 1.5; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity 0.2s ease; }
-  .vna-vx, .vna-hx { stroke: var(--copper); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity 0.2s ease; }
-  .vna.is-probing .vna-mk, .vna.is-probing .vna-vx, .vna.is-probing .vna-hx { opacity: 0.9; }
-  .vna-y, .vna-x { position: absolute; font: 600 10.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); letter-spacing: 0.04em; pointer-events: none; }
-  .vna-y { left: 8px; top: 7px; } .vna-y sub { font-size: 0.8em; }
-  .vna-x { right: 8px; bottom: 7px; }
 </style>
 <link rel="stylesheet" href="assets/scrollgraph.css?v=2026100705">
 <link rel="stylesheet" href="assets/premium.css?v=2026100705">
@@ -447,7 +363,7 @@
 </script>
 </head>
 <body>
-<div class="photo-bg" aria-hidden="true"></div>
+<div class="pi-bg" aria-hidden="true"><span>&pi;</span></div>
 <div class="scrollgraph" id="scrollgraph" role="slider" tabindex="0" aria-orientation="vertical" aria-label="Scroll position on this page" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0% down the page">
   <svg class="scrollgraph-curve" viewBox="0 0 60 1000" preserveAspectRatio="none" aria-hidden="true">
     <line class="sg-axis" x1="52" y1="0" x2="52" y2="1000" />
@@ -511,52 +427,10 @@
 </header>
 
 <div class="wrap">
-  <main>
-    <h1 class="page-title">Research Experience</h1>
-    <p class="sx-lead">The labs I have worked in, and what I did there.</p>
-
-    <section class="sx-feature reveal">
-      <div class="sx-eyebrow">Currently</div>
-      <h2>Microwave resonators and quantum computing</h2>
-      <p>My current work is about learning quantum computing. The facilities at my institute gave me the chance to fabricate my own microwave resonator and study its properties using a Vector Network Analyzer (VNA).</p>
-      <div class="sx-tags"><span class="sx-tag">Quantum computing</span><span class="sx-tag">Microwave resonator</span><span class="sx-tag">Vector Network Analyzer</span></div>
-      <div class="vna" aria-hidden="true">
-        <svg viewBox="0 0 400 110" preserveAspectRatio="none">
-          <g class="vna-grid"></g>
-          <path class="vna-ghost" d=""/>
-          <path class="vna-trace" d=""/>
-          <line class="vna-vx" x1="200" y1="0" x2="200" y2="110"/><line class="vna-hx" x1="0" y1="55" x2="400" y2="55"/>
-          <circle class="vna-head" cx="0" cy="10" r="2.6"/>
-          <circle class="vna-mk" cx="200" cy="55" r="4"/>
-        </svg>
-        <span class="vna-y">|S<sub>21</sub>|</span><span class="vna-x">f &rarr;</span>
-      </div>
-    </section>
-
-    <h2 class="section-heading reveal">Experience</h2>
-    <div class="sx-cards">
-      <div class="sx-card reveal">
-        <div class="sx-head"><span class="sx-logo"><img src="assets/img-d5c9cb8e.png" alt="IIT (BHU) Varanasi" /></span><div class="sx-title"><h3>Summer Research Scholar</h3><p>IIT (BHU) &middot; With Dr. Rajeev Singh &middot; Varanasi</p></div><span class="sx-when">May – Jul 2026</span></div>
-        <p class="sx-cap">More details soon.</p>
-      </div>
-      <div class="sx-card reveal">
-        <div class="sx-head"><span class="sx-logo"><img src="assets/img-06d06217.png" alt="TIFR-HBCSE / NIUS" /></span><div class="sx-title"><h3>NIUS 19.2 Research Project</h3><p>TIFR-HBCSE &middot; With Dr. Sudhir Jain &middot; Mumbai</p></div><span class="sx-when">2023</span></div>
-        <p>Research project carried out under Dr. Sudhir Jain at TIFR-HBCSE.</p>
-        <a class="sx-link" href="https://docs.google.com/document/d/1iGeDJsA-uLXmgem9jwPF_DHx9IUOtibI/edit?usp=drivesdk&amp;ouid=107596167092272647408&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener">Read the study ↗</a>
-      </div>
-      <div class="sx-card reveal">
-        <div class="sx-head"><span class="sx-logo"><img src="assets/img-06d06217.png" alt="TIFR-HBCSE / NIUS" /></span><div class="sx-title"><h3>NIUS 19.1</h3><p>TIFR-HBCSE &middot; Mumbai</p></div><span class="sx-when">Dec 2022 – Jan 2023</span></div>
-        <p>Participated in the NIUS Exposure cum Enrichment Camp (19.1) in Physics, held in person at HBCSE and online.</p>
-        <a class="sx-link" href="Tarang_NIUS.pdf" target="_blank" rel="noopener">View participation certificate ↗</a>
-      </div>
-      <div class="sx-card sx-wide reveal">
-        <div class="sx-head"><span class="sx-logo"><img src="assets/img-f39659bf.png" alt="TIFR" /></span><div class="sx-title"><h3>Winter Project</h3><p>TIFR Colaba &middot; With Dr. Mandar Deshmukh &middot; Mumbai</p></div><span class="sx-when">Oct – Nov 2022</span></div>
-        <div class="sx-photos"><img src="assets/img-9458c044.jpg" alt="In the TIFR Colaba nanoelectronics cleanroom" loading="lazy" /><img src="assets/img-7e700abf.jpg" alt="Working in the TIFR Colaba cleanroom during the winter project" loading="lazy" /></div>
-        <p class="sx-cap">Suited up in the TIFR Colaba cleanroom during the winter project.</p>
-        <div class="sx-tags"><span class="sx-tag">Cleanroom</span><span class="sx-tag">Nanoelectronics</span></div>
-      </div>
-    </div>
-    <div class="sx-box" id="sx-box"><img alt="" /></div>
+  <main class="tm">
+    <h1 class="page-title">Theoretical Models</h1>
+    <p class="tm-status">Site under construction</p>
+    <p class="tm-note">Will add my writeups and simulations where I try to understand the current 700+ papers published by OpenAI.</p>
   </main>
   <footer class="site-footer">
     <ul class="contact">
@@ -710,38 +584,8 @@
   measure(); setTimeout(function () { glint = -2; start(); }, 1200);
 })();
 </script>
-<script>
-// Count-up numbers when they scroll into view, and a simple photo lightbox.
-(function () {
-  var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll('[data-to]').forEach(function (el) {
-    var to = parseFloat(el.dataset.to), dec = parseInt(el.dataset.dec || '0', 10), done = false;
-    if (calm || !('IntersectionObserver' in window)) return;
-    el.textContent = (0).toFixed(dec);
-    new IntersectionObserver(function (en, ob) {
-      if (!en[0].isIntersecting || done) return; done = true; ob.disconnect();
-      var t0 = performance.now();
-      (function step(now) {
-        var t = Math.min((now - t0) / 1100, 1), e = 1 - Math.pow(1 - t, 3);
-        el.textContent = (t < 1 ? to * e : to).toFixed(dec);
-        if (t < 1) requestAnimationFrame(step);
-      })(t0);
-    }, { threshold: 0.6 }).observe(el);
-  });
-  var box = document.getElementById('sx-box');
-  if (box) {
-    var big = box.querySelector('img');
-    document.querySelectorAll('.sx-photos img').forEach(function (img) {
-      img.addEventListener('click', function () { big.src = img.src; big.alt = img.alt; box.classList.add('open'); });
-    });
-    box.addEventListener('click', function () { box.classList.remove('open'); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') box.classList.remove('open'); });
-  }
-})();
-</script>
 <script src="assets/scrollgraph.js?v=2026100705" defer></script>
 <script src="assets/premium.js?v=2026100705" defer></script>
 <script src="assets/lab.js?v=2026100705" defer></script>
-<script src="assets/vna.js?v=2026100705" defer></script>
 </body>
 </html>
