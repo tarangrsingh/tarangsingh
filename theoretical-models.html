@@ -284,6 +284,13 @@
     font-family: var(--font); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--copper-light);
   }
   .tm-note { max-width: 32em; margin: 0 auto; font-size: 18px; line-height: 1.7; color: var(--text); }
+  .tm-link { margin: 26px 0 0; }
+  .tm-link a {
+    display: inline-block; padding: 9px 18px; border-radius: 999px; border: 1px solid var(--rule);
+    font: 600 14.5px/1.2 var(--font); color: var(--copper-light); text-decoration: none;
+    background: rgba(var(--bg-rgb), 0.4); transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .tm-link a:hover, .tm-link a:focus-visible { border-color: var(--copper); color: var(--text); }
 
   /* Header name: a soft light follows the cursor and a hairline grows underneath; nothing moves (see script) */
   .header-inner { position: relative; }
@@ -423,6 +430,7 @@
     <h1 class="page-title">Theoretical Models</h1>
     <p class="tm-status">Site under construction</p>
     <p class="tm-note">Will add my writeups and simulations where I try to understand the current 700+ papers published by OpenAI.</p>
+    <p class="tm-link"><a href="https://github.com/openai/math" target="_blank" rel="noopener">OpenAI math results on GitHub</a></p>
   </main>
   <footer class="site-footer">
     <p class="footer-copy">&copy; <span data-year>2026</span> Tarang Singh</p>
