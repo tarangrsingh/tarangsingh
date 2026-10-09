@@ -49,6 +49,13 @@ html.light-mode .links a[data-k="linkedin"] { --brand: #0a66c2; }
 @keyframes link-pop { 0% { transform: scale(0.8); } 45% { transform: scale(1.22) rotate(-6deg); } 100% { transform: scale(1.12); } }
 @keyframes link-ring { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 70%, transparent); } to { box-shadow: 0 0 0 14px transparent; } }
 
+/* ---- mission: the long-range aim, set off from the intro by an accent rule -------------------------------------- */
+.home p.mission {
+  margin: 4px 0 0; padding: 2px 0 2px 18px; border-left: 2px solid var(--copper-light);
+  font-size: 18px; line-height: 1.65; font-style: italic; color: var(--text);
+}
+@media (max-width: 560px) { .home p.mission { font-size: 17px; padding-left: 14px; } }
+
 /* ---- section labels: small caps with a hairline that runs to the edge --------------------------------------- */
 .home .section-label {
   display: flex; align-items: center; gap: 14px; margin: var(--gap) 0 10px;
