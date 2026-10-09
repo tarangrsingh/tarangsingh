@@ -137,8 +137,6 @@ html.light-mode .home .tab-card .tab-icon-svg { background: radial-gradient(circ
 .home .tab-card.is-wake .medal .swing { animation: medal-swing 1.5s ease-in-out 1; }
 .home .tab-card.is-wake .medal .m-star { animation: star-pop 1.2s ease-in-out 1; }
 .home .tab-card.is-wake .medal .spark { animation: twinkle 1.1s var(--d, 0s) ease-in-out 1; }
-.home .tab-card.is-wake .cv .cv-sheet { transform: rotate(-4deg) translateY(-2px); }
-.home .tab-card.is-wake .cv .cv-line { animation: cv-draw 0.45s calc(var(--i) * 0.1s) ease-out both; }
 .home .tab-card.is-wake .envelope .flap-closed { transform: scaleY(0); opacity: 0; }
 .home .tab-card.is-wake .envelope .flap-open { transform: scaleY(1); opacity: 1; }
 .home .tab-card.is-wake .envelope .letter { transform: translateY(-12px); }

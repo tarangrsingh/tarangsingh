@@ -276,16 +276,6 @@
   @keyframes star-pop { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.25) rotate(36deg); } }
   @keyframes twinkle { 0%, 100% { transform: scale(0); opacity: 0; } 50% { transform: scale(1); opacity: 1; } }
 
-  /* CV: sheet tilts, photo bobs, text lines write themselves in */
-  .cv .cv-sheet { transform-origin: 32px 58px; transition: transform 0.3s ease; }
-  .tab-card:is(.is-hover, :focus-visible) .cv .cv-sheet { transform: rotate(-4deg) translateY(-2px); }
-  .tab-card:is(.is-hover, :focus-visible) .cv .cv-head { animation: cv-bob 0.9s ease-in-out infinite; }
-  .tab-card:is(.is-hover, :focus-visible) .cv .cv-line { animation: cv-draw 0.45s calc(var(--i) * 0.1s) ease-out both; }
-  @keyframes cv-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.6px); } }
-  @keyframes cv-draw {
-    from { stroke-dasharray: 1; stroke-dashoffset: 1; }
-    to { stroke-dasharray: 1; stroke-dashoffset: 0; }
-  }
 
   /* Contact: flap opens, letter slides out */
   .envelope .flap-closed, .envelope .flap-open { transform-origin: 32px 20px; transition: transform 0.3s ease, opacity 0.3s ease; }
@@ -603,11 +593,11 @@
   .plain-toggle svg { display: block; width: 17px; height: 17px; }
   .plain-toggle:hover svg, .plain-toggle:focus-visible svg { animation: none !important; }
 </style>
-<link rel="stylesheet" href="assets/scrollgraph.css?v=2026100707">
-<link rel="stylesheet" href="assets/premium.css?v=2026100707">
-<link rel="stylesheet" href="assets/lab.css?v=2026100707">
-<link rel="stylesheet" href="assets/profile.css?v=2026100707">
-<link rel="stylesheet" href="assets/home.css?v=2026100707">
+<link rel="stylesheet" href="assets/scrollgraph.css?v=2026100708">
+<link rel="stylesheet" href="assets/premium.css?v=2026100708">
+<link rel="stylesheet" href="assets/lab.css?v=2026100708">
+<link rel="stylesheet" href="assets/profile.css?v=2026100708">
+<link rel="stylesheet" href="assets/home.css?v=2026100708">
 <script>
   (function () {
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
@@ -723,24 +713,6 @@
           <path class="spark" style="--d:.45s" d="M11 30 L11.9 33.1 L15 34 L11.9 34.9 L11 38 L10.1 34.9 L7 34 L10.1 33.1 Z" fill="var(--copper-light)"/>
         </svg>
         <h3>Scholastic Achievements</h3>
-      </a>
-      <a class="tab-card" href="Tarang_Singh_CV.pdf" target="_blank" rel="noopener" aria-label="CV">
-        <svg class="tab-icon-svg cv" viewBox="0 0 64 64" aria-hidden="true">
-          <g class="cv-sheet">
-            <path d="M14 6 H40 L50 16 V58 H14 Z" fill="var(--avatar-bg)" stroke="var(--copper)" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M40 6 V16 H50" fill="none" stroke="var(--copper-light)" stroke-width="2" stroke-linejoin="round"/>
-            <circle class="cv-head" cx="26" cy="22" r="4.5" fill="var(--copper-light)"/>
-            <path d="M18.5 35 A7.5 7 0 0 1 33.5 35 Z" fill="var(--copper)"/>
-            <g fill="none" stroke-width="2" stroke-linecap="round">
-              <path class="cv-line" style="--i:0" pathLength="1" d="M37 20 H45" stroke="var(--copper-light)"/>
-              <path class="cv-line" style="--i:1" pathLength="1" d="M37 25 H42" stroke="var(--copper-light)"/>
-              <path class="cv-line" style="--i:2" pathLength="1" d="M20 42 H44" stroke="var(--copper)"/>
-              <path class="cv-line" style="--i:3" pathLength="1" d="M20 47.5 H44" stroke="var(--copper)"/>
-              <path class="cv-line" style="--i:4" pathLength="1" d="M20 53 H36" stroke="var(--copper)"/>
-            </g>
-          </g>
-        </svg>
-        <h3>CV</h3>
       </a>
       <a class="tab-card idea-card idea-wide" href="ideas.html" aria-label="Ideas">
         <svg class="tab-icon-svg bulb" viewBox="0 0 64 64" aria-hidden="true">
@@ -985,12 +957,12 @@
   }
 
 </script>
-<script src="assets/scrollgraph.js?v=2026100707" defer></script>
-<script src="assets/premium.js?v=2026100707" defer></script>
-<script src="assets/lab.js?v=2026100707" defer></script>
-<script src="assets/profile.js?v=2026100707" defer></script>
-<script src="assets/links.js?v=2026100707" defer></script>
-<script src="assets/explore.js?v=2026100707" defer></script>
-<script src="assets/wave.js?v=2026100707" defer></script>
+<script src="assets/scrollgraph.js?v=2026100708" defer></script>
+<script src="assets/premium.js?v=2026100708" defer></script>
+<script src="assets/lab.js?v=2026100708" defer></script>
+<script src="assets/profile.js?v=2026100708" defer></script>
+<script src="assets/links.js?v=2026100708" defer></script>
+<script src="assets/explore.js?v=2026100708" defer></script>
+<script src="assets/wave.js?v=2026100708" defer></script>
 </body>
 </html>
