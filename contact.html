@@ -656,6 +656,7 @@
 
     contactForm.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (sendBtn.disabled) return;
       if (contactForm.querySelector('[name="_honey"]').value) return;
 
       var name = document.getElementById('cf-name').value.trim();
@@ -675,8 +676,19 @@
       sendBtn.disabled = true;
       setStatus('Sending\u2026', '');
 
-      fetch(ENDPOINT, {
+      var controller = window.AbortController ? new AbortController() : null;
+      var timedOut = false, timer;
+      var timeout = new Promise(function (resolve, reject) {
+        timer = setTimeout(function () {
+          timedOut = true;
+          reject(new Error('timeout'));
+          if (controller) controller.abort();
+        }, 15000);
+      });
+      // Race the whole response, including its body, so a stalled JSON download also times out.
+      var request = Promise.resolve().then(function () { return fetch(ENDPOINT, {
         method: 'POST',
+        signal: controller ? controller.signal : undefined,
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
           name: name,
@@ -687,19 +699,22 @@
           _template: 'table',
           _captcha: 'false'
         })
-      })
+      }); })
         .then(function (res) {
           return res.json().then(function (data) { return { ok: res.ok, data: data }; });
-        })
+        });
+      Promise.race([request, timeout])
         .then(function (r) {
           if (!r.ok || String(r.data.success) !== 'true') throw new Error('rejected');
           contactForm.reset();
           setStatus('Thanks, ' + name + ' \u2014 your message is on its way. I will get back to you soon.', 'success');
         })
         .catch(function () {
-          setStatus('Something went wrong sending that. Please email me directly at tarangrajeshsingh.phy25@itbhu.ac.in.', 'error');
+          setStatus(timedOut
+            ? 'The request timed out; delivery could not be confirmed. Your message is still here. You can retry or email tarangrajeshsingh.phy25@itbhu.ac.in directly.'
+            : 'Something went wrong sending that. Please email me directly at tarangrajeshsingh.phy25@itbhu.ac.in.', 'error');
         })
-        .then(function () { sendBtn.disabled = false; });
+        .then(function () { clearTimeout(timer); sendBtn.disabled = false; });
     });
   }
 </script>

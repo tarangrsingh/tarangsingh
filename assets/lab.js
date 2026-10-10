@@ -51,7 +51,12 @@
     { ic: '⎙', t: 'CV', href: 'Tarang_Singh_CV.pdf', k: 'g v', blank: true },
     { ic: '◐', t: 'Toggle light / dark', run: function () { var b = doc.getElementById('theme-toggle'); if (b) b.click(); }, k: 't' }
   ];
-  var kp, input, list, sel = 0, shown = [], lastFocus = null;
+  var kp, input, list, status, sel = 0, shown = [], lastFocus = null;
+  function otherDialogOpen() {
+    return Array.prototype.some.call(doc.querySelectorAll('[aria-modal="true"]'), function (dialog) {
+      return dialog !== kp && !dialog.hidden;
+    });
+  }
   function build() {
     if (kp) return;
     kp = doc.createElement('div'); kp.className = 'kp'; kp.hidden = true;
@@ -60,16 +65,17 @@
       '<svg class="kp-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>' +
       '<input class="kp-input" type="text" placeholder="Go to…" aria-label="Go to" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="kp-list">' +
       '<ul class="kp-list" id="kp-list" role="listbox"></ul>' +
+      '<span class="sr-only kp-status" role="status" aria-live="polite"></span>' +
       '<div class="kp-foot"><span><kbd>↑</kbd> <kbd>↓</kbd></span><span><kbd>↵</kbd></span><span><kbd>esc</kbd></span></div></div>';
     doc.body.appendChild(kp);
-    input = kp.querySelector('.kp-input'); list = kp.querySelector('.kp-list');
+    input = kp.querySelector('.kp-input'); list = kp.querySelector('.kp-list'); status = kp.querySelector('.kp-status');
     kp.querySelector('.kp-backdrop').addEventListener('click', close);
     input.addEventListener('input', function () { sel = 0; render(); });
     input.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowDown') { e.preventDefault(); sel = (sel + 1) % Math.max(shown.length, 1); paint(); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); sel = (sel - 1 + shown.length) % Math.max(shown.length, 1); paint(); }
       else if (e.key === 'Enter') { e.preventDefault(); go(shown[sel]); }
-      else if (e.key === 'Escape') { e.preventDefault(); close(); }
+      else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); }
       else if (e.key === 'Tab') { e.preventDefault(); }
     });
     list.addEventListener('pointermove', function (e) {
@@ -91,16 +97,19 @@
     list.innerHTML = shown.length ? shown.map(function (it, i) {
       return '<li class="kp-item" role="option" id="kp-o' + i + '" data-i="' + i + '"><span class="kp-ic" aria-hidden="true">' + it.ic + '</span>' +
         it.t + '<span class="kp-k" aria-hidden="true">' + it.k + '</span></li>';
-    }).join('') : '<li class="kp-empty">No match</li>';
+    }).join('') : '<li class="kp-empty" role="presentation">No matches</li>';
+    status.textContent = shown.length ? '' : 'No matches';
     paint();
   }
   function paint() {
+    input.removeAttribute('aria-activedescendant');
     Array.prototype.forEach.call(list.querySelectorAll('.kp-item'), function (li, i) {
       li.setAttribute('aria-selected', i === sel ? 'true' : 'false');
       if (i === sel) { input.setAttribute('aria-activedescendant', li.id); li.scrollIntoView({ block: 'nearest' }); }
     });
   }
   function open() {
+    if (otherDialogOpen()) return;
     build(); if (!kp.hidden) return;
     lastFocus = doc.activeElement; input.value = ''; sel = 0; render();
     kp.hidden = false; void kp.offsetWidth; kp.classList.add('is-in'); input.focus({ preventScroll: true });
@@ -120,6 +129,7 @@
   function typing(t) { return t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)); }
   var gPending = 0;
   doc.addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || otherDialogOpen()) { gPending = 0; return; }
     if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) { e.preventDefault(); (kp && !kp.hidden) ? close() : open(); return; }
     if (typing(e.target) || e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === '/') { e.preventDefault(); open(); return; }
