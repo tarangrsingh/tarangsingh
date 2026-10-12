@@ -57,6 +57,8 @@
       close(false);                                                      // backdrop
     });
     lb.addEventListener('keydown', function (e) {
+      e.stopPropagation();                         // keep photo keys inside this dialog
+      if (e.key === 'Escape') { e.preventDefault(); close(true); }
       if (e.key === 'Tab') { e.preventDefault(); closeBtn.focus(); }    // the close button is the only stop
     });
     document.addEventListener('keydown', function (e) {
@@ -85,6 +87,7 @@
 
   function open() {
     if (state !== 'closed') return;
+    if (Array.prototype.some.call(document.querySelectorAll('[aria-modal="true"]'), function (dialog) { return !dialog.hidden; })) return;
     state = 'opening'; openedAt = performance.now(); build(); resetTilt();
     lb.hidden = false; html.classList.add('lb-open');
     var img = fig.querySelector('img');
