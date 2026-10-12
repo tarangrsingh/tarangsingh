@@ -130,8 +130,6 @@ html.light-mode .home .tab-card .tab-icon-svg { background: radial-gradient(circ
 .home .tab-card.is-wake .medal .swing { animation: medal-swing 1.5s ease-in-out 1; }
 .home .tab-card.is-wake .medal .m-star { animation: star-pop 1.2s ease-in-out 1; }
 .home .tab-card.is-wake .medal .spark { animation: twinkle 1.1s var(--d, 0s) ease-in-out 1; }
-.home .tab-card.is-wake .cv .cv-sheet { transform: rotate(-4deg) translateY(-2px); }
-.home .tab-card.is-wake .cv .cv-line { animation: cv-draw 0.45s calc(var(--i) * 0.1s) ease-out both; }
 .home .tab-card.is-wake .envelope .flap-closed { transform: scaleY(0); opacity: 0; }
 .home .tab-card.is-wake .envelope .flap-open { transform: scaleY(1); opacity: 1; }
 .home .tab-card.is-wake .envelope .letter { transform: translateY(-12px); }
@@ -186,6 +184,30 @@ html .home .updates-card .update-entry + .update-entry { margin-top: 0; }   /* o
   transition: border-color 0.25s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 .xp-btn[hidden] { display: none; }
+/* a comet circles the rim: a conic gradient masked to the 1.5px border ring, its angle animated */
+@property --xp-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.xp-btn::before {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1.5px; pointer-events: none;
+  background: conic-gradient(from var(--xp-a), transparent 0deg 250deg, color-mix(in srgb, var(--copper-light) 40%, transparent) 300deg, #fff 350deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: xp-orbit 6s linear infinite; opacity: 0.85;
+}
+html.light-mode .xp-btn::before { background: conic-gradient(from var(--xp-a), transparent 0deg 250deg, color-mix(in srgb, var(--copper) 45%, transparent) 300deg, var(--copper-light) 350deg, transparent 360deg); }
+.xp-btn:hover::before, .xp-btn[aria-expanded="true"]::before { animation-duration: 1.6s; opacity: 1; }
+@keyframes xp-orbit { to { --xp-a: 360deg; } }
+/* the letters ripple like a wave */
+.xp-word { display: inline-flex; }
+.xp-ch { display: inline-block; }
+.xp-btn.is-waving .xp-ch { animation: xp-wave 0.62s cubic-bezier(0.3, 0.6, 0.3, 1) both; animation-delay: calc(var(--i) * 38ms); }
+@keyframes xp-wave { 0%, 100% { transform: none; } 35% { transform: translateY(-4px); color: var(--copper-light); } 70% { transform: translateY(1px); } }
+/* a ring spreads out when pressed */
+.xp-btn::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; border: 1.5px solid var(--copper-light); opacity: 0; pointer-events: none; }
+.xp-btn.is-ripple::after { animation: xp-ring 0.65s cubic-bezier(0.2, 0.7, 0.3, 1); }
+@keyframes xp-ring { from { opacity: 0.8; transform: scale(1); } to { opacity: 0; transform: scale(1.5, 1.9); } }
+/* morph opening (explore.js animates the clip): no slide or fade of its own */
+.xp-pop.is-ready.is-morph, .xp-pop.is-ready.is-morph.is-open { transform: none; opacity: 1; transition: visibility 0s; }
+.xp-pop.is-ready.is-morph:not(.is-open) { visibility: hidden; }
 html.light-mode .xp-btn { background: linear-gradient(160deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35)); border-color: rgba(255, 255, 255, 0.85); box-shadow: inset 0 1px 0 #fff, 0 8px 20px -12px rgba(20, 20, 30, 0.35); }
 .xp-btn:hover, .xp-btn[aria-expanded="true"] { border-color: var(--copper); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 0 3px var(--copper-glow), 0 8px 20px -12px rgba(0, 0, 0, 0.55); }
 .xp-btn:active { transform: scale(0.96); }
@@ -223,7 +245,7 @@ html.light-mode .home .xp-pop .tab-grid { background: linear-gradient(160deg, rg
   .xp-pop.is-ready { left: 0; right: 0; width: auto; }
   .xp-btn { height: 32px; padding: 0 12px 0 13px; font-size: 13px; }
 }
-@media (prefers-reduced-motion: reduce) { .xp-pop.is-ready, .xp-chev, .xp-btn { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .xp-pop.is-ready, .xp-chev, .xp-btn { transition: none; } .xp-btn::before { animation: none; opacity: 0; } }
 @media print {
   .xp-btn { display: none !important; }
   .xp-pop.is-ready { position: static !important; opacity: 1 !important; visibility: visible !important; transform: none !important; width: auto !important; margin-top: 14px !important; }
