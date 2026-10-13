@@ -46,7 +46,7 @@
     { ic: '▢', t: 'Plain page', href: 'basic.html', k: 'g p' },
     { ic: '∂', t: 'Ideas', href: 'ideas.html', k: 'g i' },
     { ic: 'π', t: 'Theoretical Models', href: 'theoretical-models.html', k: 'g t' },
-    { ic: '⌁', t: 'Superconducting Circuit', href: 'superconducting-circuit.html', k: 'g u' },
+    { ic: '⌁', t: 'Quantum Metal site', href: 'https://tarangrsingh.github.io/qiskit/', k: 'g u', blank: true },
     { ic: '✳', t: 'Quote of the Week', href: 'star.html', k: 'g q' },
     { ic: '✉', t: 'Contact', href: 'contact.html', k: 'g c' },
     { ic: '⎙', t: 'CV', href: 'Tarang_Singh_CV.pdf', k: 'g v', blank: true },

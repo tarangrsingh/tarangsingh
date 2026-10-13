@@ -49,6 +49,31 @@ html.light-mode .links a[data-k="linkedin"] { --brand: #0a66c2; }
 @keyframes link-pop { 0% { transform: scale(0.8); } 45% { transform: scale(1.22) rotate(-6deg); } 100% { transform: scale(1.12); } }
 @keyframes link-ring { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 70%, transparent); } to { box-shadow: 0 0 0 14px transparent; } }
 
+/* ---- featured link: the Quantum Metal site, in the first screen ------------------------------------------------- */
+.home .qm-link {
+  position: relative; display: inline-flex; align-items: center; gap: 14px; margin: 6px 0 0; padding: 12px 20px 12px 14px; border-radius: 16px;
+  color: var(--text); text-decoration: none; -webkit-tap-highlight-color: transparent; isolation: isolate; overflow: hidden;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 10px 24px -14px rgba(0, 0, 0, 0.6);
+  transition: border-color 0.25s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+html.light-mode .home .qm-link { background: linear-gradient(160deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35)); border-color: rgba(255, 255, 255, 0.85); box-shadow: inset 0 1px 0 #fff, 0 10px 24px -14px rgba(20, 20, 30, 0.35); }
+.home .qm-link::after {   /* a slow sheen passing across, so the eye finds it */
+  content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 30%; z-index: -1; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.18), transparent); transform: skewX(-18deg);
+  animation: qm-sheen 5s ease-in-out 1.2s infinite;
+}
+@keyframes qm-sheen { 0% { left: -40%; } 40%, 100% { left: 130%; } }
+.home .qm-link:is(:hover, :focus-visible) { border-color: var(--copper); transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 0 3px var(--copper-glow), 0 12px 26px -14px rgba(0, 0, 0, 0.6); }
+.home .qm-link:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+.home .qm-icon { flex: none; width: 34px; height: 34px; padding: 6px; border-radius: 10px; color: var(--copper-light); background: color-mix(in srgb, var(--copper) 16%, transparent); }
+.home .qm-text { display: flex; flex-direction: column; gap: 2px; }
+.home .qm-title { font-size: 16px; font-weight: 600; line-height: 1.2; }
+.home .qm-url { font-size: 12.5px; color: var(--muted); line-height: 1.2; }
+@media (prefers-reduced-motion: reduce) { .home .qm-link::after { animation: none; display: none; } .home .qm-link { transition: none; } }
+
 /* ---- section labels: small caps with a hairline that runs to the edge --------------------------------------- */
 .home .section-label {
   display: flex; align-items: center; gap: 14px; margin: var(--gap) 0 10px;
