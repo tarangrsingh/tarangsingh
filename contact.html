@@ -442,7 +442,15 @@
 <link rel="stylesheet" href="assets/lab.css?v=2026101302">
 <script>
   (function () {
-    try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
+    // Stored choice wins; with nothing stored, follow the reader's system setting.
+    // The theme-color metas above already advertise a light theme to a light
+    // system, so rendering dark there left the browser chrome mismatched.
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || (!t && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.documentElement.classList.add('light-mode');
+      }
+    } catch (e) {}
   })();
 </script>
 </head>
@@ -664,12 +672,20 @@
       var purpose = document.getElementById('cf-purpose').value.trim();
       var message = document.getElementById('cf-message').value.trim();
 
+      // Point the reader at the field that needs them, instead of leaving focus
+      // on the Send button with only a message to go on.
+      function focusField(id) {
+        var el = document.getElementById(id);
+        if (el && typeof el.focus === 'function') el.focus();
+      }
       if (!name || !email || !purpose || !message) {
         setStatus('Please fill in every field before sending.', 'error');
+        focusField(!name ? 'cf-name' : !email ? 'cf-email' : !purpose ? 'cf-purpose' : 'cf-message');
         return;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         setStatus('That email address does not look quite right.', 'error');
+        focusField('cf-email');
         return;
       }
 

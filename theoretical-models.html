@@ -375,7 +375,15 @@
 <link rel="stylesheet" href="assets/lab.css?v=2026101302">
 <script>
   (function () {
-    try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
+    // Stored choice wins; with nothing stored, follow the reader's system setting.
+    // The theme-color metas above already advertise a light theme to a light
+    // system, so rendering dark there left the browser chrome mismatched.
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || (!t && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.documentElement.classList.add('light-mode');
+      }
+    } catch (e) {}
   })();
 </script>
 </head>

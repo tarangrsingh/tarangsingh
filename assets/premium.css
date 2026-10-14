@@ -83,3 +83,46 @@ html.theme-switching *, html.theme-switching *::before, html.theme-switching *::
 /* Footer on the inner pages: the same hairline the home page has, now that the icon row is gone */
 body:not(.page-home) .site-footer:not(:has(.contact)) { border-top: 1px solid var(--rule); }   /* Contact keeps its icons, already ruled off */
 body:not(.page-home) .site-footer:not(:has(.contact)) .footer-copy { margin-top: 18px; }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Contrast and target-size corrections.
+   Loaded after every page's inline <style>, so these override it.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* The page photo sits under a scrim built from the page colour, and in the
+   middle band that scrim thins to 0.40 alpha. Dark mode absorbs it (the photos
+   are dark and so is the page), but light mode does not: a near-black photo at
+   60% strength pulls the declared #d9e7ff page colour down to about
+   rgb(152, 164, 183), so light mode was not actually light. Headings, labels
+   and muted text designed against #d9e7ff measured 2.3:1 to 3.4:1 there.
+   Light mode therefore gets a heavier scrim and keeps the photo as a tint.
+   Dark mode is deliberately left exactly as it was. */
+html.light-mode .photo-bg::after {
+  background:
+    linear-gradient(to right,
+      rgba(var(--bg-rgb), 0.94) 0%,
+      rgba(var(--bg-rgb), 0.92) 55%,
+      rgba(var(--bg-rgb), 0.88) 78%,
+      rgba(var(--bg-rgb), 0.91) 100%),
+    linear-gradient(
+      rgba(var(--bg-rgb), 0.30) 0%,
+      rgba(var(--bg-rgb), 0.10) 16%,
+      rgba(var(--bg-rgb), 0.10) 68%,
+      rgba(var(--bg-rgb), 0.55) 100%);
+}
+
+/* WCAG 1.4.11: the boundary of a control with no other affordance needs 3:1.
+   --rule is 1.33:1 against the page in both themes, so the field edges were
+   very nearly invisible. --muted is 5.8:1 (light) and 6.6:1 (dark). */
+.form-field input,
+.form-field textarea { border-color: var(--muted); }
+
+/* WCAG 2.5.8: pointer targets are at least 24x24 CSS px. The star was 22x22.
+   Padding plus a matching negative margin grows the hit area without moving
+   anything in the header. */
+.brand-star {
+  min-width: 24px;
+  min-height: 24px;
+  align-items: center;
+  justify-content: center;
+}
