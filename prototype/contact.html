@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact</title>
+<meta name="description" content="Write to Tarang Singh about the work, collaborations, or anything else.">
+<link rel="preload" href="inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="base.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="shell">
+    <a class="wordmark" href="index.html">Tarang Singh</a>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="research.html">Research</a>
+      <a href="scholastic.html">Scholastic</a>
+      <a href="ideas.html">Ideas</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+      <button class="ghost" type="button" data-theme-toggle hidden>Theme</button>
+    </nav>
+  </div>
+</header>
+
+<main class="shell">
+
+  <div class="page-head">
+    <h1>Contact</h1>
+    <p class="lede">For collaborations, questions about the work, or anything else.</p>
+  </div>
+
+  <section>
+    <!-- Prototype: the live page posts to FormSubmit. Here the submit is handled in form.js. -->
+    <form id="contact-form" novalidate>
+      <div class="field">
+        <label for="cf-name">Name</label>
+        <input type="text" id="cf-name" name="name" required autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="cf-email">Email</label>
+        <input type="email" id="cf-email" name="email" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="cf-subject">Subject</label>
+        <input type="text" id="cf-subject" name="subject" required>
+      </div>
+      <div class="field">
+        <label for="cf-message">Message</label>
+        <textarea id="cf-message" name="message" rows="7" required></textarea>
+      </div>
+      <button type="submit">Send</button>
+      <p class="status" id="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section>
+    <h2 class="section-head">Or write directly</h2>
+    <div class="entries">
+      <article class="entry">
+        <div class="when">Email</div>
+        <div class="body"><p><a href="mailto:tarangrajeshsingh.phy25@itbhu.ac.in">tarangrajeshsingh.phy25@itbhu.ac.in</a></p></div>
+      </article>
+      <article class="entry">
+        <div class="when">Based in</div>
+        <div class="body"><p>Varanasi, India &middot; IST, UTC+5:30</p></div>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="shell">&copy; 2026 Tarang Singh</div>
+</footer>
+
+<script src="theme.js" defer></script>
+<script src="form.js" defer></script>
+</body>
+</html>

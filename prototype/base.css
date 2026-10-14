@@ -1,0 +1,239 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   Prototype of a minimal rebuild of tarangrsingh.github.io/tarangsingh
+   Layout: one column, ~68-character measure, hairline rules instead of cards.
+
+   The whole visual vocabulary is the :root block below. Nothing outside it
+   introduces a colour, a size, a radius or a spacing value. That constraint is
+   the design: if a new element needs a token that does not exist here, the
+   element is probably decoration.
+
+   Dark is the default (as on the current site); light follows the reader's OS
+   unless the in-page toggle has set data-theme.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* colour — 7 tokens. Neutrals are biased toward the accent hue, not pure grey. */
+  --bg:        #0b1522;
+  --surface:   #101d2e;
+  --fg:        #e9e7e1;
+  --muted:     #8ea0b8;
+  --rule:      #1e2c42;
+  --accent:    #7fb0e6;
+  --accent-fg: #0b1522;
+
+  /* type — 5 sizes, 2 weights, 2 roles */
+  --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --data: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --t-xs: 13px;   /* meta: dates, field sizes, captions */
+  --t-sm: 15px;   /* secondary text, navigation, controls */
+  --t-md: 19px;   /* body */
+  --t-lg: 26px;   /* section heading */
+  --t-xl: 38px;   /* page heading */
+
+  /* space — one 4px scale */
+  --s1: 4px;  --s2: 8px;  --s3: 16px;  --s4: 32px;  --s5: 64px;
+
+  /* form — one radius, one border weight, one measure */
+  --radius:  6px;
+  --measure: 40rem;
+
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:        #f9fafb;
+    --surface:   #ffffff;
+    --fg:        #101d30;
+    --muted:     #5a6b84;
+    --rule:      #dde3ec;
+    --accent:    #0a53a0;
+    --accent-fg: #ffffff;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg:        #f9fafb;
+  --surface:   #ffffff;
+  --fg:        #101d30;
+  --muted:     #5a6b84;
+  --rule:      #dde3ec;
+  --accent:    #0a53a0;
+  --accent-fg: #ffffff;
+  color-scheme: light;
+}
+
+@font-face {
+  font-family: Inter; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url(inter-var.woff2) format('woff2');
+}
+
+/* ── base ────────────────────────────────────────────────────────────────── */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 var(--t-md)/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-weight: 600; line-height: 1.25; text-wrap: balance; margin: 0; }
+h1 { font-size: var(--t-xl); letter-spacing: -0.022em; }
+h2 { font-size: var(--t-lg); letter-spacing: -0.014em; }
+h3 { font-size: var(--t-md); letter-spacing: -0.006em; }
+p  { margin: 0; }
+
+a { color: var(--accent); text-decoration: none; transition: color .15s ease; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+/* The only layout primitive: a centred column with a gutter that clears a
+   phone's side system bar. Every page is this, once. */
+.shell {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-left:  max(var(--s3), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--s3), env(safe-area-inset-right, 0px));
+}
+
+/* The portrait is content, not decoration: it answers "who is this?". Kept at
+   one size, square, with no tilt, no pointer light and no lightbox. */
+.intro { flex-direction: row; align-items: flex-start; justify-content: space-between; gap: var(--s4); }
+.intro > div { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
+.portrait { flex: none; width: 80px; height: 80px; border-radius: var(--radius); object-fit: cover; background: var(--surface); }
+
+/* ── header ──────────────────────────────────────────────────────────────── */
+/* Static, not sticky: one line of text does not need a blurred glass bar
+   following the reader down the page. Present on every page, so no page is a
+   dead end — the current site's inner pages can only go back home. */
+
+.site-head { border-bottom: 1px solid var(--rule); }
+.site-head .shell {
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--s2) var(--s4);
+  padding-block: var(--s3);
+}
+.wordmark { font-size: var(--t-sm); font-weight: 600; color: var(--fg); letter-spacing: -0.01em; }
+.wordmark:hover { text-decoration: none; color: var(--accent); }
+
+.site-nav { display: flex; flex-wrap: wrap; gap: var(--s3); margin-left: auto; font-size: var(--t-sm); }
+.site-nav a { color: var(--muted); }
+.site-nav a:hover { color: var(--fg); }
+.site-nav a[aria-current="page"] { color: var(--fg); }
+
+.ghost {
+  font: 400 var(--t-sm)/1 var(--sans);
+  color: var(--muted); background: none; border: 0; padding: 0;
+  cursor: pointer; transition: color .15s ease;
+}
+.ghost:hover { color: var(--fg); }
+
+/* ── page ────────────────────────────────────────────────────────────────── */
+
+main { padding-block: var(--s5) var(--s5); }
+.page-head { display: flex; flex-direction: column; gap: var(--s2); margin-bottom: var(--s5); }
+.lede { font-size: var(--t-md); color: var(--muted); max-width: 34rem; }
+
+section { margin-top: var(--s5); }
+.section-head {
+  font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: var(--s3);
+}
+.prose { display: flex; flex-direction: column; gap: var(--s3); }
+
+/* ── entry: the one repeated element ─────────────────────────────────────── */
+/* Research posts, education, updates and ideas are all the same shape — a date
+   or label in the margin, a body beside it. One component, four pages, which is
+   why the stylesheet stays short. */
+
+.entries { display: flex; flex-direction: column; }
+.entry {
+  display: grid; grid-template-columns: 8.5rem 1fr;
+  gap: var(--s1) var(--s4);
+  padding-block: var(--s4);
+  border-top: 1px solid var(--rule);
+}
+.entries > .entry:first-child { border-top: 0; padding-top: 0; }
+.entry > .when {
+  font: 400 var(--t-xs)/1.6 var(--data);
+  color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 4px;
+}
+.entry > .body { min-width: 0; display: flex; flex-direction: column; gap: var(--s2); }
+.entry .where { font-size: var(--t-sm); color: var(--muted); }
+.entry p { font-size: var(--t-sm); }
+.entry ul { margin: 0; padding-left: 1.1em; font-size: var(--t-sm); }
+.entry li { margin-block: var(--s1); }
+
+/* Keywords, as one quiet line of text. The current site sets these as 11.5px
+   pills inside rounded borders; the words are identical, the furniture is not. */
+.keys { font: 400 var(--t-xs)/1.6 var(--data); color: var(--muted); }
+
+@media (max-width: 34rem) {
+  .entry { grid-template-columns: 1fr; gap: var(--s2); }
+  .entry > .when { padding-top: 0; }
+  :root { --t-xl: 30px; --t-lg: 22px; --s5: 44px; }
+}
+
+/* ── table (ranks) ───────────────────────────────────────────────────────── */
+/* Seven exam results are a table. They were seven 50px numerals in seven
+   bordered tiles, which is a layout that hides the comparison it exists to make. */
+
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: var(--t-sm); }
+caption { text-align: left; font-size: var(--t-xs); color: var(--muted); padding-bottom: var(--s2); }
+th, td { text-align: left; padding: var(--s3) var(--s3) var(--s3) 0; border-top: 1px solid var(--rule); }
+thead th {
+  border-top: 0; padding-top: 0; font-size: var(--t-xs); font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+td.num { font-family: var(--data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td:last-child, th:last-child { padding-right: 0; }
+
+/* ── figure (the one piece of ornament that carries data) ────────────────── */
+
+figure { margin: 0; display: flex; flex-direction: column; gap: var(--s2); }
+.plot {
+  width: 100%; height: auto; display: block;
+  border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface);
+}
+.plot .axis  { stroke: var(--rule); stroke-width: 1; }
+.plot .trace { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linejoin: round; }
+.plot .tick  { fill: var(--muted); font: 400 9px var(--data); }
+.plot .mark  { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+figcaption { font-size: var(--t-xs); color: var(--muted); }
+
+/* ── form ────────────────────────────────────────────────────────────────── */
+
+form { display: flex; flex-direction: column; gap: var(--s4); max-width: 30rem; }
+.field { display: flex; flex-direction: column; gap: var(--s2); }
+label { font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+input, textarea {
+  font: 400 var(--t-sm)/1.5 var(--sans);
+  color: var(--fg); background: var(--surface);
+  border: 1px solid var(--rule); border-radius: var(--radius);
+  padding: var(--s2) var(--s3); width: 100%;
+}
+input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+textarea { resize: vertical; min-height: 9rem; }
+button[type="submit"] {
+  align-self: flex-start;
+  font: 600 var(--t-sm)/1 var(--sans);
+  color: var(--accent-fg); background: var(--accent);
+  border: 0; border-radius: var(--radius); padding: var(--s3) var(--s4); cursor: pointer;
+}
+button[type="submit"]:hover { opacity: 0.9; }
+.status { font-size: var(--t-sm); color: var(--muted); min-height: 1.5em; }
+
+/* ── footer ──────────────────────────────────────────────────────────────── */
+/* Copyright. The live footer also carries a Varanasi clock, a visitor counter
+   fetched from a third-party host, and a keyboard-shortcut hint. */
+
+.site-foot { border-top: 1px solid var(--rule); }
+.site-foot .shell { padding-block: var(--s4) var(--s5); font-size: var(--t-xs); color: var(--muted); }
+
+/* There is no scroll-triggered motion, no ambient animation and no transition
+   longer than 150ms, so prefers-reduced-motion has nothing to switch off.
+   That equivalence is the test of whether the motion was carrying information. */
