@@ -1,21 +1,33 @@
 // Visitor number for this browser session (see the footer counter below). Shared with basic.html via window.siteVisitor.
-window.siteVisitor = function (show) {
-  var KEY = 'visitor-number', n = null;
+// The count lives with Abacus (no server on GitHub Pages). The first page of a session records a hit; if that fails or
+// is slow, it falls back to reading the current total, so the footer still shows a number. Add #counter-debug to any
+// page's address to see, in the footer, exactly why the number is missing.
+window.siteVisitor = function (show, fail) {
+  var KEY = 'visitor-number', BASE = 'https://abacus.jasoncameron.dev/', NS = 'tarangrsingh-github-io/visits', n = null;
+  var debug = /counter-debug/.test(location.hash);
   try { n = parseInt(sessionStorage.getItem(KEY), 10); } catch (e) {}
   if (n > 0) { show(n); return; }
-  if (!window.fetch) return;
-  var ctl = window.AbortController ? new AbortController() : null;
-  var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 5000);
-  fetch('https://abacus.jasoncameron.dev/hit/tarangrsingh-github-io/visits', ctl ? { signal: ctl.signal } : {})
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-    .then(function (d) {
-      clearTimeout(timer);
-      var v = parseInt(d && d.value, 10);
-      if (!(v > 0)) return;
+  if (!window.fetch) { if (debug && fail) fail('this browser has no fetch()'); return; }
+  function ask(path, ms) {
+    var ctl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, ms);
+    return fetch(BASE + path + NS, Object.assign({ cache: 'no-store', mode: 'cors' }, ctl ? { signal: ctl.signal } : {}))
+      .then(function (r) { clearTimeout(timer); if (!r.ok) throw new Error(path + ' answered HTTP ' + r.status); return r.json(); })
+      .then(function (d) { var v = parseInt(d && d.value, 10); if (!(v > 0)) throw new Error(path + ' gave no number: ' + JSON.stringify(d).slice(0, 80)); return v; })
+      .catch(function (e) { clearTimeout(timer); throw new Error(e && e.name === 'AbortError' ? path + ' took longer than ' + ms / 1000 + ' s' : (e && e.message) || String(e)); });
+  }
+  var first = '';
+  ask('hit/', 10000)
+    .catch(function (e) { first = e.message; return ask('get/', 8000); })
+    .then(function (v) {
       try { sessionStorage.setItem(KEY, String(v)); } catch (e) {}
       show(v);
     })
-    .catch(function () { clearTimeout(timer); });
+    .catch(function (e) {
+      var why = (first ? first + '; then ' : '') + e.message + (/fetch|NetworkError|Load failed/i.test(e.message) ? ' (blocked: CORS, an ad blocker or the network)' : '');
+      if (window.console) console.warn('Visitor counter unavailable: ' + why);
+      if (debug && fail) fail(why);
+    });
 };
 
 (function () {
@@ -61,12 +73,14 @@ window.siteVisitor = function (show) {
   // page in that session just shows it. If the service is slow or down, nothing is shown.
   var footerCopy = document.querySelector('.footer-copy');
   if (footerCopy) {
-    window.siteVisitor(function (n) {
+    var place = function (text) {
       var vc = document.createElement('span'); vc.className = 'visit-count';
-      vc.textContent = 'Visitor #' + n.toLocaleString('en-US');
+      vc.textContent = text;
       var after = footerCopy.querySelector('.local-time');   // sits right after the local time, before the Ctrl K hint
       footerCopy.insertBefore(vc, after ? after.nextSibling : footerCopy.querySelector('.kp-hint'));
-    });
+    };
+    window.siteVisitor(function (n) { place('Visitor #' + n.toLocaleString('en-US')); },
+                       function (why) { place('Visitor counter: ' + why); });
   }
 
   // Theme switch. The page's own click handler still does the real work (toggling html.light-mode); we wrap it.
