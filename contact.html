@@ -278,7 +278,7 @@
 
   .contact-form { display: flex; flex-direction: column; gap: 22px; margin-top: 8px; max-width: 480px; }
   .contact-layout { display: grid; gap: 28px; }
-  @media (min-width: 860px) { .contact-layout { grid-template-columns: minmax(0, 480px) minmax(0, 1fr); gap: 48px; align-items: start; } }
+  @media (min-width: 1024px) { .contact-layout { grid-template-columns: minmax(0, 480px) 260px; justify-content: space-between; gap: 40px; align-items: start; } }   /* side by side only when the panel has room */
   .contact-aside {
     position: relative; overflow: hidden; isolation: isolate; margin-top: 8px; padding: 22px 24px; border-radius: 16px;
     background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
@@ -289,7 +289,7 @@
   html.light-mode .contact-aside { background: linear-gradient(160deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.22)); border-color: rgba(255, 255, 255, 0.7); }
   .ca-kicker { margin: 0 0 6px; font-family: var(--font); font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
   .ca-kicker + * { margin-top: 0; }
-  .ca-mail { margin: 0 0 12px; font-family: var(--font); font-size: 15px; }
+  .ca-mail { margin: 0 0 12px; font-family: var(--font); font-size: 15px; overflow-wrap: anywhere; }   /* never clipped, whatever the width */
   .ca-text { margin: 0; font-family: var(--font); font-size: 15px; color: var(--text); }
   .ca-copy {
     margin: 0 0 22px; padding: 6px 13px; border-radius: 999px; cursor: pointer; font: 600 12.5px/1.2 var(--font);
@@ -437,9 +437,9 @@
                 linear-gradient(rgba(var(--bg-rgb), 0.2) 0%, rgba(var(--bg-rgb), 0.02) 16%, rgba(var(--bg-rgb), 0.02) 68%, rgba(var(--bg-rgb), 0.48) 100%);
   }
 </style>
-<link rel="stylesheet" href="assets/scrollgraph.css?v=2026101302">
-<link rel="stylesheet" href="assets/premium.css?v=2026101302">
-<link rel="stylesheet" href="assets/lab.css?v=2026101302">
+<link rel="stylesheet" href="assets/scrollgraph.css?v=2026101501">
+<link rel="stylesheet" href="assets/premium.css?v=2026101501">
+<link rel="stylesheet" href="assets/lab.css?v=2026101501">
 <script>
   (function () {
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
@@ -807,8 +807,8 @@
   setTimeout(fly, 350);
 })();
 </script>
-<script src="assets/scrollgraph.js?v=2026101302" defer></script>
-<script src="assets/premium.js?v=2026101302" defer></script>
+<script src="assets/scrollgraph.js?v=2026101501" defer></script>
+<script src="assets/premium.js?v=2026101501" defer></script>
 <script>
 // Contact: copy the email address with one click (button only appears where the clipboard is available)
 (function () {
@@ -822,6 +822,6 @@
   });
 })();
 </script>
-<script src="assets/lab.js?v=2026101302" defer></script>
+<script src="assets/lab.js?v=2026101501" defer></script>
 </body>
 </html>

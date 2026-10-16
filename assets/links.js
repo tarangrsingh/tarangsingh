@@ -61,3 +61,17 @@
     }, { threshold: 0.5 }).observe(grid);
   }
 })();
+
+// Updates on narrow screens: the squares scroll sideways, so the right edge fades out while there is more to see,
+// and the fade lifts once the reader reaches the last card.
+(function () {
+  var list = document.querySelector('.home .updates-list');
+  if (!list) return;
+  function edge() {
+    var more = list.scrollWidth - list.clientWidth - list.scrollLeft > 4;
+    list.classList.toggle('has-more', more);
+  }
+  list.addEventListener('scroll', edge, { passive: true });
+  window.addEventListener('resize', edge);
+  edge();
+})();

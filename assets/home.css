@@ -183,7 +183,8 @@ html.light-mode .home .updates-card .update-entry {
   flex: 0 0 var(--sq, 220px); width: var(--sq, 220px); aspect-ratio: 1 / 1; scroll-snap-align: start;
   display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 18px 18px 16px;
 }
-html .home .updates-card .update-entry + .update-entry { margin-top: 0; }   /* outranks the light-mode card reset */
+html .home .updates-card .update-entry + .update-entry { margin-top: 0; }
+.home .updates-list.has-more { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); }   /* more to swipe */   /* outranks the light-mode card reset */
 .home .updates-card .update-date { margin: 0; font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: none; color: var(--muted); font-variant-numeric: tabular-nums; }
 .home .updates-card .update-entry p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--text); }
 /* the card that opens a page */
