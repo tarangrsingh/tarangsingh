@@ -24,6 +24,16 @@ main p a:hover, main p a:focus-visible { text-underline-offset: 0.32em; text-dec
   ::view-transition-old(root) { animation: 0.2s cubic-bezier(0.4, 0, 1, 1) both vt-out; }
   ::view-transition-new(root) { animation: 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both vt-in; }
 
+  /* Moving between pages, the header stays put and the name travels with you: from the large heading on the home
+     page into the header of every other page, and back. Only the content underneath changes. The header and the
+     profile skip their entrance motion when the page arrives this way (html.vt-arrived, set by each page's head
+     script on pagereveal), so nothing dips while the two pages cross. */
+  html:not(.theme-vt) header { view-transition-name: site-header; }
+  html:not(.theme-vt) .profile-name, html:not(.theme-vt) .site-name { view-transition-name: site-name; }
+  ::view-transition-group(site-header) { z-index: 1; animation-duration: 0.3s; }
+  ::view-transition-group(site-name) { z-index: 2; animation-duration: 0.55s; animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+  html.vt-arrived header, html.vt-arrived .profile { animation: none; }
+
   /* Light/dark switch: the new theme grows out of the toggle button as a circle (clip-path set in premium.js) */
   html.theme-vt::view-transition-old(root), html.theme-vt::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
   html.theme-vt::view-transition-old(root) { z-index: 1; }
@@ -48,6 +58,34 @@ main p a:hover, main p a:focus-visible { text-underline-offset: 0.32em; text-dec
   html { scroll-behavior: auto; }
 }
 
+/* Depth: as the page scrolls, the background photo drifts up a little (48px over the whole page), so the glass panels
+   read as floating above it rather than painted on it. Scroll-driven, no script; pages too short to scroll stay still. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes bg-drift { to { transform: translateY(-48px); } }
+    .photo-bg { bottom: -48px; animation: bg-drift linear both; animation-timeline: scroll(root); }
+  }
+}
+
+/* Header name: the box hugs the letters (so the name morph between pages lines up with the home heading) and the
+   generous tap area moves to a pseudo-element */
+.site-name { padding: 0; }
+.site-name::before { content: ""; position: absolute; inset: -10px -14px; }
+
+/* Typography: headings break into even lines, and paragraphs avoid leaving one word alone on the last line */
+h1, h2, h3, .section-subheading { text-wrap: balance; }
+main p, main li { text-wrap: pretty; }
+.sx-title p { text-wrap: wrap; }   /* "Lab · With … · City" lines: let them break where they always did */
+
+/* Skip link (added by premium.js): the first Tab press offers a jump past the header straight to the content */
+.skip-link {
+  position: fixed; left: 12px; top: 10px; z-index: 100; padding: 9px 16px; border-radius: 999px;
+  background: var(--bg); color: var(--text); border: 1px solid var(--copper); text-decoration: none;
+  font: 600 14px/1 var(--font, sans-serif); transform: translateY(-180%); transition: transform 0.2s ease;
+}
+.skip-link:focus-visible { transform: none; outline: 2px solid var(--copper-glow); outline-offset: 2px; }
+main:focus { outline: none; }
+
 /* Theme switch: no colour transitions while the theme flips, so the page lands on its final colours in one frame
    (otherwise each element fades on its own schedule and the switch reads as a washed-out blink). See premium.js. */
 html.theme-switching *, html.theme-switching *::before, html.theme-switching *::after { transition: none !important; }
@@ -71,7 +109,7 @@ html.theme-switching *, html.theme-switching *::before, html.theme-switching *::
 @media print {
   :root, html.light-mode { --bg: #fff; --text: #111; --muted: #444; --rule: #ccc; --copper: #333; --copper-light: #111; --link: #111; }
   html, body { background: #fff !important; color: #111 !important; }
-  .photo-bg, .scrollgraph, .cursor-atoms, .theme-toggle, .kp-hint, .local-time, .visit-count, header nav, .home-doodle, .lb, .tab-icon-svg { display: none !important; }
+  .skip-link, .photo-bg, .scrollgraph, .cursor-atoms, .theme-toggle, .kp-hint, .local-time, .visit-count, header nav, .home-doodle, .lb, .tab-icon-svg { display: none !important; }
   header { position: static !important; background: none !important; box-shadow: none !important; border: 0 !important; }
   .reveal { opacity: 1 !important; transform: none !important; }
   *, *::before, *::after { box-shadow: none !important; text-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; animation: none !important; transition: none !important; }

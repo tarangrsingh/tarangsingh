@@ -30,6 +30,13 @@
     if (!a || a.target === '_blank' || a.origin !== location.origin || !/\.html?$/.test(a.pathname) || a.pathname === location.pathname) return;
     dwell = setTimeout(function () { page(a); }, 90);
   }, { passive: true });
+  // Chromium also gets the native hint, which covers touch too: a page is fetched as soon as a finger lands on its link
+  // (or the pointer rests on it), so it is usually ready by the time the tap ends. Fetch only, never prerendered.
+  if (window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) {
+    var sr = doc.createElement('script'); sr.type = 'speculationrules';
+    sr.textContent = JSON.stringify({ prefetch: [{ where: { and: [{ href_matches: '*.html' }, { not: { selector_matches: '[target=_blank]' } }] }, eagerness: 'moderate' }] });
+    doc.head.appendChild(sr);
+  }
   var net = navigator.connection;
   if (net && !net.saveData && net.effectiveType === '4g') {
     window.addEventListener('load', function () {

@@ -383,12 +383,13 @@
   .past-quote .fact-week { margin-bottom: 8px; }
   .past-quote .fact-text { font-size: 17px; }
 </style>
-<link rel="stylesheet" href="assets/scrollgraph.css?v=2026101501">
-<link rel="stylesheet" href="assets/premium.css?v=2026101501">
-<link rel="stylesheet" href="assets/lab.css?v=2026101501">
+<link rel="stylesheet" href="assets/scrollgraph.css?v=2026102001">
+<link rel="stylesheet" href="assets/premium.css?v=2026102001">
+<link rel="stylesheet" href="assets/lab.css?v=2026102001">
 <script>
   (function () {
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
+    addEventListener('pagereveal', function (e) { if (e.viewTransition) document.documentElement.classList.add('vt-arrived'); });   // arrived by a page-to-page transition (premium.css)
   })();
 </script>
 </head>
@@ -651,8 +652,8 @@
   measure(); setTimeout(function () { glint = -2; start(); }, 1200);
 })();
 </script>
-<script src="assets/scrollgraph.js?v=2026101501" defer></script>
-<script src="assets/premium.js?v=2026101501" defer></script>
-<script src="assets/lab.js?v=2026101501" defer></script>
+<script src="assets/scrollgraph.js?v=2026102001" defer></script>
+<script src="assets/premium.js?v=2026102001" defer></script>
+<script src="assets/lab.js?v=2026102001" defer></script>
 </body>
 </html>
