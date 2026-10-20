@@ -22,46 +22,6 @@
   });
 })();
 
-// Explore rows: the light follows the pointer along each row; icons play their animation once as the list comes into
-// view (one after another), and on touch a tap plays it before the page changes.
-(function () {
-  var rows = Array.prototype.slice.call(document.querySelectorAll('.home .tab-card'));
-  if (!rows.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  function wake(row, ms) {
-    row.classList.remove('is-wake'); void row.offsetWidth; row.classList.add('is-wake');
-    clearTimeout(row._wake); row._wake = setTimeout(function () { row.classList.remove('is-wake'); }, ms || 1300);
-  }
-  rows.forEach(function (row) {
-    var pend = null, raf = 0;
-    row.addEventListener('pointermove', function (e) {
-      pend = e; if (raf) return;
-      raf = requestAnimationFrame(function () {
-        raf = 0; var r = row.getBoundingClientRect();
-        row.style.setProperty('--mx', (pend.clientX - r.left).toFixed(0) + 'px'); row.style.setProperty('--my', (pend.clientY - r.top).toFixed(0) + 'px');
-      });
-    }, { passive: true });
-    row.addEventListener('pointerdown', function (e) {
-      if (e.pointerType === 'mouse') return;
-      var r = row.getBoundingClientRect();
-      row.style.setProperty('--mx', (e.clientX - r.left).toFixed(0) + 'px'); row.style.setProperty('--my', (e.clientY - r.top).toFixed(0) + 'px');
-      wake(row, 900);
-    });
-  });
-  var grid = document.querySelector('.home .tab-grid');
-  function playAll(start) {
-    rows.forEach(function (row, i) {
-      setTimeout(function () { row.style.setProperty('--mx', '40px'); row.style.setProperty('--my', '50%'); wake(row, 1100); }, start + i * 140);
-    });
-  }
-  var pop = grid && grid.closest('.xp-pop');
-  if (pop) pop.addEventListener('xp-open', function () { playAll(120); }, { once: true });   // in the Explore dropdown: the first time it opens
-  else if (grid && 'IntersectionObserver' in window) {
-    new IntersectionObserver(function (en, ob) {
-      if (!en[0].isIntersecting) return; ob.disconnect(); playAll(350);
-    }, { threshold: 0.5 }).observe(grid);
-  }
-})();
-
 // Updates: anything posted since the reader's last visit gets a small dot beside its date (kept for the rest of that
 // visit, so it does not vanish on the next page), and each date shows in full, in the reader's own date format, on
 // hover: 07/10 is 7 October here but reads as July 10 in the US. A first visit marks nothing, since all of it is new.
