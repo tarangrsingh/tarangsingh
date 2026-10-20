@@ -39,19 +39,12 @@ main p a:hover, main p a:focus-visible { text-underline-offset: 0.32em; text-dec
   html.theme-vt::view-transition-old(root) { z-index: 1; }
   html.theme-vt::view-transition-new(root) { z-index: 2; }
 
-  /* Entrance: header drifts in, headline rises, tab cards cascade. "backwards" fill only styles the delay period,
+  /* Entrance: header drifts in, headline rises. "backwards" fill only styles the delay period,
      so hover transforms keep working afterwards. */
   @keyframes enter-up { from { opacity: 0; transform: translateY(14px); } }
   @keyframes enter-down { from { opacity: 0; transform: translateY(-10px); } }
   header { animation: enter-down 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
   .page-title, #about { animation: enter-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s backwards; }
-  .tab-card { animation: enter-up 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
-  .tab-card:nth-child(1) { animation-delay: 0.28s; }
-  .tab-card:nth-child(2) { animation-delay: 0.36s; }
-  .tab-card:nth-child(3) { animation-delay: 0.44s; }
-  .tab-card:nth-child(4) { animation-delay: 0.52s; }
-  .tab-card:nth-child(5) { animation-delay: 0.6s; }
-  .tab-card:nth-child(6) { animation-delay: 0.68s; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -109,11 +102,11 @@ html.theme-switching *, html.theme-switching *::before, html.theme-switching *::
 @media print {
   :root, html.light-mode { --bg: #fff; --text: #111; --muted: #444; --rule: #ccc; --copper: #333; --copper-light: #111; --link: #111; }
   html, body { background: #fff !important; color: #111 !important; }
-  .skip-link, .photo-bg, .scrollgraph, .cursor-atoms, .theme-toggle, .kp-hint, .local-time, .visit-count, header nav, .home-doodle, .lb, .tab-icon-svg { display: none !important; }
+  .skip-link, .photo-bg, .scrollgraph, .cursor-atoms, .theme-toggle, .kp-hint, .local-time, .visit-count, header nav, .home-doodle, .lb { display: none !important; }
   header { position: static !important; background: none !important; box-shadow: none !important; border: 0 !important; }
   .reveal { opacity: 1 !important; transform: none !important; }
   *, *::before, *::after { box-shadow: none !important; text-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; animation: none !important; transition: none !important; }
-  .tab-grid, .update-entry, .sx-card, .sx-stat, .sx-feature, .idea-panel { background: none !important; border-color: #ccc !important; break-inside: avoid; }
+  .update-entry, .sx-card, .sx-stat, .sx-feature, .idea-panel { background: none !important; border-color: #ccc !important; break-inside: avoid; }
   a { color: #111 !important; }
   main p a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; color: #555; }
 }
