@@ -53,8 +53,8 @@
       setTimeout(function () { row.style.setProperty('--mx', '40px'); row.style.setProperty('--my', '50%'); wake(row, 1100); }, start + i * 140);
     });
   }
-  var pop = grid && grid.closest('.xp-pop');
-  if (pop) pop.addEventListener('xp-open', function () { playAll(120); }, { once: true });   // in the Explore dropdown: the first time it opens
+  var pop = grid && grid.closest('.sb-panel');
+  if (pop) pop.addEventListener('sb-open', function () { playAll(420); }, { once: true });   // in the Explore panel: the first time it opens, once the rows have arrived
   else if (grid && 'IntersectionObserver' in window) {
     new IntersectionObserver(function (en, ob) {
       if (!en[0].isIntersecting) return; ob.disconnect(); playAll(350);

@@ -203,68 +203,107 @@ html .home .updates-card .update-entry + .update-entry { margin-top: 0; }
 .home .update-link:is(:hover, :focus-visible) .update-more { text-decoration-color: currentColor; }
 .home .update-link:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
 
-/* ---- Explore, beside the name (see explore.js): a glass button opens the five pages in a frosted dropdown, so the
-   first screen holds the intro and the Updates squares. Without JavaScript the list simply shows under the links. -- */
+/* ---- Explore, in the header's top-left corner (see sidebar.js): a glass button opens the four pages in a frosted
+   panel that slides in from the left edge, under the header. Without JavaScript the list simply shows under the
+   profile links. -------------------------------------------------------------------------------------------------- */
 .home .name-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; }
-.xp-btn {
-  position: relative; display: inline-flex; align-items: center; gap: 9px; height: 36px; padding: 0 15px 0 16px; border-radius: 999px; cursor: pointer;
-  font: 600 14px/1 var(--font); letter-spacing: 0.01em; color: var(--text); -webkit-tap-highlight-color: transparent;
+
+/* the button: three hairlines on a glass disc, the last one shorter; they fold into a cross while the panel is open */
+.sb-btn {
+  position: absolute; left: max(16px, env(safe-area-inset-left)); top: 50%; z-index: 3; width: 36px; height: 36px; margin-top: -18px; padding: 0;
+  border-radius: 50%; cursor: pointer; color: var(--text); -webkit-tap-highlight-color: transparent;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
   border: 1px solid rgba(255, 255, 255, 0.32);
   -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 20px -12px rgba(0, 0, 0, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 6px 18px -8px rgba(0, 0, 0, 0.45);
   transition: border-color 0.25s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
-.xp-btn[hidden] { display: none; }
-/* a comet circles the rim: a conic gradient masked to the 1.5px border ring, its angle animated */
-@property --xp-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
-.xp-btn::before {
-  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1.5px; pointer-events: none;
-  background: conic-gradient(from var(--xp-a), transparent 0deg 250deg, color-mix(in srgb, var(--copper-light) 40%, transparent) 300deg, #fff 350deg, transparent 360deg);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-  animation: xp-orbit 6s linear infinite; opacity: 0.85;
+.sb-btn[hidden] { display: none; }
+html.light-mode .sb-btn { background: linear-gradient(160deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35)); border-color: rgba(255, 255, 255, 0.85); box-shadow: inset 0 1px 0 #fff, 0 6px 16px -8px rgba(20, 20, 30, 0.3); }
+.sb-btn:hover, .sb-btn[aria-expanded="true"] { border-color: var(--copper); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 0 3px var(--copper-glow); }
+.sb-btn:active { transform: scale(0.94); }
+.sb-btn:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+.sb-btn i {
+  position: absolute; left: 50%; top: 50%; width: 16px; height: 1.6px; margin: -0.8px 0 0 -8px; border-radius: 2px; background: currentColor;
+  transition: transform 0.4s cubic-bezier(0.3, 0.8, 0.2, 1.1), opacity 0.2s ease, width 0.3s ease;
 }
-html.light-mode .xp-btn::before { background: conic-gradient(from var(--xp-a), transparent 0deg 250deg, color-mix(in srgb, var(--copper) 45%, transparent) 300deg, var(--copper-light) 350deg, transparent 360deg); }
-.xp-btn:hover::before, .xp-btn[aria-expanded="true"]::before { animation-duration: 1.6s; opacity: 1; }
-@keyframes xp-orbit { to { --xp-a: 360deg; } }
-/* the letters ripple like a wave */
-.xp-word { display: inline-flex; }
-.xp-ch { display: inline-block; }
-.xp-btn.is-waving .xp-ch { animation: xp-wave 0.62s cubic-bezier(0.3, 0.6, 0.3, 1) both; animation-delay: calc(var(--i) * 38ms); }
-@keyframes xp-wave { 0%, 100% { transform: none; } 35% { transform: translateY(-4px); color: var(--copper-light); } 70% { transform: translateY(1px); } }
-/* a ring spreads out when pressed */
-.xp-btn::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; border: 1.5px solid var(--copper-light); opacity: 0; pointer-events: none; }
-.xp-btn.is-ripple::after { animation: xp-ring 0.65s cubic-bezier(0.2, 0.7, 0.3, 1); }
-@keyframes xp-ring { from { opacity: 0.8; transform: scale(1); } to { opacity: 0; transform: scale(1.5, 1.9); } }
-/* morph opening (explore.js animates the clip): no slide or fade of its own */
-.xp-pop.is-ready.is-morph, .xp-pop.is-ready.is-morph.is-open { transform: none; opacity: 1; transition: visibility 0s; }
-.xp-pop.is-ready.is-morph:not(.is-open) { visibility: hidden; }
-html.light-mode .xp-btn { background: linear-gradient(160deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35)); border-color: rgba(255, 255, 255, 0.85); box-shadow: inset 0 1px 0 #fff, 0 8px 20px -12px rgba(20, 20, 30, 0.35); }
-.xp-btn:hover, .xp-btn[aria-expanded="true"] { border-color: var(--copper); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 0 3px var(--copper-glow), 0 8px 20px -12px rgba(0, 0, 0, 0.55); }
-.xp-btn:active { transform: scale(0.96); }
-.xp-btn:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
-.xp-chev { width: 7px; height: 7px; margin-top: -3px; border-right: 1.6px solid currentColor; border-bottom: 1.6px solid currentColor; transform: rotate(45deg); opacity: 0.8; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
-.xp-btn[aria-expanded="true"] .xp-chev { transform: translateY(3px) rotate(-135deg); }
+.sb-btn i:nth-child(1) { transform: translateY(-5px); }
+.sb-btn i:nth-child(3) { transform: translateY(5px); width: 10px; }
+.sb-btn:hover i:nth-child(3) { width: 16px; }
+.sb-btn[aria-expanded="true"] i:nth-child(1) { transform: rotate(45deg); }
+.sb-btn[aria-expanded="true"] i:nth-child(2) { opacity: 0; transform: scaleX(0.2); }
+.sb-btn[aria-expanded="true"] i:nth-child(3) { transform: rotate(-45deg); width: 16px; }
+/* the header row keeps clear of the button where the margin beside it is too narrow (phones, small tablets) */
+.page-home .header-inner { padding-left: max(24px, calc(66px - max(0px, (100vw - var(--content-width, 640px)) / 2))); }
 
+/* the panel */
 .home .profile-text { position: relative; }
-.xp-pop { margin-top: 14px; }                                  /* no JavaScript: a plain list under the links */
-.xp-pop.is-ready {
-  position: absolute; left: 0; top: calc(100% + 12px); z-index: 40; width: min(400px, calc(100vw - 36px)); margin: 0;
-  opacity: 0; visibility: hidden; transform: translateY(-8px) scale(0.98); transform-origin: 24px 0;
-  transition: opacity 0.22s ease, transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.32s;
-}
-.xp-pop.is-ready.is-open { opacity: 1; visibility: visible; transform: none; transition: opacity 0.22s ease, transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s; }
-/* frosted harder than the page glass: it floats over text, which must not show through */
-html .home .xp-pop .tab-grid {
+.sb-panel { display: block; margin: 14px 0 0; }   /* no JavaScript: the label and list sit under the links (overrides the page's bare nav rule) */
+.sb-panel .sb-label { margin: 0 0 10px; }
+.sb-panel.is-ready {
+  position: fixed; z-index: 71; left: 10px; top: calc(var(--sb-top, 68px) + 10px); bottom: 10px; width: min(400px, calc(100vw - 20px)); margin: 0;
+  display: flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; justify-content: center; padding: 24px 12px 56px;   /* (the page's bare nav rule centres and wraps) */ border-radius: 22px; overflow: hidden auto; overscroll-behavior: contain; touch-action: pan-y;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03)), rgba(var(--bg-rgb), 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.24);
   -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 24px 50px -18px rgba(0, 0, 0, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 30px 0 60px -30px rgba(0, 0, 0, 0.75);
+  transform: translateX(calc(-100% - 16px)); visibility: hidden;
+  transition: transform 0.32s cubic-bezier(0.5, 0, 0.75, 0), visibility 0s linear 0.32s;
 }
-html.light-mode .home .xp-pop .tab-grid { background: linear-gradient(160deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.4)), rgba(var(--bg-rgb), 0.8); }
-.home .xp-pop .tab-card, html.js-tilt .home .xp-pop .tab-card, html.light-mode .home .xp-pop .tab-card { padding: 6px 12px; grid-template-columns: 38px 1fr 38px; }
-.home .xp-pop .tab-card .tab-icon-svg { width: 36px; height: 36px; padding: 5px; }
-.home .xp-pop .tab-card h3 { font-size: 16px; }
+html.light-mode .sb-panel.is-ready {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.5)), rgba(var(--bg-rgb), 0.85);
+  border-color: rgba(255, 255, 255, 0.9); box-shadow: inset 0 1px 0 #fff, 30px 0 60px -30px rgba(20, 20, 40, 0.35);
+}
+html.sb-open .sb-panel.is-ready { transform: translateX(var(--sb-drag, 0px)); visibility: visible; transition: transform 0.55s cubic-bezier(0.2, 0.9, 0.2, 1), visibility 0s; }
+html.sb-open .sb-panel.is-dragging { transition: none; }
+.sb-panel.is-ready .sb-label { margin: 0 14px 6px; }
+.sb-panel.is-ready .sb-label::after { background: rgba(255, 255, 255, 0.12); }   /* same hairline as the row dividers */
+html.light-mode .sb-panel.is-ready .sb-label::after { background: rgba(10, 31, 92, 0.1); }
+/* inside the panel the list loses its own glass (the panel is the glass); the label and the four rows sit together,
+   a little above the middle, each row a tall band */
+html .home .sb-panel.is-ready .tab-grid {
+  flex: 0 1 auto; display: flex; flex-direction: column; padding: 0; overflow: visible;
+  background: none; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.home .sb-panel.is-ready .tab-grid::after { content: none; }
+.home .sb-panel.is-ready .tab-card, html.js-tilt .home .sb-panel.is-ready .tab-card, html.light-mode .home .sb-panel.is-ready .tab-card {
+  flex: 0 1 104px; min-height: 66px; grid-template-columns: 50px 1fr 14px; gap: 16px; padding: 0 14px; border-radius: 14px;
+}
+.home .sb-panel.is-ready .tab-card .tab-icon-svg { width: 50px; height: 50px; padding: 8px; }
+.home .sb-panel.is-ready .tab-card h3 { justify-self: start; text-align: left; font-size: 19px; letter-spacing: -0.01em; }
+.home .sb-panel.is-ready .tab-card h3::after { transform-origin: 0 50%; }
+@media (max-width: 420px) {
+  .home .sb-panel.is-ready .tab-card, html.js-tilt .home .sb-panel.is-ready .tab-card, html.light-mode .home .sb-panel.is-ready .tab-card { grid-template-columns: 46px 1fr 14px; gap: 14px; padding: 0 12px; }
+  .home .sb-panel.is-ready .tab-card .tab-icon-svg { width: 46px; height: 46px; padding: 7px; }
+  .home .sb-panel.is-ready .tab-card h3 { font-size: 18px; }
+}
+/* a small chevron slides in beside the row you are on (always faintly there on touch screens) */
+.sb-go {
+  width: 8px; height: 8px; justify-self: center; color: var(--copper-light); opacity: 0;
+  border-top: 1.6px solid currentColor; border-right: 1.6px solid currentColor; transform: translateX(-6px) rotate(45deg);
+  transition: opacity 0.25s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.tab-card:is(.is-hover, :focus-visible) .sb-go { opacity: 1; transform: rotate(45deg); }
+@media (hover: none) { .sb-go { opacity: 0.45; transform: rotate(45deg); } }
+/* the label and rows arrive one after another as the panel slides in */
+@media (prefers-reduced-motion: no-preference) {
+  .sb-panel.is-ready .sb-label, .home .sb-panel.is-ready .tab-card { opacity: 0; translate: -18px 0; transition: opacity 0.2s ease, translate 0.2s ease, background 0.25s ease; }
+  html.sb-open .sb-panel.is-ready .sb-label, html.sb-open .home .sb-panel.is-ready .tab-card {
+    opacity: 1; translate: 0 0;
+    transition: opacity 0.35s ease calc(140ms + var(--i, 0) * 55ms), translate 0.6s cubic-bezier(0.2, 0.9, 0.2, 1) calc(140ms + var(--i, 0) * 55ms), background 0.25s ease;
+  }
+}
+/* the page behind dims and softens; the header stays above it, so the button (now a cross) is where it was */
+.sb-scrim {
+  position: fixed; inset: 0; z-index: 70; background: rgba(var(--bg-rgb), 0.5);
+  -webkit-backdrop-filter: blur(8px) saturate(120%); backdrop-filter: blur(8px) saturate(120%);
+  opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+html.sb-open .sb-scrim { opacity: 1; visibility: visible; transition: opacity 0.4s ease, visibility 0s; }
+html.sb-open { overflow: hidden; }
+html.sb-open header { z-index: 72; }
+@media (prefers-reduced-motion: reduce) { .sb-btn, .sb-btn i, .sb-panel.is-ready, .sb-scrim, .sb-go { transition: none !important; } }
+
 .home .updates-card .section-label { margin-top: 40px; }
 @media (min-width: 960px) {
   .page-home .wrap { padding-top: 34px; }                 /* a little less air above, so the Updates fit the first screen */
@@ -274,13 +313,11 @@ html.light-mode .home .xp-pop .tab-grid { background: linear-gradient(160deg, rg
 @media (max-width: 560px) {
   .home .profile { position: relative; }
   .home .profile-text { position: static; }
-  .xp-pop.is-ready { left: 0; right: 0; width: auto; }
-  .xp-btn { height: 32px; padding: 0 12px 0 13px; font-size: 13px; }
 }
-@media (prefers-reduced-motion: reduce) { .xp-pop.is-ready, .xp-chev, .xp-btn { transition: none; } .xp-btn::before { animation: none; opacity: 0; } }
 @media print {
-  .xp-btn { display: none !important; }
-  .xp-pop.is-ready { position: static !important; opacity: 1 !important; visibility: visible !important; transform: none !important; width: auto !important; margin-top: 14px !important; }
+  .sb-btn, .sb-scrim, .sb-go { display: none !important; }
+  .sb-panel.is-ready { position: static !important; visibility: visible !important; transform: none !important; width: auto !important; margin-top: 14px !important; padding: 0 !important; }
+  .sb-panel .sb-label, .sb-panel .tab-card { opacity: 1 !important; translate: none !important; }
 }
 
 /* ---- footer -------------------------------------------------------------------------------------------------- */
