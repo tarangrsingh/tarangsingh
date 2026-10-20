@@ -21,6 +21,21 @@ window.siteVisitor = function (show) {
 (function () {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Skip link: keyboard and screen-reader users get a jump past the header to the page's content on their first Tab.
+  var main = document.querySelector('main');
+  if (main) {
+    if (!main.id) main.id = 'content';
+    var skip = document.createElement('a'); skip.className = 'skip-link'; skip.href = '#' + main.id; skip.textContent = 'Skip to content';
+    skip.addEventListener('click', function () {                 // focus moves with the jump, so the next Tab continues from the content
+      if (!main.hasAttribute('tabindex')) {
+        main.setAttribute('tabindex', '-1');
+        main.addEventListener('blur', function () { main.removeAttribute('tabindex'); }, { once: true });
+      }
+      main.focus({ preventScroll: true });
+    });
+    document.body.insertBefore(skip, document.body.firstChild);
+  }
+
   // Header gains depth once the page has scrolled beneath it.
   var header = document.querySelector('header');
   if (header) {

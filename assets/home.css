@@ -187,6 +187,12 @@ html .home .updates-card .update-entry + .update-entry { margin-top: 0; }
 .home .updates-list.has-more { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); }   /* more to swipe */   /* outranks the light-mode card reset */
 .home .updates-card .update-date { margin: 0; font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: none; color: var(--muted); font-variant-numeric: tabular-nums; }
 .home .updates-card .update-entry p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--text); }
+/* posted since this reader's last visit (links.js): a small lit dot beside the date, which pulses twice on arrival */
+.home .update-new { display: inline-block; width: 6px; height: 6px; margin-left: 9px; border-radius: 50%; vertical-align: 1px; background: var(--copper-light); box-shadow: 0 0 0 3px var(--copper-glow); }
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes upd-new { 50% { box-shadow: 0 0 0 7px transparent; } }
+  .home .update-new { animation: upd-new 2.2s ease-out 1.2s 2; }
+}
 /* the card that opens a page */
 .home .update-link { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; transition: border-color 0.25s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .home .update-more {

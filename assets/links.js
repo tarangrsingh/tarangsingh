@@ -62,6 +62,26 @@
   }
 })();
 
+// Updates: anything posted since the reader's last visit gets a small dot beside its date (kept for the rest of that
+// visit, so it does not vanish on the next page), and each date shows in full, in the reader's own date format, on
+// hover: 07/10 is 7 October here but reads as July 10 in the US. A first visit marks nothing, since all of it is new.
+(function () {
+  var entries = document.querySelectorAll('.home .update-entry');
+  if (!entries.length) return;
+  var base = null, newest = '';
+  try { base = sessionStorage.getItem('updates-base'); if (base === null) { base = localStorage.getItem('updates-seen') || ''; sessionStorage.setItem('updates-base', base); } } catch (e) {}
+  var full = window.Intl && new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
+  Array.prototype.forEach.call(entries, function (en) {
+    var el = en.querySelector('.update-date'), m = el && /(\d{2})\/(\d{2})\/(\d{4})/.exec(el.textContent);
+    if (!m) return;
+    var iso = m[3] + '-' + m[2] + '-' + m[1];
+    if (iso > newest) newest = iso;
+    if (full) el.title = full.format(new Date(+m[3], +m[2] - 1, +m[1]));
+    if (base && iso > base) el.insertAdjacentHTML('beforeend', '<span class="update-new"><span class="sr-only">New since your last visit</span></span>');
+  });
+  try { if (newest > (localStorage.getItem('updates-seen') || '')) localStorage.setItem('updates-seen', newest); } catch (e) {}
+})();
+
 // Updates on narrow screens: the squares scroll sideways, so the right edge fades out while there is more to see,
 // and the fade lifts once the reader reaches the last card.
 (function () {
