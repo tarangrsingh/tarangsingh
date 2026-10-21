@@ -10,7 +10,7 @@
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var PAGES = [
-    { href: 'research.html', name: 'Research Experience', icon: '<svg class="sb-ic qubit" viewBox="0 0 64 64" aria-hidden="true">' +
+    { href: 'research.html', name: 'Research Experience', peek: { bg: 'bg-26e2d7b5.jpg', pos: '82% 32%', title: 'Research Experience', lede: 'The labs I have worked in, and what I did there.' }, icon: '<svg class="sb-ic qubit" viewBox="0 0 64 64" aria-hidden="true">' +
       '<circle cx="32" cy="32" r="21" fill="var(--avatar-bg)" stroke="var(--copper)" stroke-width="1.8"/>' +
       '<path d="M11 32 A21 7.9 0 0 1 53 32" fill="none" stroke="var(--copper)" stroke-width="1.1" stroke-dasharray="2 2.4" opacity="0.6"/>' +
       '<path d="M32 12.5 V51.5" fill="none" stroke="var(--copper)" stroke-width="1" stroke-dasharray="1.5 2.2" opacity="0.6"/>' +
@@ -20,21 +20,21 @@
       '<line class="bl-vec" x1="32" y1="32" x2="32" y2="32" stroke="var(--copper-light)" stroke-width="2" stroke-linecap="round"/>' +
       '<circle class="bl-halo" cx="32" cy="32" r="6" fill="var(--copper-glow)"/><circle class="bl-tip" cx="32" cy="32" r="3" fill="var(--copper-light)"/>' +
       '<circle cx="32" cy="32" r="1.5" fill="var(--copper)"/></svg>' },
-    { href: 'scholastic.html', name: 'Scholastic Achievements', icon: '<svg class="sb-ic medal" viewBox="0 0 64 64" aria-hidden="true"><g class="swing">' +
+    { href: 'scholastic.html', name: 'Scholastic Achievements', peek: { bg: 'bg-416785b6.jpg', pos: '80% 35%', title: 'Scholastic Achievements', lede: 'Entrance-exam ranks and the academic path so far.' }, icon: '<svg class="sb-ic medal" viewBox="0 0 64 64" aria-hidden="true"><g class="swing">' +
       '<path d="M17 3 H28 L37 27 H26 Z" fill="var(--copper)"/><path d="M47 3 H36 L27 27 H38 Z" fill="var(--copper-light)"/>' +
       '<circle cx="32" cy="41" r="15" fill="var(--avatar-bg)" stroke="var(--copper-light)" stroke-width="2.4"/>' +
       '<circle cx="32" cy="41" r="10.5" fill="none" stroke="var(--copper)" stroke-width="1.2" opacity="0.7"/>' +
       '<path class="m-star" d="M32 35 l1.8 3.7 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6Z" fill="var(--copper-light)"/></g>' +
       '<path class="spark" style="--d:0s" d="M53 16 L54.2 19.8 L58 21 L54.2 22.2 L53 26 L51.8 22.2 L48 21 L51.8 19.8 Z" fill="var(--copper-light)"/>' +
       '<path class="spark" style="--d:.45s" d="M11 30 L11.9 33.1 L15 34 L11.9 34.9 L11 38 L10.1 34.9 L7 34 L10.1 33.1 Z" fill="var(--copper-light)"/></svg>' },
-    { href: 'ideas.html', name: 'Ideas', icon: '<svg class="sb-ic bulb" viewBox="0 0 64 64" aria-hidden="true">' +
+    { href: 'ideas.html', name: 'Ideas', peek: { bg: 'bg-fa5bc326.jpg', pos: '72% 40%', title: 'Ideas', lede: 'Still under construction' }, icon: '<svg class="sb-ic bulb" viewBox="0 0 64 64" aria-hidden="true">' +
       '<circle class="bulb-glow" cx="32" cy="25" r="19"/><g class="bulb-rays" stroke-linecap="round">' +
       '<path pathLength="1" d="M32 2v5"/><path pathLength="1" d="M11 12l3.5 3.5"/><path pathLength="1" d="M53 12l-3.5 3.5"/>' +
       '<path pathLength="1" d="M5 28h5"/><path pathLength="1" d="M54 28h5"/></g>' +
       '<path class="bulb-glass" d="M32 8c-9 0-16 7-16 15 0 6.5 3.3 10.5 7 13.3L24 42h16l1-5.7c3.7-2.8 7-6.8 7-13.3 0-8-7-15-16-15Z"/>' +
       '<path class="bulb-filament" d="M27 38 V29 c0 -4.5 2 -4.5 2 0 c0 -4.5 2 -4.5 2 0 c0 -4.5 2 -4.5 2 0 c0 -4.5 2 -4.5 2 0 c0 -4.5 2 -4.5 2 0 V38"/>' +
       '<rect class="bulb-base" x="25.5" y="42" width="13" height="7" rx="1.6"/><path class="bulb-thread" d="M25.5 45.3h13M25.5 48.6h11"/></svg>' },
-    { href: 'contact.html', name: 'Contact', icon: '<svg class="sb-ic envelope" viewBox="0 0 64 64" aria-hidden="true">' +
+    { href: 'contact.html', name: 'Contact', peek: { bg: 'bg-26e2d7b5.jpg', pos: '30% 60%', title: 'Contact me' }, icon: '<svg class="sb-ic envelope" viewBox="0 0 64 64" aria-hidden="true">' +
       '<rect x="8" y="20" width="48" height="34" rx="2" fill="var(--avatar-bg)" stroke="var(--copper)" stroke-width="2"/>' +
       '<path class="flap-open" d="M8 20 L32 4 L56 20 Z" fill="var(--avatar-bg)" stroke="var(--copper)" stroke-width="2" stroke-linejoin="round"/>' +
       '<g class="letter"><rect x="15" y="24" width="34" height="22" rx="1.5" fill="var(--copper-light)"/>' +
@@ -53,13 +53,39 @@
   document.body.appendChild(scrim); document.body.appendChild(panel);
   var rows = [].slice.call(panel.querySelectorAll('.sb-row'));
 
+  // ---- wide screens: while the pointer (or focus) is on a row, the dimmed area beside the panel shows that page's
+  // photo and title. The photos are fetched the first time the panel opens on a wide screen, never on phones.
+  var wide = window.matchMedia('(min-width: 900px) and (hover: hover)');
+  var peek = document.createElement('div'); peek.className = 'sb-peek'; peek.setAttribute('aria-hidden', 'true');
+  peek.innerHTML = PAGES.map(function (p) {
+    return '<div class="sb-peek-layer" data-href="' + p.href + '" style="background-position:' + p.peek.pos + '"><p class="sb-peek-title">' + p.peek.title + '</p>' +
+      (p.peek.lede ? '<p class="sb-peek-lede">' + p.peek.lede + '</p>' : '') + '</div>';
+  }).join('');
+  document.body.insertBefore(peek, panel);   // above the dimmed page, under the panel
+  var layers = [].slice.call(peek.children), photos = false;
+  function peekAt(href) {
+    if (href === here || !wide.matches) href = null;   // the page you are on needs no preview
+    layers.forEach(function (l) { l.classList.toggle('is-on', l.dataset.href === href); });
+  }
+  function loadPhotos() {
+    if (photos || !wide.matches) return;
+    photos = true;
+    layers.forEach(function (l, i) { l.style.backgroundImage = 'url(assets/' + PAGES[i].peek.bg + ')'; });
+  }
+  rows.forEach(function (row) {
+    row.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') peekAt(row.getAttribute('href')); });
+    row.addEventListener('focus', function () { peekAt(row.getAttribute('href')); });
+  });
+  panel.addEventListener('pointerleave', function () { peekAt(null); });
+  panel.addEventListener('focusout', function (e) { if (!panel.contains(e.relatedTarget)) peekAt(null); });
+
   // ---- open / close ------------------------------------------------------------------------------------------
   var woke = false;
   function isOpen() { return root.classList.contains('sb-open'); }
   function place() { root.style.setProperty('--sb-top', Math.max(0, header.getBoundingClientRect().bottom).toFixed(0) + 'px'); }   // under the header
   function set(open, focusFirst) {
     if (open === isOpen()) return;
-    if (open) place();
+    if (open) { place(); loadPhotos(); } else peekAt(null);
     root.classList.toggle('sb-open', open);
     btn.setAttribute('aria-expanded', open);
     rows.forEach(function (a) { a.tabIndex = open ? 0 : -1; });

@@ -159,6 +159,28 @@ html.light-mode .sb-ic { background: radial-gradient(circle at 50% 35%, rgba(255
   }
 }
 
+/* wide screens: while the pointer (or focus) is on a row, the dimmed area beside the panel shows that page's photo and
+   title, fading in behind the glass (layers built by sidebar.js) */
+.sb-peek { display: none; }
+@media (min-width: 900px) and (hover: hover) {
+  .sb-peek { display: block; position: fixed; z-index: 70; left: 0; right: 0; top: var(--sb-top, 68px); bottom: 0; pointer-events: none; visibility: hidden; transition: visibility 0s linear 0.45s; }
+  html.sb-open .sb-peek { visibility: visible; transition: visibility 0s; }
+  .sb-peek-layer {
+    position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px;
+    padding: 0 6vw 10vh calc(min(400px, 100vw - 20px) + 10px + 5vw);
+    background-color: var(--bg); background-size: cover; opacity: 0; transition: opacity 0.45s ease;
+  }
+  .sb-peek-layer::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(var(--bg-rgb), 0.9) 0%, rgba(var(--bg-rgb), 0.72) 42%, rgba(var(--bg-rgb), 0.3) 100%); }
+  .sb-peek-layer > * { position: relative; margin: 0; }
+  .sb-peek-layer.is-on { opacity: 1; }
+  .sb-peek-title {
+    font-family: var(--font); font-size: clamp(2.2rem, 4vw, 3.4rem); font-weight: 400; letter-spacing: -0.01em; line-height: 1.15; color: var(--copper-light);
+    text-wrap: balance; translate: 0 12px; transition: translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .sb-peek-layer.is-on .sb-peek-title { translate: 0 0; }
+  .sb-peek-lede { font-family: var(--font); font-size: 17px; line-height: 1.5; color: var(--text); opacity: 0.85; max-width: 34em; }
+}
+
 /* the page behind dims and softens; the header stays above it, so the button (now a cross) is where it was */
 .sb-scrim {
   position: fixed; inset: 0; z-index: 70; background: rgba(var(--bg-rgb), 0.5);
@@ -170,7 +192,7 @@ html.sb-open { overflow: hidden; }
 html.sb-open header { z-index: 72; }
 
 @media (prefers-reduced-motion: reduce) {
-  .sb-btn, .sb-btn i, .sb-panel, .sb-scrim, .sb-row, .sb-row::before, .sb-name, .sb-name::after, .sb-go, .sb-ic, .sb-ic * { transition: none !important; }
+  .sb-btn, .sb-btn i, .sb-panel, .sb-scrim, .sb-peek, .sb-peek-layer, .sb-peek-title, .sb-row, .sb-row::before, .sb-name, .sb-name::after, .sb-go, .sb-ic, .sb-ic * { transition: none !important; }
   .sb-ic * { animation: none !important; }
 }
-@media print { .sb-btn, .sb-panel, .sb-scrim { display: none !important; } }
+@media print { .sb-btn, .sb-panel, .sb-scrim, .sb-peek { display: none !important; } }

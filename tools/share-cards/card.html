@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Share card</title>
+<!-- One 1200 x 630 share card (the image shown when a page's link is shared). render.cjs opens this once per page with
+     window.CARD set, and saves a screenshot to assets/share/. Served from the repository root, so /assets/ resolves. -->
+<style>
+  @font-face { font-family: 'Inter'; font-weight: 100 900; src: url(/assets/inter-var.woff2) format('woff2'); }
+  :root { --bg-rgb: 8, 17, 31; --text: #e8e6df; --muted: #8b9ab0; --copper-light: #a9cbf0; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; background: #08111f; font-family: Inter, sans-serif; color: var(--text); }
+  .bg { position: absolute; inset: 0; background-size: cover; }
+  .bg::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(var(--bg-rgb), 0.92) 0%, rgba(var(--bg-rgb), 0.82) 48%, rgba(var(--bg-rgb), 0.35) 100%),
+                linear-gradient(0deg, rgba(var(--bg-rgb), 0.6), transparent 40%);
+  }
+  .pi { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+  .pi span { font: italic 400 600px/1 "Times New Roman", Times, Georgia, serif; color: var(--text); opacity: 0.07; transform: translate(270px, -3%); }
+  .card { position: absolute; inset: 0; padding: 72px 84px; display: flex; flex-direction: column; }
+  .top { display: flex; align-items: center; gap: 14px; font-size: 22px; font-weight: 500; letter-spacing: 0.02em; }
+  .top svg { width: 30px; height: 30px; }
+  .title { margin-top: auto; font-size: 76px; font-weight: 400; letter-spacing: -0.015em; line-height: 1.05; color: var(--copper-light); max-width: 820px; }
+  .lede { margin-top: 22px; font-size: 28px; line-height: 1.4; color: #c9d3e0; max-width: 760px; }
+  .quote { margin-top: 26px; font-size: 30px; line-height: 1.45; color: #dfe6ef; max-width: 860px; }
+  .quote cite { display: block; margin-top: 12px; font-size: 22px; color: var(--muted); font-style: normal; }
+  .foot { margin-top: 46px; display: flex; align-items: center; gap: 16px; font-size: 20px; color: var(--muted); letter-spacing: 0.01em; }
+  .foot svg { width: 64px; height: 18px; }
+  .home .title { color: var(--text); font-weight: 600; font-size: 84px; letter-spacing: -0.025em; }
+  .portrait { position: absolute; right: 84px; top: 72px; width: 180px; height: 180px; border-radius: 48px; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.28); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
+</style>
+</head>
+<body>
+<div id="back"></div>
+<div class="card" id="card"></div>
+<script>
+  var STAR = '<svg viewBox="0 0 24 24"><g stroke="#a9cbf0" stroke-linecap="round"><line x1="12" y1="1.4" x2="12" y2="8.6" stroke-width="1.6"/><line x1="12" y1="15.4" x2="12" y2="22.6" stroke-width="1.6"/><line x1="1.4" y1="12" x2="8.6" y2="12" stroke-width="1.6"/><line x1="15.4" y1="12" x2="22.6" y2="12" stroke-width="1.6"/><line x1="6.5" y1="6.5" x2="9.4" y2="9.4" stroke-width="1.3"/><line x1="14.6" y1="14.6" x2="17.5" y2="17.5" stroke-width="1.3"/><line x1="17.5" y1="6.5" x2="14.6" y2="9.4" stroke-width="1.3"/><line x1="9.4" y1="14.6" x2="6.5" y2="17.5" stroke-width="1.3"/></g><circle cx="12" cy="12" r="2" fill="#a9cbf0"/></svg>';
+  var WAVE = '<svg viewBox="0 0 64 18"><path d="M0 9 Q8 1 16 9 T32 9 T48 9 T64 9" fill="none" stroke="#a9cbf0" stroke-width="2" stroke-linecap="round"/></svg>';
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  window.renderCard = function (c) {
+    document.body.className = c.page;
+    var back = document.getElementById('back');
+    back.innerHTML = c.bg ? '<div class="bg" style="background-image:url(/assets/' + c.bg + ');background-position:' + (c.pos || '60% 40%') + '"></div>' : '<div class="pi"><span>&pi;</span></div>';
+    var body = '';
+    if (c.page === 'home') body += '<img class="portrait" src="/assets/portrait-large.jpg" alt="">';
+    else body += '<div class="top">' + STAR + '<span>Tarang Singh</span></div>';
+    body += '<div class="title">' + esc(c.title) + '</div>';
+    if (c.quote) body += '<blockquote class="quote">' + esc(c.quote.text) + '<cite>' + esc(c.quote.cite) + '</cite></blockquote>';
+    else if (c.lede) body += '<div class="lede">' + esc(c.lede) + '</div>';
+    body += '<div class="foot">' + WAVE + '<span>tarangrsingh.github.io/tarangsingh</span></div>';
+    document.getElementById('card').innerHTML = body;
+  };
+</script>
+</body>
+</html>
