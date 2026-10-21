@@ -151,7 +151,9 @@
   var KICKER = { god: 'The origin', disc: 'A field', idea: 'An idea', death: 'The edge' };
   function replay(node) { node.classList.remove('ip-view'); void node.offsetWidth; node.classList.add('ip-view'); }
 
+  var stopSim = null;   // a field's live simulation (ideas-sims.js), stopped whenever the panel changes
   function renderPanel(id) {
+    if (stopSim) { stopSim(); stopSim = null; }
     if (!id) { introView.hidden = false; detailView.hidden = true; replay(introView); return; }
     var n = byId[id], d = n.data;
     introView.hidden = true; detailView.hidden = false; detailView.textContent = '';
@@ -170,6 +172,7 @@
     detailView.appendChild(el('p', 'ip-kicker', KICKER[n.type]));
     detailView.appendChild(el('h2', 'ip-title', d.title || d.label));
     if (d.prompt) detailView.appendChild(el('p', 'ip-prompt', d.prompt));
+    if (window.IDEA_SIMS) stopSim = window.IDEA_SIMS.mount(id, detailView);
     if (d.body && d.body.length) { var body = el('div', 'ip-body'); d.body.forEach(function (t) { body.appendChild(el('p', null, t)); }); detailView.appendChild(body); }
     if (d.listLabel) detailView.appendChild(el('p', 'ip-text', d.listLabel));
     if (d.list && d.list.length) { var ul = el('ul', 'ip-list'); d.list.forEach(function (t) { ul.appendChild(el('li', null, t)); }); detailView.appendChild(ul); }

@@ -100,6 +100,12 @@ html.light-mode .idea-panel { background: linear-gradient(160deg, rgba(255, 255,
 .ip-text, .ip-prompt, .ip-body p { font-size: 15px; line-height: 1.65; margin: 0 0 12px; }
 .ip-text { color: var(--text); }
 .ip-prompt { font-style: italic; color: var(--muted); }
+/* a field's live simulation (ideas-sims.js): a small dark instrument window; tap it to stir it */
+.ip-sim { margin: 4px 0 16px; }
+.ip-sim canvas { display: block; width: 100%; border-radius: 12px; cursor: pointer; touch-action: manipulation;
+  background: radial-gradient(120% 140% at 50% 0%, rgba(110, 160, 216, 0.1), transparent 60%), rgba(var(--bg-rgb), 0.55); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+html.light-mode .ip-sim canvas { background: rgba(255, 255, 255, 0.5); box-shadow: inset 0 0 0 1px rgba(10, 31, 92, 0.12); }
+.ip-sim figcaption { margin-top: 6px; font-size: 12px; letter-spacing: 0.02em; color: var(--muted); font-variant-numeric: tabular-nums; }
 .ip-body p { color: var(--text); }
 .ip-list { margin: 0 0 12px; padding-left: 19px; font-size: 14.5px; line-height: 1.65; color: var(--text); }
 .ip-list li { margin: 0 0 5px; font-style: italic; }
