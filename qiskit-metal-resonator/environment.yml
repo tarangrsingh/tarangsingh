@@ -1,0 +1,15 @@
+name: qmetal
+channels:
+  - conda-forge
+dependencies:
+  # qiskit-metal 0.1.x uses APIs removed in numpy 2 / pandas 2 (e.g. DataFrame.append),
+  # so these upper bounds are required, not cosmetic.
+  - python=3.10
+  - pip
+  - pip:
+      - qiskit-metal
+      - "numpy<2"
+      - "pandas<2"
+      - "geopandas<1"
+      - "shapely<2.1"
+      - pytest
