@@ -1,5 +1,5 @@
-// Ideas map: each field's panel opens with a small live simulation from that field's own world. Tap (or click) it to
-// perturb it. ideas.js calls IDEA_SIMS.mount(id, host) when a field is opened and the returned stop() when it closes.
+// Ideas map: each field's panel opens with a small live simulation from that field's own world, captioned with its
+// name and a Wikipedia link. Tap (or click) it to perturb it. ideas.js calls IDEA_SIMS.mount(id, host) when a field is opened and the returned stop() when it closes.
 // With prefers-reduced-motion each one is advanced off-screen and drawn once; a tap advances and redraws it.
 (function () {
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -13,7 +13,7 @@
 
   // ---- the simulations: each has init(w, h), step(), draw(ctx, w, h, pal), tap(x, y) --------------------------------
   var SIMS = {
-    physics: { name: 'Double pendulum, two starts 0.001 rad apart', make: function () {
+    physics: { name: 'Double pendulum', wiki: 'https://en.wikipedia.org/wiki/Double_pendulum', make: function () {
       var g = 9.81, P = [], trail = [[], []];
       function deriv(s) {
         var t1 = s[0], w1 = s[1], t2 = s[2], w2 = s[3], d = t1 - t2, den = 3 - Math.cos(2 * d);
@@ -44,10 +44,9 @@
       };
     } },
 
-    math: { name: 'Lissajous figure', make: function () {
+    math: { name: 'Lissajous curve', wiki: 'https://en.wikipedia.org/wiki/Lissajous_curve', make: function () {
       var R = [[3, 2], [5, 4], [3, 4], [5, 6], [1, 2], [7, 6]], r = 0, phase = 0, t = 0, self;
       self = {
-        caption: function () { return 'Lissajous figure ' + R[r][0] + ' : ' + R[r][1]; },
         step: function () { phase += 0.004; t += 0.03; },
         draw: function (c, w, h, pal) {
           var a = R[r][0], b = R[r][1], cx = w / 2, cy = h / 2, sx = Math.min(w * 0.42, h * 0.62), sy = h * 0.4;
@@ -61,7 +60,7 @@
       return self;
     } },
 
-    chemistry: { name: 'Gray–Scott reaction–diffusion', make: function () {
+    chemistry: { name: 'Gray–Scott reaction–diffusion', wiki: 'https://en.wikipedia.org/wiki/Reaction%E2%80%93diffusion_system', make: function () {
       var W = 120, Hh = 64, U, V, U2, V2, img = null, F = 0.0367, K = 0.0649;
       function seed(gx, gy, r) { for (var y = -r; y <= r; y++) for (var x = -r; x <= r; x++) { var i = ((gy + y + Hh) % Hh) * W + (gx + x + W) % W; U[i] = 0.5; V[i] = 0.25 + Math.random() * 0.02; } }
       function reset() { U = new Float32Array(W * Hh).fill(1); V = new Float32Array(W * Hh); U2 = new Float32Array(W * Hh); V2 = new Float32Array(W * Hh);
@@ -88,7 +87,7 @@
       };
     } },
 
-    biology: { name: 'Conway’s Game of Life', make: function () {
+    biology: { name: 'Conway’s Game of Life', wiki: 'https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life', make: function () {
       var W = 72, Hh = 36, A, B, age, tick = 0;
       function reset() { A = new Uint8Array(W * Hh); B = new Uint8Array(W * Hh); age = new Float32Array(W * Hh); for (var i = 0; i < A.length; i++) A[i] = Math.random() < 0.24 ? 1 : 0; }
       reset();
@@ -112,7 +111,7 @@
       };
     } },
 
-    philosophy: { name: 'Langton’s ant', make: function () {
+    philosophy: { name: 'Langton’s ant', wiki: 'https://en.wikipedia.org/wiki/Langton%27s_ant', make: function () {
       var W = 120, Hh = 60, G, ants;
       function reset() { G = new Uint8Array(W * Hh); ants = [{ x: W / 2 | 0, y: Hh / 2 | 0, d: 0 }]; }
       reset();
@@ -132,7 +131,7 @@
       };
     } },
 
-    metaphysics: { name: 'Lorenz attractor, two starts 10⁻⁵ apart', make: function () {
+    metaphysics: { name: 'Lorenz attractor', wiki: 'https://en.wikipedia.org/wiki/Lorenz_system', make: function () {
       var S, trails, rot = 0;
       function reset() { S = [[1, 1, 20], [1 + 1e-5, 1, 20]]; trails = [[], []]; }
       function f(p) { return [10 * (p[1] - p[0]), p[0] * (28 - p[2]) - p[1], p[0] * p[1] - 8 / 3 * p[2]]; }
@@ -162,19 +161,20 @@
     mount: function (id, host) {
       var def = SIMS[id]; if (!def) return null;
       var sim = def.make(), fig = document.createElement('figure'); fig.className = 'ip-sim';
-      var cv = document.createElement('canvas'); cv.setAttribute('role', 'img'); cv.title = 'Tap to stir it';
-      var cap = document.createElement('figcaption');
+      var cv = document.createElement('canvas'); cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', def.name);
+      var cap = document.createElement('figcaption'), wiki = document.createElement('a');
+      cap.textContent = def.name + ' ';
+      wiki.href = def.wiki; wiki.target = '_blank'; wiki.rel = 'noopener'; wiki.textContent = 'Wikipedia \u2197'; cap.appendChild(wiki);
       fig.appendChild(cv); fig.appendChild(cap); host.appendChild(fig);
       var c = cv.getContext('2d'), w = 0, raf = 0, frame = 0, pal = palette(), dead = false;
-      function caption() { var t = sim.caption ? sim.caption() : def.name; cap.textContent = t; cv.setAttribute('aria-label', t); }
       function size() { var dpr = Math.min(2, window.devicePixelRatio || 1); w = fig.clientWidth || 300; cv.width = w * dpr; cv.height = H * dpr; cv.style.height = H + 'px'; c.setTransform(dpr, 0, 0, dpr, 0, 0); }
       function paint() { if (++frame % 60 === 0) pal = palette(); c.clearRect(0, 0, w, H); sim.draw(c, w, H, pal); }
       function loop() { if (dead) return; sim.step(); paint(); raf = requestAnimationFrame(loop); }
       function still() { for (var i = 0; i < 400; i++) sim.step(); pal = palette(); paint(); }
-      cv.addEventListener('pointerdown', function (e) { var r = cv.getBoundingClientRect(); sim.tap(e.clientX - r.left, e.clientY - r.top, r.width, r.height); caption(); if (calm) still(); });
+      cv.addEventListener('pointerdown', function (e) { var r = cv.getBoundingClientRect(); sim.tap(e.clientX - r.left, e.clientY - r.top, r.width, r.height); if (calm) still(); });
       var onResize = function () { size(); if (calm) paint(); };
       window.addEventListener('resize', onResize);
-      caption(); size();
+      size();
       if (calm) still(); else raf = requestAnimationFrame(loop);
       return function stop() { dead = true; cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); };
     }
