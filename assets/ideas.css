@@ -106,6 +106,8 @@ html.light-mode .idea-panel { background: linear-gradient(160deg, rgba(255, 255,
   background: radial-gradient(120% 140% at 50% 0%, rgba(110, 160, 216, 0.1), transparent 60%), rgba(var(--bg-rgb), 0.55); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
 html.light-mode .ip-sim canvas { background: rgba(255, 255, 255, 0.5); box-shadow: inset 0 0 0 1px rgba(10, 31, 92, 0.12); }
 .ip-sim figcaption { margin-top: 6px; font-size: 12px; letter-spacing: 0.02em; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ip-sim figcaption a { margin-left: 4px; color: var(--link); text-decoration: none; }
+.ip-sim figcaption a:hover, .ip-sim figcaption a:focus-visible { text-decoration: underline; text-underline-offset: 0.2em; }
 .ip-body p { color: var(--text); }
 .ip-list { margin: 0 0 12px; padding-left: 19px; font-size: 14.5px; line-height: 1.65; color: var(--text); }
 .ip-list li { margin: 0 0 5px; font-style: italic; }
