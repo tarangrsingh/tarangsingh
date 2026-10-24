@@ -351,7 +351,20 @@
   .sx-tag { padding: 3px 9px; border: 1px solid var(--rule); border-radius: 999px; font-size: 11.5px; color: var(--muted); }
   .sx-link { display: inline-block; margin-top: 2px; font-size: 13.5px; font-weight: 600; text-decoration: none; }
   .sx-link:hover { text-decoration: underline; }
-  .sx-repo { margin-top: 14px; }   /* under the resonance plot in the Currently card */
+  /* Quantum Metal repository card, with a live fluxonium (assets/fluxonium.js) */
+  .sx-repo h2 a { color: var(--text); text-decoration: none; }
+  .sx-repo h2 a:hover, .sx-repo h2 a:focus-visible { color: var(--link-hover, var(--link)); text-decoration: underline; text-underline-offset: 0.2em; }
+  .flx { margin: 14px 0 0; display: grid; gap: 12px; }
+  .flx-main { display: block; width: 100%; height: 230px; border-radius: 10px; background: rgba(4, 9, 18, 0.45); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+  .flx-row { display: flex; gap: 14px; align-items: stretch; flex-wrap: wrap; }
+  .flx-circuit { flex: 0 0 auto; width: 156px; height: 84px; color: var(--copper-light); padding: 4px; border-radius: 10px; background: rgba(4, 9, 18, 0.45); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); box-sizing: content-box; }
+  .flx-spec { flex: 1 1 200px; min-width: 0; height: 92px; border-radius: 10px; background: rgba(4, 9, 18, 0.45); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+  html.light-mode .flx-main, html.light-mode .flx-circuit, html.light-mode .flx-spec { background: rgba(255, 255, 255, 0.45); box-shadow: inset 0 0 0 1px rgba(10, 31, 92, 0.12); }
+  .flx-cap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; font-size: 12.5px; color: var(--muted); }
+  .flx-cap a { color: var(--link); text-decoration: none; margin-left: 4px; }
+  .flx-cap a:hover, .flx-cap a:focus-visible { text-decoration: underline; }
+  .flx-read { font-variant-numeric: tabular-nums; }
+  .flx-read b { font-weight: 600; color: var(--text); }
   .sx-feature {
     position: relative; overflow: hidden; isolation: isolate; margin: 0 0 30px; padding: 22px 22px 20px;
     border-left: 3px solid var(--copper); border-radius: 14px;
@@ -530,7 +543,37 @@
         </svg>
         <span class="vna-y">|S<sub>21</sub>|</span><span class="vna-x">f &rarr;</span>
       </div>
-      <a class="sx-link sx-repo" href="https://github.com/tarangrsingh/qiskit" target="_blank" rel="noopener">This is my Quantum Metal repository ↗</a>
+    </section>
+
+    <section class="sx-feature sx-repo reveal" aria-labelledby="repo-title">
+      <div class="sx-eyebrow">tarangrsingh.github.io/qiskit</div>
+      <h2 id="repo-title"><a href="https://tarangrsingh.github.io/qiskit/" target="_blank" rel="noopener">This is my Quantum Metal repository ↗</a></h2>
+      <p>This is my current interest, along with cQED, understanding Quantum Algorithms and Error Corrections</p>
+      <figure class="flx">
+        <canvas class="flx-main" role="img" aria-label="Fluxonium qubit: potential, energy levels and a superposition tunnelling between the two wells"></canvas>
+        <div class="flx-row">
+          <svg class="flx-circuit" viewBox="0 0 156 84" role="img" aria-label="Fluxonium circuit: a Josephson junction shunted by a capacitance and a junction-array superinductance, with external flux through the loop">
+            <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+              <path d="M18 14 H140 M18 70 H140 M18 14 V36 M18 48 V70 M60 14 V34 M60 50 V70 M140 14 V18 M140 66 V70"/>
+              <path d="M10 36 H26 M10 48 H26"/>
+              <rect x="52" y="34" width="16" height="16" rx="1.5"/><path d="M54 36 L66 48 M66 36 L54 48"/>
+              <g stroke-width="1.2"><rect x="135" y="18" width="10" height="8" rx="1"/><path d="M136 19 L144 25 M144 19 L136 25"/>
+                <rect x="135" y="28" width="10" height="8" rx="1"/><path d="M136 29 L144 35 M144 29 L136 35"/>
+                <path d="M140 38 V40 M140 42 V44 M140 46 V48" stroke-dasharray="0.1 2"/>
+                <rect x="135" y="48" width="10" height="8" rx="1"/><path d="M136 49 L144 55 M144 49 L136 55"/>
+                <rect x="135" y="58" width="10" height="8" rx="1"/><path d="M136 59 L144 65 M144 59 L136 65"/></g>
+              <circle cx="100" cy="42" r="7"/>
+            </g>
+            <circle cx="100" cy="42" r="1.8" fill="currentColor"/>
+            <g fill="currentColor" font-size="9" font-family="Inter, sans-serif"><text x="30" y="45">C</text><text x="72" y="45">E<tspan font-size="7" dy="2">J</tspan></text><text x="112" y="45">&#934;<tspan font-size="7" dy="2">ext</tspan></text><text x="118" y="80">E<tspan font-size="7" dy="2">L</tspan></text></g>
+          </svg>
+          <canvas class="flx-spec" aria-hidden="true"></canvas>
+        </div>
+        <figcaption class="flx-cap">
+          <span>Fluxonium qubit <a href="https://en.wikipedia.org/wiki/Superconducting_quantum_computing" target="_blank" rel="noopener">Wikipedia ↗</a></span>
+          <span class="flx-read">&Phi;<sub>ext</sub>/&Phi;<sub>0</sub> <b data-k="phi">0.500</b> &middot; f<sub>01</sub> <b data-k="f01">237 MHz</b> &middot; E<sub>J</sub> 4.0 &middot; E<sub>C</sub> 1.0 &middot; E<sub>L</sub> 0.5 GHz</span>
+        </figcaption>
+      </figure>
     </section>
 
     <h2 class="section-heading reveal">Experience</h2>
@@ -735,6 +778,7 @@
 <script src="assets/scrollgraph.js?v=2026102101" defer></script>
 <script src="assets/premium.js?v=2026102101" defer></script>
 <script src="assets/lab.js?v=2026102101" defer></script>
+<script src="assets/fluxonium.js?v=2026102401" defer></script>
 <script src="assets/sidebar.js?v=2026102101" defer></script>
 <script src="assets/vna.js?v=2026102101" defer></script>
 </body>
