@@ -7,7 +7,7 @@
      window.CARD set, and saves a screenshot to assets/share/. Served from the repository root, so /assets/ resolves. -->
 <style>
   @font-face { font-family: 'Inter'; font-weight: 100 900; src: url(/assets/inter-var.woff2) format('woff2'); }
-  :root { --bg-rgb: 8, 17, 31; --text: #e8e6df; --muted: #8b9ab0; --copper-light: #a9cbf0; }
+  :root { --bg-rgb: 8, 17, 31; --text: #e8e6df; --muted: #8b9ab0; --copper: #6ea0d8; --copper-light: #a9cbf0; }
   * { box-sizing: border-box; margin: 0; }
   html, body { width: 1200px; height: 630px; overflow: hidden; background: #08111f; font-family: Inter, sans-serif; color: var(--text); }
   .bg { position: absolute; inset: 0; background-size: cover; }
@@ -28,6 +28,10 @@
   .foot { margin-top: 46px; display: flex; align-items: center; gap: 16px; font-size: 20px; color: var(--muted); letter-spacing: 0.01em; }
   .foot svg { width: 64px; height: 18px; }
   .home .title { color: var(--text); font-weight: 600; font-size: 84px; letter-spacing: -0.025em; }
+  /* Research card: the page's own fluxonium (assets/fluxonium.js), drawn once at half flux in the top-right corner */
+  .flx { position: absolute; right: 64px; top: 58px; width: 560px; margin: 0; }
+  .flx-main { display: block; width: 560px; height: 250px; }
+  .flx-spec { display: none; }
   .portrait { position: absolute; right: 84px; top: 72px; width: 180px; height: 180px; border-radius: 48px; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.28); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8); }
 </style>
 </head>
@@ -50,6 +54,10 @@
     else if (c.lede) body += '<div class="lede">' + esc(c.lede) + '</div>';
     body += '<div class="foot">' + WAVE + '<span>tarangrsingh.github.io/tarangsingh</span></div>';
     document.getElementById('card').innerHTML = body;
+    if (c.flux) {   // the same solver and drawing as the Research page (render.cjs runs with reduced motion: one still frame)
+      document.getElementById('card').insertAdjacentHTML('beforeend', '<figure class="flx"><canvas class="flx-main"></canvas><canvas class="flx-spec"></canvas><b data-k="phi" hidden></b><b data-k="f01" hidden></b></figure>');
+      var sc = document.createElement('script'); sc.src = '/assets/fluxonium.js'; sc.onload = function () { window.cardReady = true; }; document.body.appendChild(sc);
+    } else window.cardReady = true;
   };
 </script>
 </body>
