@@ -22,7 +22,7 @@ function latestQuote() {
 // Titles and subtitles are the pages' own; backgrounds and their framing match each page's photo
 const CARDS = [
   { page: 'home', title: 'Tarang Singh', lede: 'IIT (BHU), Varanasi · M.Sc. in Physics', bg: 'bg-qchip.jpg', pos: '70% 40%' },
-  { page: 'research', title: 'Research Experience', lede: 'The labs I have worked in, and what I did there.', bg: 'bg-26e2d7b5.jpg', pos: '82% 32%' },
+  { page: 'research', title: 'Research Experience', lede: 'The labs I have worked in, and what I did there.', bg: 'bg-26e2d7b5.jpg', pos: '82% 32%', flux: true },
   { page: 'scholastic', title: 'Scholastic Achievements', lede: 'Entrance-exam ranks and the academic path so far.', bg: 'bg-416785b6.jpg', pos: '80% 35%' },
   { page: 'contact', title: 'Contact me', bg: 'bg-26e2d7b5.jpg', pos: '30% 60%' },
   { page: 'ideas', title: 'Ideas', lede: 'Still under construction', bg: 'bg-fa5bc326.jpg', pos: '72% 40%' },
@@ -45,11 +45,12 @@ const server = http.createServer((req, res) => {
   await new Promise(r => server.listen(0, '127.0.0.1', r));
   const base = 'http://127.0.0.1:' + server.address().port;
   const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
-  const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
+  const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, reducedMotion: 'reduce' });   // the fluxonium draws one still frame
   fs.mkdirSync(OUT, { recursive: true });
   for (const card of CARDS) {
     await page.goto(base + '/tools/share-cards/card.html');
     await page.evaluate(c => window.renderCard(c), card);
+    await page.waitForFunction(() => window.cardReady === true);
     await page.evaluate(() => Promise.all([document.fonts.ready].concat([...document.images].map(i => i.decode().catch(() => {})))));
     await page.waitForFunction(() => [...document.querySelectorAll('.bg')].every(el => {
       const u = getComputedStyle(el).backgroundImage.match(/url\("?(.*?)"?\)/); if (!u) return true;

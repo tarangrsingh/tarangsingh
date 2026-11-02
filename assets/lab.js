@@ -11,8 +11,8 @@
   // Kept deliberately light: no prerendering (it ran whole pages in the background and made scrolling heavy on
   // phones). With a mouse, resting on a link for a moment fetches that page's HTML and background photo. On a fast,
   // non-metered connection the other pages' photos are fetched once this page is idle, so they appear instantly later.
-  var BG = { 'index.html': 'bg-qchip.jpg', 'scholastic.html': 'bg-416785b6.jpg', 'star.html': 'bg-416785b6.jpg',
-    'research.html': 'bg-26e2d7b5.jpg', 'contact.html': 'bg-26e2d7b5.jpg', 'ideas.html': 'bg-fa5bc326.jpg' };
+  var BG = { 'index.html': 'bg-qchip.webp', 'scholastic.html': 'bg-416785b6.webp', 'star.html': 'bg-416785b6.webp',
+    'research.html': 'bg-26e2d7b5.webp', 'contact.html': 'bg-26e2d7b5.webp', 'ideas.html': 'bg-fa5bc326.webp' };
   var base = location.href.replace(/[^/]*([?#].*)?$/, ''), done = {};
   function img(file) {
     if (!file || done[file]) return; done[file] = 1;

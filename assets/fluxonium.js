@@ -46,14 +46,19 @@
   }
 
   // the f01(Φ_ext) curve for the inset, once
-  var SPEC = [], FMAX = 0;
-  for (var k = 0; k <= 100; k++) { var E = levels(potential(k / 100, new Float64Array(N)), 2), f = E[1] - E[0]; SPEC.push(f); FMAX = Math.max(FMAX, f); }
+  // the spectrum for the inset, once: f01, f12, f02 against Φ_ext/Φ0 (what two-tone spectroscopy measures); the same pass
+  // fixes the energy axis so the plot holds every flux the visitor can dial in
+  var SPEC = [], FMAX = 0, UMIN = Infinity, EMAX = -Infinity;
+  for (var k = 0; k <= 100; k++) {
+    var Uk = potential(k / 100, new Float64Array(N)), E = levels(Uk, 3);
+    SPEC.push([E[1] - E[0], E[2] - E[1], E[2] - E[0]]); FMAX = Math.max(FMAX, E[2] - E[0]); EMAX = Math.max(EMAX, E[2]);
+    for (var u = 0; u < N; u++) if (Math.abs(X[u]) <= VIEW) UMIN = Math.min(UMIN, Uk[u]);
+  }
 
   var main = fig.querySelector('.flx-main'), spec = fig.querySelector('.flx-spec'), cm = main.getContext('2d'), cs = spec.getContext('2d');
   var readPhi = fig.querySelector('[data-k="phi"]'), readF = fig.querySelector('[data-k="f01"]');
-  var ref = solve(0.5), Y0 = Infinity, Y1 = ref.E[2] + 1.6, PEAK = 0;
-  for (var q = 0; q < N; q++) { if (Math.abs(X[q]) <= VIEW) Y0 = Math.min(Y0, ref.U[q]); PEAK = Math.max(PEAK, ref.p0[q] * ref.p0[q]); }
-  Y0 -= 0.7;
+  var ref = solve(0.5), Y0 = UMIN - 0.6, Y1 = EMAX + 1.1, PEAK = 0;
+  [0, 0.25, 0.5].forEach(function (f) { var s = f === 0.5 ? ref : solve(f); for (var q = 0; q < N; q++) PEAK = Math.max(PEAK, s.p0[q] * s.p0[q]); });
 
   var W = 0, H = 0, SW = 0, SH = 0, pal = null;
   function palette() { var c = getComputedStyle(document.documentElement); return { hi: c.getPropertyValue('--copper-light').trim(), lo: c.getPropertyValue('--copper').trim(), mu: c.getPropertyValue('--muted').trim() }; }
@@ -86,33 +91,58 @@
     for (var i2 = 0; i2 < N; i2++) { if (Math.abs(X[i2]) > VIEW) continue; var y2 = py(s.U[i2]); c[first ? 'moveTo' : 'lineTo'](px(X[i2]), y2); first = false; }
     c.globalAlpha = 1; c.strokeStyle = pal.lo; c.lineWidth = 1.8; c.stroke();
 
-    // inset: f01 against Φ_ext/Φ0, with the current point
+    // inset: the spectrum f01, f12, f02 against Φ_ext/Φ0, with the current flux marked on each (drag it to tune)
     var t = cs; t.clearRect(0, 0, SW, SH);
-    var ix = function (f) { return 6 + f * (SW - 12); }, iy = function (v) { return SH - 16 - v / FMAX * (SH - 26); };
-    t.strokeStyle = pal.hi; t.lineWidth = 1.3; t.globalAlpha = 0.9; t.beginPath();
-    SPEC.forEach(function (v, k) { t[k ? 'lineTo' : 'moveTo'](ix(k / 100), iy(v)); }); t.stroke();
-    t.globalAlpha = 1; t.font = '10px Inter, sans-serif'; t.fillStyle = pal.mu; t.textAlign = 'center';
-    t.fillText('0', ix(0), SH - 2); t.fillText('½', ix(0.5), SH - 2); t.fillText('1', ix(1), SH - 2);
-    t.textAlign = 'left'; t.fillText('f₀₁', 8, 10); t.textAlign = 'right'; t.fillText('Φₑₓₜ/Φ₀', SW - 4, 10);
-    var f01 = s.E[1] - s.E[0];
-    t.fillStyle = pal.hi; t.beginPath(); t.arc(ix(fx), iy(f01), 3.4, 0, 7); t.fill();
+    var ix = function (f) { return 22 + f * (SW - 30); }, iy = function (v) { return SH - 16 - v / FMAX * (SH - 26); };
+    var now = [s.E[1] - s.E[0], s.E[2] - s.E[1], s.E[2] - s.E[0]], NAME = ['f\u2080\u2081', 'f\u2081\u2082', 'f\u2080\u2082'], ALPHA = [0.95, 0.55, 0.4];
+    t.globalAlpha = 0.25; t.strokeStyle = pal.mu; t.lineWidth = 1; t.beginPath(); t.moveTo(ix(fx), 12); t.lineTo(ix(fx), SH - 16); t.stroke();
+    t.font = '10px Inter, sans-serif';
+    [2, 1, 0].forEach(function (j) {
+      t.globalAlpha = ALPHA[j]; t.strokeStyle = j ? pal.lo : pal.hi; t.lineWidth = j ? 1.1 : 1.4; t.beginPath();
+      SPEC.forEach(function (v, k) { t[k ? 'lineTo' : 'moveTo'](ix(k / 100), iy(v[j])); }); t.stroke();
+      t.fillStyle = j ? pal.lo : pal.hi; t.textAlign = 'right'; t.fillText(NAME[j], 19, iy(SPEC[0][j]) + 4);
+      t.globalAlpha = j ? 0.8 : 1; t.beginPath(); t.arc(ix(fx), iy(now[j]), j ? 2.6 : 3.4, 0, 7); t.fill();
+    });
+    t.globalAlpha = 1; t.fillStyle = pal.mu; t.textAlign = 'center';
+    t.fillText('0', ix(0), SH - 2); t.fillText('\u00bd', ix(0.5), SH - 2); t.fillText('1', ix(1), SH - 2);
+    t.textAlign = 'right'; t.fillText('\u03a6\u2091\u2093\u209c/\u03a6\u2080', SW - 4, 10);
   }
 
-  var fx = 0.5, theta = 0, last = 0, start = 0, raf = 0, live = false, cur = ref, tick = 0, solvedAt = 0.5;
+  var fx = 0.5, theta = 0, last = 0, start = 0, raf = 0, live = false, cur = ref, tick = 0, solvedAt = 0.5, manual = null, keyHold = 0;
   function read(s) {
-    readPhi.textContent = fx.toFixed(3);
+    readPhi.textContent = fx.toFixed(3); spec.setAttribute('aria-valuenow', fx.toFixed(3));
     var f = (s.E[1] - s.E[0]) * 1000; readF.textContent = f < 1000 ? f.toFixed(0) + ' MHz' : (f / 1000).toFixed(2) + ' GHz';
   }
   function frame(t) {
     var dt = Math.min(Math.max((t - last) / 1000, 0), 0.05); last = t;
-    fx = 0.5 + 0.03 * Math.sin((t - start) / 1000 * 2 * Math.PI / 26);       // a slow drift around the sweet spot
-    if (Math.abs(fx - solvedAt) > 4e-4) { cur = solve(fx); solvedAt = fx; }   // the flux moves slowly: no need to re-solve every frame
+    var drift = 0.5 + 0.03 * Math.sin((t - start) / 1000 * 2 * Math.PI / 26);  // a slow drift around the sweet spot
+    if (manual !== null) fx = manual;                                            // set by the visitor
+    else fx += (drift - fx) * (1 - Math.exp(-dt / 0.6));                         // otherwise glide back to the drift
+    if (Math.abs(fx - solvedAt) > 4e-4) { cur = solve(fx); solvedAt = fx; }   // re-solve only when the flux has moved
     var f01 = cur.E[1] - cur.E[0];
-    theta += 2 * Math.PI * (f01 / (ref.E[1] - ref.E[0])) / 3.2 * dt;         // one tunnelling period ≈ 3.2 s at Φ0/2
+    // shown slowed down: one tunnelling period ≈ 3.2 s at Φ0/2, faster as √f01 elsewhere (capped so it stays watchable)
+    theta += 2 * Math.PI * Math.min(3, Math.sqrt(f01 / (ref.E[1] - ref.E[0]))) / 3.2 * dt;
     if (++tick % 30 === 0) pal = palette();
     draw(cur, fx, theta); if (tick % 6 === 0) read(cur);
     raf = live ? requestAnimationFrame(frame) : 0;
   }
+  function kick() {
+    if (calm || !raf) { if (Math.abs(fx - solvedAt) > 1e-6) { cur = solve(fx); solvedAt = fx; } draw(cur, fx, theta); read(cur); }
+    if (!calm && live && !raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+  }
+  function fluxAt(e) { var r = spec.getBoundingClientRect(); return Math.min(1, Math.max(0, (e.clientX - r.left - 22) / (r.width - 30))); }
+  function setManual(v) { manual = v; if (calm || !raf) fx = v; kick(); }
+  spec.addEventListener('pointerdown', function (e) { try { spec.setPointerCapture(e.pointerId); } catch (err) {} setManual(fluxAt(e)); });
+  spec.addEventListener('pointermove', function (e) { if (manual !== null && spec.hasPointerCapture && spec.hasPointerCapture(e.pointerId)) setManual(fluxAt(e)); });
+  function release() { if (calm) return; manual = null; }
+  spec.addEventListener('pointerup', release); spec.addEventListener('pointercancel', release);
+  spec.addEventListener('keydown', function (e) {
+    var step = { ArrowLeft: -0.01, ArrowDown: -0.01, ArrowRight: 0.01, ArrowUp: 0.01 }[e.key];
+    if (e.key === 'Home') step = -1; if (e.key === 'End') step = 1;
+    if (step === undefined) return;
+    e.preventDefault(); setManual(Math.min(1, Math.max(0, (manual !== null ? manual : fx) + step)));
+    clearTimeout(keyHold); keyHold = setTimeout(release, 4000);                  // the keyboard holds a value for a few seconds
+  });
   size(); read(ref); draw(ref, 0.5, 0);
   window.addEventListener('resize', function () { size(); draw(cur, fx, theta); });
   if (calm || !('IntersectionObserver' in window)) return;
