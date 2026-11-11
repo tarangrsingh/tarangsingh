@@ -39,12 +39,12 @@
 </script>
 <link rel="canonical" href="https://tarangrsingh.github.io/tarangsingh/" />
 <meta property="og:url" content="https://tarangrsingh.github.io/tarangsingh/" />
-<meta property="og:image" content="https://tarangrsingh.github.io/tarangsingh/assets/share/home.jpg?v=2026110201" />
+<meta property="og:image" content="https://tarangrsingh.github.io/tarangsingh/assets/share/home.jpg?v=2026111101" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="Tarang Singh, IIT (BHU), Varanasi, M.Sc. in Physics" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:image" content="https://tarangrsingh.github.io/tarangsingh/assets/share/home.jpg?v=2026110201" />
+<meta name="twitter:image" content="https://tarangrsingh.github.io/tarangsingh/assets/share/home.jpg?v=2026111101" />
 <meta name="twitter:title" content="Tarang Singh" />
 <meta name="twitter:description" content="MSc Physics student at IIT (BHU), Varanasi, working on cQED, Error Corrections and Superconducting Circuits." />
 <meta name="theme-color" content="#08111f" media="(prefers-color-scheme: dark)">
@@ -495,12 +495,13 @@
   .plain-toggle svg { display: block; width: 17px; height: 17px; }
   .plain-toggle:hover svg, .plain-toggle:focus-visible svg { animation: none !important; }
 </style>
-<link rel="stylesheet" href="assets/scrollgraph.css?v=2026110201">
-<link rel="stylesheet" href="assets/premium.css?v=2026110201">
-<link rel="stylesheet" href="assets/lab.css?v=2026110201">
-<link rel="stylesheet" href="assets/profile.css?v=2026110201">
-<link rel="stylesheet" href="assets/home.css?v=2026110201">
-<link rel="stylesheet" href="assets/sidebar.css?v=2026110201">
+<link rel="stylesheet" href="assets/scrollgraph.css?v=2026111101">
+<link rel="stylesheet" href="assets/premium.css?v=2026111101">
+<link rel="stylesheet" href="assets/lab.css?v=2026111101">
+<link rel="stylesheet" href="assets/profile.css?v=2026111101">
+<link rel="stylesheet" href="assets/home.css?v=2026111101">
+<link rel="stylesheet" href="assets/sidebar.css?v=2026111101">
+<link rel="stylesheet" href="assets/fluxonium.css?v=2026111101">
 <script>
   (function () {
     try { if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode'); } catch (e) {}
@@ -578,6 +579,8 @@
 
 <div class="wrap">
   <main id="top" class="home">
+    <div class="home-grid">
+    <div class="home-intro">
     <div class="profile">
       <button type="button" class="profile-photo" aria-label="View a larger photo of Tarang Singh" title="View larger photo"><img src="assets/portrait.jpg" width="480" height="480" alt="" decoding="async" fetchpriority="high"></button>
       <div class="profile-text"><div class="name-row"><h1 class="profile-name">Tarang Singh</h1></div><ul class="links" aria-label="Links">
@@ -591,25 +594,36 @@
     </div>
     <p id="about">I am currently pursuing my masters from <a href="https://www.iitbhu.ac.in" target="_blank" rel="noopener">IIT-BHU, Varanasi</a>, and learning methods of Quantum Computing, to build my own circuits and to contribute to the field in the coming years.</p>
     <p class="reveal">I love understanding Math and Physics, I also have several other interests such as philosophy/metaphysics, writing, understanding human brain/LLM&rsquo;s and a few other things.</p>
-    <a class="qm-link" href="https://tarangrsingh.github.io/qiskit/" target="_blank" rel="noopener">
-      <svg class="qm-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/><path d="M10 10h4v4h-4z"/></svg>
-      <span class="qm-text"><span class="qm-title">My Quantum Metal site</span><span class="qm-url">tarangrsingh.github.io/qiskit</span></span>
-    </a>
-
-    <div class="updates-card reveal" id="updates">
-      <h2 class="section-label">Updates</h2>
-      <div class="updates-list">
-        <a class="update-entry update-link" href="theoretical-models.html">
-          <div class="update-date">07/10/2026</div>
-          <p>Trying to analyze the new set of papers published by OpenAI.</p>
-          <span class="update-more">Theoretical Models</span>
-        </a>
-        <div class="update-entry">
-          <div class="update-date">22/09/2026</div>
-          <p>v1.1 is out &mdash; hope you have a great time here. I&rsquo;m currently editing my first paper, and the arXiv preprint will be up soon!</p>
+      <div class="updates-card reveal" id="updates">
+        <h2 class="section-label">Updates</h2>
+        <div class="updates-list">
+          <a class="update-entry update-link" href="theoretical-models.html">
+            <div class="update-date">07/10/2026</div>
+            <p>Trying to analyze the new set of papers published by OpenAI.</p>
+            <span class="update-more">Theoretical Models</span>
+          </a>
+          <div class="update-entry">
+            <div class="update-date">22/09/2026</div>
+            <p>v1.1 is out &mdash; hope you have a great time here. I&rsquo;m currently editing my first paper, and the arXiv preprint will be up soon!</p>
+          </div>
         </div>
       </div>
     </div>
+    <section class="home-now reveal" aria-labelledby="now-title">
+      <div class="now-eyebrow">tarangrsingh.github.io/qiskit</div>
+      <h2 class="now-title" id="now-title"><a href="https://tarangrsingh.github.io/qiskit/" target="_blank" rel="noopener">This is my Quantum Metal repository ↗</a></h2>
+      <p class="now-text">This is my current interest, along with cQED, understanding Quantum Algorithms and Error Corrections</p>
+      <figure class="flx">
+        <canvas class="flx-main" role="img" aria-label="Fluxonium qubit: potential, energy levels and a superposition tunnelling between the two wells"></canvas>
+        <div class="flx-row"><canvas class="flx-spec" tabindex="0" role="slider" aria-label="External flux, Φext/Φ0" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.5"></canvas></div>
+        <figcaption class="flx-cap">
+          <span>Fluxonium qubit <a href="https://en.wikipedia.org/wiki/Superconducting_quantum_computing" target="_blank" rel="noopener">Wikipedia ↗</a></span>
+          <span class="flx-read">&Phi;<sub>ext</sub>/&Phi;<sub>0</sub> <b data-k="phi">0.500</b> &middot; f<sub>01</sub> <b data-k="f01">237 MHz</b></span>
+        </figcaption>
+      </figure>
+    </section>
+    </div>
+
   </main>
   <footer class="site-footer">
     <p class="footer-copy">&copy; <span data-year>2026</span> Tarang Singh</p>
@@ -706,12 +720,13 @@
   }
 
 </script>
-<script src="assets/scrollgraph.js?v=2026110201" defer></script>
-<script src="assets/premium.js?v=2026110201" defer></script>
-<script src="assets/lab.js?v=2026110201" defer></script>
-<script src="assets/profile.js?v=2026110201" defer></script>
-<script src="assets/links.js?v=2026110201" defer></script>
-<script src="assets/sidebar.js?v=2026110201" defer></script>
-<script src="assets/wave.js?v=2026110201" defer></script>
+<script src="assets/scrollgraph.js?v=2026111101" defer></script>
+<script src="assets/premium.js?v=2026111101" defer></script>
+<script src="assets/lab.js?v=2026111101" defer></script>
+<script src="assets/profile.js?v=2026111101" defer></script>
+<script src="assets/links.js?v=2026111101" defer></script>
+<script src="assets/sidebar.js?v=2026111101" defer></script>
+<script src="assets/fluxonium.js?v=2026111101" defer></script>
+<script src="assets/wave.js?v=2026111101" defer></script>
 </body>
 </html>

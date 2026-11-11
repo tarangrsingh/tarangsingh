@@ -49,30 +49,39 @@ html.light-mode .links a[data-k="linkedin"] { --brand: #0a66c2; }
 @keyframes link-pop { 0% { transform: scale(0.8); } 45% { transform: scale(1.22) rotate(-6deg); } 100% { transform: scale(1.12); } }
 @keyframes link-ring { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 70%, transparent); } to { box-shadow: 0 0 0 14px transparent; } }
 
-/* ---- featured link: the Quantum Metal site, in the first screen ------------------------------------------------- */
-.home .qm-link {
-  position: relative; display: inline-flex; align-items: center; gap: 14px; margin: 6px 0 0; padding: 12px 20px 12px 14px; border-radius: 16px;
-  color: var(--text); text-decoration: none; -webkit-tap-highlight-color: transparent; isolation: isolate; overflow: hidden;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.05));
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 10px 24px -14px rgba(0, 0, 0, 0.6);
-  transition: border-color 0.25s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+/* ---- portfolio layout: you on the left, your current work (live) on the right ----------------------------------- */
+.home-grid { display: grid; gap: 28px; }
+.home-grid > * { min-width: 0; }   /* the sideways-scrolling Updates row must not widen its column */
+.home-intro .updates-card .section-label { margin-top: 28px; }
+@media (min-width: 1100px) {
+  :root { --content-width: 1120px; }                    /* the page and its header widen together */
+  .home-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 500px); gap: 56px; align-items: start; }
+  .home-now { margin-top: 8px; }
+  .home .profile-photo { width: 116px; height: 116px; border-radius: 32px; }
+  .home .profile-name { font-size: 44px; }
 }
-html.light-mode .home .qm-link { background: linear-gradient(160deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35)); border-color: rgba(255, 255, 255, 0.85); box-shadow: inset 0 1px 0 #fff, 0 10px 24px -14px rgba(20, 20, 30, 0.35); }
-.home .qm-link::after {   /* a slow sheen passing across, so the eye finds it */
-  content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 30%; z-index: -1; pointer-events: none;
-  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.18), transparent); transform: skewX(-18deg);
-  animation: qm-sheen 5s ease-in-out 1.2s infinite;
+
+/* ---- the "now" panel: the Quantum Metal link, the line under it, and the fluxonium (fluxonium.js) --------------- */
+.home-now {
+  position: relative; overflow: hidden; isolation: isolate; padding: 22px 22px 18px; border-radius: 18px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03)), rgba(var(--bg-rgb), 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  -webkit-backdrop-filter: blur(18px) saturate(170%); backdrop-filter: blur(18px) saturate(170%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 20px 44px -24px rgba(0, 0, 0, 0.75);
 }
-@keyframes qm-sheen { 0% { left: -40%; } 40%, 100% { left: 130%; } }
-.home .qm-link:is(:hover, :focus-visible) { border-color: var(--copper); transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 0 3px var(--copper-glow), 0 12px 26px -14px rgba(0, 0, 0, 0.6); }
-.home .qm-link:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
-.home .qm-icon { flex: none; width: 34px; height: 34px; padding: 6px; border-radius: 10px; color: var(--copper-light); background: color-mix(in srgb, var(--copper) 16%, transparent); }
-.home .qm-text { display: flex; flex-direction: column; gap: 2px; }
-.home .qm-title { font-size: 16px; font-weight: 600; line-height: 1.2; }
-.home .qm-url { font-size: 12.5px; color: var(--muted); line-height: 1.2; }
-@media (prefers-reduced-motion: reduce) { .home .qm-link::after { animation: none; display: none; } .home .qm-link { transition: none; } }
+html.light-mode .home-now {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.35)); border-color: rgba(255, 255, 255, 0.75);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 16px 34px -20px rgba(20, 20, 30, 0.35);
+}
+.home-now::after { content: ""; position: absolute; left: -15%; right: -15%; top: -55%; height: 60%; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 75%); transform: rotate(-6deg); }
+.now-eyebrow { margin: 0 0 8px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--link); }
+.home .now-title { margin: 0 0 6px; font-size: 20px; font-weight: 600; line-height: 1.3; letter-spacing: -0.005em; }
+.home .now-title a { color: var(--text); text-decoration: none; }
+.home .now-title a:hover, .home .now-title a:focus-visible { color: var(--link-hover, var(--link)); text-decoration: underline; text-underline-offset: 0.2em; }
+.home .now-text { margin: 0; font-size: 15px; line-height: 1.6; color: var(--muted); }
+.home-now .flx-main { height: 210px; }
+.home-now .flx-spec { height: 92px; }
 
 /* ---- section labels: small caps with a hairline that runs to the edge --------------------------------------- */
 .home .section-label {

@@ -1,0 +1,14 @@
+/* The live fluxonium (assets/fluxonium.js): the main plot, the spectrum inset (a flux slider), the circuit, the caption.
+   Shared by the home page's "now" panel and the Research page's card. */
+.flx { margin: 14px 0 0; display: grid; gap: 12px; }
+.flx-main { display: block; width: 100%; height: 230px; border-radius: 10px; background: rgba(4, 9, 18, 0.45); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+.flx-row { display: flex; gap: 14px; align-items: stretch; flex-wrap: wrap; }
+.flx-circuit { flex: 0 0 auto; width: 156px; height: 84px; color: var(--copper-light); padding: 4px; border-radius: 10px; background: rgba(4, 9, 18, 0.45); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); box-sizing: content-box; }
+.flx-spec { flex: 1 1 200px; min-width: 0; height: 104px; cursor: ew-resize; touch-action: pan-y; border-radius: 10px; background: rgba(4, 9, 18, 0.45); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+html.light-mode .flx-main, html.light-mode .flx-circuit, html.light-mode .flx-spec { background: rgba(255, 255, 255, 0.45); box-shadow: inset 0 0 0 1px rgba(10, 31, 92, 0.12); }
+.flx-spec:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.flx-cap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; font-size: 12.5px; color: var(--muted); }
+.flx-cap a { color: var(--link); text-decoration: none; margin-left: 4px; }
+.flx-cap a:hover, .flx-cap a:focus-visible { text-decoration: underline; }
+.flx-read { font-variant-numeric: tabular-nums; }
+.flx-read b { font-weight: 600; color: var(--text); }
