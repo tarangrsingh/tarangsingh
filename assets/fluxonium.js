@@ -45,20 +45,36 @@
     return { U: U, E: E, p0: p0, p1: p1 };
   }
 
-  // the f01(Φ_ext) curve for the inset, once
-  // the spectrum for the inset, once: f01, f12, f02 against Φ_ext/Φ0 (what two-tone spectroscopy measures); the same pass
-  // fixes the energy axis so the plot holds every flux the visitor can dial in
-  var SPEC = [], FMAX = 0, UMIN = Infinity, EMAX = -Infinity;
-  for (var k = 0; k <= 100; k++) {
-    var Uk = potential(k / 100, new Float64Array(N)), E = levels(Uk, 3);
-    SPEC.push([E[1] - E[0], E[2] - E[1], E[2] - E[0]]); FMAX = Math.max(FMAX, E[2] - E[0]); EMAX = Math.max(EMAX, E[2]);
-    for (var u = 0; u < N; u++) if (Math.abs(X[u]) <= VIEW) UMIN = Math.min(UMIN, Uk[u]);
+  // solutions are kept per flux (in steps of 0.0005 Φ0), so the drift around Φ0/2 is solved once and then only redrawn
+  var CACHE = {}, cached = 0;
+  function solveQ(fx) {
+    var k = Math.round(fx * 2000), s = CACHE[k];
+    if (!s) { if (cached > 180) { CACHE = {}; cached = 0; } s = CACHE[k] = solve(k / 2000); cached++; }
+    return s;
   }
+
+  // the spectrum for the inset: f01, f12, f02 against Φ_ext/Φ0 (what two-tone spectroscopy measures). It is symmetric about
+  // Φ0/2, so half is computed and mirrored: a few points at once, to fix the axes, and the rest in idle moments so the page
+  // never stalls while it loads.
+  var SPEC = new Array(101), FMAX = 0, UMIN = -EJ, EMAX = -Infinity;                     // the deepest the potential gets is -E_J, at zero flux
+  function specAt(k) {
+    var E = levels(potential(k / 100, new Float64Array(N)), 3);
+    SPEC[k] = SPEC[100 - k] = [E[1] - E[0], E[2] - E[1], E[2] - E[0]]; return E;
+  }
+  [0, 12, 25, 37, 50].forEach(function (k) { var E = specAt(k); FMAX = Math.max(FMAX, E[2] - E[0]); EMAX = Math.max(EMAX, E[2]); });
+  FMAX *= 1.03;
+  (function fill(k) {
+    var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 30); };
+    idle(function () {
+      for (var n = 0; n < 5 && k <= 50; k++) if (!SPEC[k]) { specAt(k); n++; }
+      if (k <= 50) fill(k); else if (!raf) draw(cur, fx, theta);                         // complete: redraw if nothing is animating
+    });
+  })(1);
 
   var main = fig.querySelector('.flx-main'), spec = fig.querySelector('.flx-spec'), cm = main.getContext('2d'), cs = spec.getContext('2d');
   var readPhi = fig.querySelector('[data-k="phi"]'), readF = fig.querySelector('[data-k="f01"]');
-  var ref = solve(0.5), Y0 = UMIN - 0.6, Y1 = EMAX + 1.1, PEAK = 0;
-  [0, 0.25, 0.5].forEach(function (f) { var s = f === 0.5 ? ref : solve(f); for (var q = 0; q < N; q++) PEAK = Math.max(PEAK, s.p0[q] * s.p0[q]); });
+  var ref = solveQ(0.5), Y0 = UMIN - 0.6, Y1 = EMAX + 1.1, PEAK = 0;
+  [0, 0.25, 0.5].forEach(function (f) { var s = solveQ(f); for (var q = 0; q < N; q++) PEAK = Math.max(PEAK, s.p0[q] * s.p0[q]); });
 
   var W = 0, H = 0, SW = 0, SH = 0, pal = null;
   function palette() { var c = getComputedStyle(document.documentElement); return { hi: c.getPropertyValue('--copper-light').trim(), lo: c.getPropertyValue('--copper').trim(), mu: c.getPropertyValue('--muted').trim() }; }
@@ -118,7 +134,7 @@
     var drift = 0.5 + 0.03 * Math.sin((t - start) / 1000 * 2 * Math.PI / 26);  // a slow drift around the sweet spot
     if (manual !== null) fx = manual;                                            // set by the visitor
     else fx += (drift - fx) * (1 - Math.exp(-dt / 0.6));                         // otherwise glide back to the drift
-    if (Math.abs(fx - solvedAt) > 4e-4) { cur = solve(fx); solvedAt = fx; }   // re-solve only when the flux has moved
+    if (Math.abs(fx - solvedAt) > 4e-4) { cur = solveQ(fx); solvedAt = fx; }  // only when the flux has moved, and from the cache when it has been here before
     var f01 = cur.E[1] - cur.E[0];
     // shown slowed down: one tunnelling period ≈ 3.2 s at Φ0/2, faster as √f01 elsewhere (capped so it stays watchable)
     theta += 2 * Math.PI * Math.min(3, Math.sqrt(f01 / (ref.E[1] - ref.E[0]))) / 3.2 * dt;
@@ -127,7 +143,7 @@
     raf = live ? requestAnimationFrame(frame) : 0;
   }
   function kick() {
-    if (calm || !raf) { if (Math.abs(fx - solvedAt) > 1e-6) { cur = solve(fx); solvedAt = fx; } draw(cur, fx, theta); read(cur); }
+    if (calm || !raf) { if (Math.abs(fx - solvedAt) > 1e-6) { cur = solveQ(fx); solvedAt = fx; } draw(cur, fx, theta); read(cur); }
     if (!calm && live && !raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
   }
   function fluxAt(e) { var r = spec.getBoundingClientRect(); return Math.min(1, Math.max(0, (e.clientX - r.left - 22) / (r.width - 30))); }

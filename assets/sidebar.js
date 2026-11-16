@@ -1,7 +1,8 @@
 // Explore, on every page: the glass button in the header's top-left corner (#sb-btn, in each page's markup) opens the
 // four pages in a frosted panel that slides in from the left edge, under the header. This builds the panel, marks the
 // page you are on, and handles it: the button, the dimmed page, Esc or a swipe to the left closes it, and keyboard
-// focus stays inside while it is open. The rows keep the old Explore cards' touches: a light that follows the pointer,
+// focus stays inside while it is open. It also guides: a first-visit hint on the button, and a pager at the foot of each
+// page. The rows keep the old Explore cards' touches: a light that follows the pointer,
 // icons that move on hover (and play once, one after another, the first time the panel opens), and a qubit whose
 // state vector precesses while the panel is open.
 (function () {
@@ -92,6 +93,7 @@
     qubit(open);
     if (!open) return;
     if (!woke) { woke = true; if (!calm) playAll(420); }
+    seen();
     if (focusFirst) rows[0].focus({ preventScroll: true });
   }
   btn.hidden = false;
@@ -207,4 +209,23 @@
       if (live && !raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
     };
   })();
+
+  // ---- guidance
+  // A first visit: the button rings twice, a moment after the page settles, so the way in is noticed. Opening the panel
+  // once is enough to never see it again.
+  function seen() { btn.classList.remove('is-hint'); try { localStorage.setItem('sb-seen', '1'); } catch (e) {} }
+  var isNew = false; try { isNew = !localStorage.getItem('sb-seen'); } catch (e) {}
+  if (isNew && !calm) setTimeout(function () { if (!isOpen()) btn.classList.add('is-hint'); }, 1800);
+  btn.addEventListener('animationend', function (e) { if (e.animationName === 'sb-hint') btn.classList.remove('is-hint'); });
+
+  // The foot of each page leads on, in the panel's order starting from home: back to the page before, forward to the next.
+  var ORDER = [{ href: 'index.html', name: 'Home' }].concat(PAGES), at = -1, footer = document.querySelector('.site-footer');
+  ORDER.forEach(function (p, i) { if (p.href === here) at = i; });
+  if (at >= 0 && footer) {
+    var prev = ORDER[at - 1], next = ORDER[at + 1], nav = document.createElement('nav');
+    nav.className = 'pager'; nav.setAttribute('aria-label', 'Continue');
+    nav.innerHTML = (prev ? '<a class="pg-prev" href="' + prev.href + '" aria-label="Previous page: ' + prev.name + '"><i aria-hidden="true">\u2190</i><span>' + prev.name + '</span></a>' : '') +
+      (next ? '<a class="pg-next" href="' + next.href + '" aria-label="Next page: ' + next.name + '"><span>' + next.name + '</span><i aria-hidden="true">\u2192</i></a>' : '');
+    footer.parentNode.insertBefore(nav, footer);
+  }
 })();
